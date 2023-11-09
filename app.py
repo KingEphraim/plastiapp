@@ -62,7 +62,7 @@ def process_data():
         "xkey": config['xKey'],
         "xversion": "5.0.0",
         "xsoftwarename": "test",
-        "xsoftwareversion": "4.5.9",
+        "xsoftwareversion": "1.0",
         "xCommand": "report:ebtwapl",
         "xewicaplenvironment": "production",
         "xebtwstate": "ny"
