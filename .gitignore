@@ -1,0 +1,4 @@
+# ignore json config
+*.json
+# Ignore the virtualenv
+env/

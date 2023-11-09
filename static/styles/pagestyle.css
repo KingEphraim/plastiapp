@@ -1,0 +1,44 @@
+#loading {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(192, 192, 192, 0.5);
+    background-repeat: no-repeat;
+    background-position: center;
+  
+  }
+  
+  #spin {
+  
+    width: 4rem;
+    height: 4rem;
+  
+  }
+  
+  
+  .approved {
+    width: 100%;
+    font-family: "Barlow", sans-serif;
+    text-align: center;
+    width: 100%;
+    font-weight: 600;
+    font-size: 20px;
+    background-color: #1eb863c5;
+  }
+  
+  .dclnerr {
+    width: 100%;
+    font-family: "Barlow", sans-serif;
+    text-align: center;
+    width: 100%;
+    font-weight: 600;
+    font-size: 20px;
+    background-color: #f700005b;
+  }
+  /* #table{
+    height: 50px;
+  } */

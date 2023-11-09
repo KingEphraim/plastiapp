@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Untitled</title>
+    <meta name="description" content="This is an example of a meta description.">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/notestyle.css') }}">
+</head>
+
+<body>
+    <div id="wrapper">
+
+        <form id="paper" method="get" action="">
+    
+            <div id="margin">Title: <input id="title" type="text" name="title"></div>
+            <textarea placeholder="Enter something funny." id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; "></textarea>  
+            <br>
+            <input id="button" type="submit" value="Create">
+            
+        </form>
+    
+    </div>
+    <script src="{{url_for('static', filename='notejs.js')}}"></script>
+</body>
+
+</html>
