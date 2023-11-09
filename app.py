@@ -61,7 +61,7 @@ def process_data():
     payload = json.dumps({
         "xkey": config['xKey'],
         "xversion": "5.0.0",
-        "xsoftwarename": "test",
+        "xsoftwarename": "PlatiappAPL",
         "xsoftwareversion": "1.0",
         "xCommand": "report:ebtwapl",
         "xewicaplenvironment": "production",
