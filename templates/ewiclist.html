@@ -19,34 +19,83 @@
 
 <body>
 
-  <div class="container text-center" >
+  <div class="container text-center">
     <div class="row">
       <div class="col">
         <h1 class="pt-5">APL Report</h1>
       </div>
     </div>
-    <div class="input-group"> 
+    <div class="input-group">
       <div class="form-floating">
-        <select id="state" name="state" class="form-select"
-            aria-label="Floating label select example">
+        <select id="state" name="state" class="form-select" aria-label="Floating label select example">
 
-            <option label="New York">NY</option>
-            <option label="New Jersey">NJ</option>
+          <option label="Alabama">AL</option>
+          <option label="Alaska">AK</option>
+          <option label="Arizona">AZ</option>
+          <option label="Arkansas">AR</option>
+          <option label="California">CA</option>
+          <option label="Colorado">CO</option>
+          <option label="Connecticut">CT</option>
+          <option label="Delaware">DE</option>
+          <option label="Florida">FL</option>
+          <option label="Georgia">GA</option>
+          <option label="Hawaii">HI</option>
+          <option label="Idaho">ID</option>
+          <option label="Illinois">IL</option>
+          <option label="Indiana">IN</option>
+          <option label="Iowa">IA</option>
+          <option label="Kansas">KS</option>
+          <option label="Kentucky">KY</option>
+          <option label="Louisiana">LA</option>
+          <option label="Maine">ME</option>
+          <option label="Maryland">MD</option>
+          <option label="Massachusetts">MA</option>
+          <option label="Michigan">MI</option>
+          <option label="Minnesota">MN</option>
+          <option label="Mississippi">MS</option>
+          <option label="Missouri">MO</option>
+          <option label="Montana">MT</option>
+          <option label="Nebraska">NE</option>
+          <option label="Nevada">NV</option>
+          <option label="New Hampshire">NH</option>
+          <option label="New Jersey">NJ</option>
+          <option label="New Mexico">NM</option>
+          <option label="New York" selected>NY</option>
+          <option label="North Carolina">NC</option>
+          <option label="North Dakota">ND</option>
+          <option label="Ohio">OH</option>
+          <option label="Oklahoma">OK</option>
+          <option label="Oregon">OR</option>
+          <option label="Pennsylvania">PA</option>
+          <option label="Rhode Island">RI</option>
+          <option label="South Carolina">SC</option>
+          <option label="South Dakota">SD</option>
+          <option label="Tennessee">TN</option>
+          <option label="Texas">TX</option>
+          <option label="Utah">UT</option>
+          <option label="Vermont">VT</option>
+          <option label="Virginia">VA</option>
+          <option label="Washington">WA</option>
+          <option label="West Virginia">WV</option>
+          <option label="Wisconsin">WI</option>
+          <option label="Wyoming">WY</option>
+
+
         </select>
         <label for="state" class="text-muted">State</label>
-    </div>  
-        <button type="button" class="btn btn-secondary" id="pullcatreport">Categories</button>
-        <button type="button" class="btn btn-secondary" id="pullprodreport">Products</button>      
+      </div>
+      <button type="button" class="btn btn-secondary" id="pullcatreport">Categories</button>
+      <button type="button" class="btn btn-secondary" id="pullprodreport">Products</button>
     </div>
-    <div class="row" >
-      <div class="col" >
+    <div class="row">
+      <div class="col">
         <table id="table" data-search-highlight="false" data-sort-name="UPC_PLU" data-sort-order="asc" data-height="600"
-          data-visible-search="true" >
+          data-visible-search="true">
         </table>
       </div>
     </div>
   </div>
-  
+
 
 
 
