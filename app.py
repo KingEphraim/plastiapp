@@ -53,6 +53,8 @@ def webhookpin():
 @app.route('/aplpull', methods=['POST','GET'])
 def process_data():
     apltype = request.args.get('apltype')
+    aplstate = request.args.get('state')
+    print(aplstate)
     print(apltype)
     url = "https://x1.cardknox.com/reportjson/"
     payload = json.dumps({
@@ -62,7 +64,7 @@ def process_data():
         "xsoftwareversion": "1.0",
         "xCommand": "report:ebtwapl",
         "xewicaplenvironment": "production",
-        "xebtwstate": "ny"
+        "xebtwstate": aplstate
     })
     headers = {
         'Content-Type': 'application/json'

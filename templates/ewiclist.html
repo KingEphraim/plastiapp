@@ -25,11 +25,18 @@
         <h1 class="pt-5">APL Report</h1>
       </div>
     </div>
-    <div class="row">
-      <div class="col">        
+    <div class="input-group"> 
+      <div class="form-floating">
+        <select id="state" name="state" class="form-select"
+            aria-label="Floating label select example">
+
+            <option label="New York">NY</option>
+            <option label="New Jersey">NJ</option>
+        </select>
+        <label for="state" class="text-muted">State</label>
+    </div>  
         <button type="button" class="btn btn-secondary" id="pullcatreport">Categories</button>
-        <button type="button" class="btn btn-secondary" id="pullprodreport">Products</button>
-      </div>
+        <button type="button" class="btn btn-secondary" id="pullprodreport">Products</button>      
     </div>
     <div class="row" >
       <div class="col" >
