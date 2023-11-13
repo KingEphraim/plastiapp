@@ -179,8 +179,7 @@ def handle_slackrefnum():
     payload = {}
     headers = {
         'Authorization': f'Bearer {config['slackauth']}'
-        }
-    print(url, headers, payload)
+        }    
     response = requests.request("GET", url, headers=headers, data=payload)
     print(response.text)
     responseparse = json.loads(response.text) 
