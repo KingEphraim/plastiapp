@@ -140,7 +140,7 @@ def handle_webhook():
     if ck_signature is None:
         ck_signature=""
         print(ck_signature)
-        url = config['slackurlhook']
+        url = config['ipn-webhook-hooks.slack']
         payload = json.dumps({
             "text": f"message{data}{ck_signature}",
             "blocks":[{"type":"section","text":{"type":"mrkdwn","text":"A new transaction has been processed:"}},{"type":"section","text":{"type":"mrkdwn","text":f"*Payload:*\n```{json.dumps(data,indent=4)}```"},"accessory":{"type":"image","image_url":"https://cardknoxdemo.com/img/logo.png","alt_text":"computer thumbnail"}}]       
@@ -153,7 +153,7 @@ def handle_webhook():
         else:
             print("The two strings are not equal.") 
             matchcheck="No Match"
-        url = config['slackurlhook']
+        url = config['ipn-webhook-hooks.slack']
         payload = json.dumps({
             "text": f"message{data}{ck_signature}", 
             "blocks":[{"type":"section","text":{"type":"mrkdwn","text":"A new transaction has been processed:"}},{"type":"section","text":{"type":"mrkdwn","text":f"*Payload:*\n```{json.dumps(data,indent=4)}```\n*ck_signature: * `{ck_signature}` \n*Hash: * `{md5_hash}`\n*ck_signature - Hash:* `{matchcheck}`"},"accessory":{"type":"image","image_url":"https://cardknoxdemo.com/img/logo.png","alt_text":"computer thumbnail"}}]       
