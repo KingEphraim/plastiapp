@@ -52,9 +52,6 @@ def webhookpin():
 
 @app.route('/aplpull', methods=['POST','GET'])
 def process_data():
-    #data = request.get_json()
-    #print (data)
-    #data = request.g()
     apltype = request.args.get('apltype')
     print(apltype)
     url = "https://x1.cardknox.com/reportjson/"
