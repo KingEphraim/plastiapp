@@ -1,53 +1,57 @@
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 const appendAlert = (message, type) => {
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = [
-    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-    `   <div>${message}</div>`,
-    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-    '</div>'
-  ].join('')
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('')
 
-  alertPlaceholder.insertBefore(wrapper,alertPlaceholder.firstChild)
+    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
 }
 
 
 
 const button = document.getElementById("sbmtbtn");
 button.addEventListener("click", () => {
-    
-    var formData = {};
-    var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv"];
-    
-    fields.forEach(function(field) {
-        formData[field] = document.getElementById(field).value;
-    });
+    setAccount("ifields_cardkndemodevc039cbc0007b426295100ecf", "tranzact", "1.0");
+    getTokens(function () {
+        var formData = {};
+        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv"];
 
-    // Convert JSON to string for display or further processing
-    var formDataJSON = JSON.stringify(formData);
+        fields.forEach(function (field) {
+            formData[field] = document.getElementById(field).value;
+        });
 
-    // Display JSON in the console (for testing)
-    // console.log(formDataJSON);
-    // appendAlert(formDataJSON, 'success');
+        // Convert JSON to string for display or further processing
+        var formDataJSON = JSON.stringify(formData);
 
-    fetch('/sendtocardknox', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataJSON)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.xResult == "A"){
-                appendAlert(JSON.stringify(data), 'success');
-            }else{
-                appendAlert(JSON.stringify(data), 'info');
-            }
-            
+        // Display JSON in the console (for testing)
+        // console.log(formDataJSON);
+        // appendAlert(formDataJSON, 'success');
 
+        fetch('/sendtocardknox', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
         })
-        .catch(error => console.error(error));
-
+            .then(response => response.json())
+            .then(data => {
+                if (data.xResult == "A") {
+                    appendAlert(JSON.stringify(data), 'success');
+                } else {
+                    appendAlert(JSON.stringify(data), 'info');
+                }
+            })
+            .catch(error => console.error(error));
+    }, 30000,);
 });
+
+
+
+
+
 
