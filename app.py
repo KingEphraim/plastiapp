@@ -12,31 +12,69 @@ with open('config.json') as f:
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/ewiclist')
 def ewiclist():
     return render_template('ewiclist.html')
+
+
 @app.route('/tranzact')
 def tranzact():
     return render_template('tranzact.html')
 
+
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox():
-    json_data = request.get_json()
-    print(json_data)
+    datafromuser = json.loads(request.get_json())
+    print(datafromuser)
 
-    return {'message':'ok'}
+    url = "https://x1.cardknox.com/gatewayjson"
+    data = {
+        "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
+        "xVersion": "5.0.0",
+        "xSoftwareName": "tranzact",
+        "xSoftwareVersion": "1.0",
+        "xCommand": "cc:sale",
+        "xName": datafromuser['name'],
+        "xEmail": datafromuser['email'],
+        "xStreet": datafromuser['address'],
+        "xBillCity": datafromuser['city'],
+        "xBillState": datafromuser['state'],
+        "xZip": datafromuser['zip'],
+        "xInvoice": datafromuser['invoice'],
+        "xDescription": datafromuser['comments'],
+        "xAmount": datafromuser['amount'],
+        "xCardnum": datafromuser['card'],
+        "xExp": datafromuser['exp'],
+        "xCvv": datafromuser['cvv'],
+
+
+    }
+    json_data = json.dumps(data)
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url, data=json_data, headers=headers)
+    if response.status_code == 200:
+        print("POST request successful!")
+        print("Response:", response.json())
+    else:
+        print("POST request failed. Status code:", response.status_code)
+        print("Response:", response.text)
+
+    return {'message': 'ok'}
+
 
 @app.route('/webhookpin', methods=['GET', 'POST'])
 def webhookpin():
     if request.method == 'POST':
-        
+
         trnsdata = request.form.get('data')
         pin = request.form.get('pin')
-        
+
         lines = trnsdata.split('\n')
 
         # Remove empty lines
@@ -60,7 +98,8 @@ def webhookpin():
     else:
         return render_template('webhookpin.html')
 
-@app.route('/aplpull', methods=['POST','GET'])
+
+@app.route('/aplpull', methods=['POST', 'GET'])
 def process_data():
     apltype = request.args.get('apltype')
     aplstate = request.args.get('state')
@@ -79,8 +118,8 @@ def process_data():
     headers = {
         'Content-Type': 'application/json'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)    
-    responseparse = json.loads(response.text)    
+    response = requests.request("POST", url, headers=headers, data=payload)
+    responseparse = json.loads(response.text)
     for item in responseparse["xReportData"]:
         if item['Type'] == 'Products':
             products_url = item['URL']
@@ -92,29 +131,30 @@ def process_data():
     elif apltype == "catg":
         urlreport = categories_url
 
-    print(urlreport)    
-    prodresponse = requests.get(urlreport)   
+    print(urlreport)
+    prodresponse = requests.get(urlreport)
     return prodresponse.text
+
 
 @app.route('/receipt')
 def receipt():
     # Get all the query parameters
     params = request.args
-    print (request.args)
+    print(request.args)
     # Create an empty list to store the HTML for each parameter
     fields = []
-    
+
     # Iterate through the parameters and generate HTML for each one
     for key, value in params.items():
         field = f"<p><strong>{key.replace('_', ' ')}:</strong> {value}</p>"
         fields.append(field)
-    
+
     # Join all the HTML fields together into a single string
     receipt_html = ''.join(fields)
-    
-    
+
     # Render the HTML template with the dynamic fields
     return render_template('receipt.html', receipt_html=receipt_html)
+
 
 @app.route('/webhook', methods=['POST'])
 def handle_webhook():
@@ -123,26 +163,26 @@ def handle_webhook():
         print(content_type)
     except KeyError:
         return "Content-Type header is missing", 400
-    
-    ck_signature = request.headers.get('ck-signature')       
+
+    ck_signature = request.headers.get('ck-signature')
     if content_type == 'application/json':
         data = request.get_json()
     elif content_type.startswith('multipart/form-data'):
-       data = request.form.to_dict() 
+        data = request.form.to_dict()
     elif content_type == 'application/x-www-form-urlencoded':
-       data = request.form.to_dict() 
+        data = request.form.to_dict()
     elif content_type.startswith('application/x-www-form-urlencoded'):
-       data = request.form.to_dict() 
+        data = request.form.to_dict()
     elif content_type.startswith('text/plain'):
         datatext = request.data.decode('utf-8')
         try:
             data = json.loads(datatext)
         except json.JSONDecodeError as e:
-            data = {"text/plain": request.data.decode('utf-8')}         
+            data = {"text/plain": request.data.decode('utf-8')}
     else:
         # Unsupported content type
         return f"Unsupported content type Content Type: {request.headers['Content-Type']}", 400
-    
+
     pin = config['webhookpin']
     sorted_dict = dict(sorted(data.items(), key=lambda item: item[0]))
     values_string = ''.join([str(value) for value in sorted_dict.values()])
@@ -150,50 +190,50 @@ def handle_webhook():
     md5_hash = hashlib.md5(values_string_pin.encode()).hexdigest()
     print(md5_hash)
     if ck_signature is None:
-        ck_signature=""
+        ck_signature = ""
         print(ck_signature)
         url = config['ipn-webhook-hooks.slack']
         payload = json.dumps({
             "text": f"message{data}{ck_signature}",
-            "blocks":[{"type":"section","text":{"type":"mrkdwn","text":"A new transaction has been processed:"}},{"type":"section","text":{"type":"mrkdwn","text":f"*Payload:*\n```{json.dumps(data,indent=4)}```"},"accessory":{"type":"image","image_url":"https://cardknoxdemo.com/img/logo.png","alt_text":"computer thumbnail"}}]       
+            "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "A new transaction has been processed:"}}, {"type": "section", "text": {"type": "mrkdwn", "text": f"*Payload:*\n```{json.dumps(data, indent=4)}```"}, "accessory": {"type": "image", "image_url": "https://cardknoxdemo.com/img/logo.png", "alt_text": "computer thumbnail"}}]
         })
 
     else:
         if ck_signature.lower() == md5_hash.lower():
             print("The two strings are equal (ignoring case).")
-            matchcheck="Match"
+            matchcheck = "Match"
         else:
-            print("The two strings are not equal.") 
-            matchcheck="No Match"
+            print("The two strings are not equal.")
+            matchcheck = "No Match"
         url = config['ipn-webhook-hooks.slack']
         payload = json.dumps({
-            "text": f"message{data}{ck_signature}", 
-            "blocks":[{"type":"section","text":{"type":"mrkdwn","text":"A new transaction has been processed:"}},{"type":"section","text":{"type":"mrkdwn","text":f"*Payload:*\n```{json.dumps(data,indent=4)}```\n*ck_signature: * `{ck_signature}` \n*Hash: * `{md5_hash}`\n*ck_signature - Hash:* `{matchcheck}`"},"accessory":{"type":"image","image_url":"https://cardknoxdemo.com/img/logo.png","alt_text":"computer thumbnail"}}]       
+            "text": f"message{data}{ck_signature}",
+            "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "A new transaction has been processed:"}}, {"type": "section", "text": {"type": "mrkdwn", "text": f"*Payload:*\n```{json.dumps(data, indent=4)}```\n*ck_signature: * `{ck_signature}` \n*Hash: * `{md5_hash}`\n*ck_signature - Hash:* `{matchcheck}`"}, "accessory": {"type": "image", "image_url": "https://cardknoxdemo.com/img/logo.png", "alt_text": "computer thumbnail"}}]
         })
     headers = {
         'Content-Type': 'application/json'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)    
-     
-    
+    response = requests.request("POST", url, headers=headers, data=payload)
+
     print(response)
-    
+
     return 'OK'
+
+
 @app.route('/slackrefnum', methods=['POST'])
 def handle_slackrefnum():
 
-
-    userid=request.form.get('user_id')
-    refnum=request.form.get('text')
+    userid = request.form.get('user_id')
+    refnum = request.form.get('text')
     print(userid)
 
     url = f"https://slack.com/api/users.info?user={userid}&pretty=1"
     payload = {}
-    headers = {'Authorization': f'Bearer {config["slackauth"]}'} 
+    headers = {'Authorization': f'Bearer {config["slackauth"]}'}
     response = requests.request("GET", url, headers=headers, data=payload)
     print(response.text)
-    responseparse = json.loads(response.text) 
-    email=responseparse["user"]["profile"]["email"]
+    responseparse = json.loads(response.text)
+    email = responseparse["user"]["profile"]["email"]
     print(email)
     url = f"https://x1.cardknox.com/report/rptpwd/{refnum}?xemail={email}"
     payload = {}
@@ -205,12 +245,15 @@ def handle_slackrefnum():
         if response.text == "OK":
             return "Your reference number details are on their way to your email. Don't blink or you might miss them!"
         else:
-            return f"Oops! Something's not right. Please check the reference number and try again. {response.text}"      
+            return f"Oops! Something's not right. Please check the reference number and try again. {response.text}"
     else:
         return f"Oops! Something's not right. Please check the reference number and try again. {response.text}"
+
+
 @app.route('/bulk')
 def handle_bulk():
     return render_template('bulk.html')
+
 
 @app.route('/bulk_csv', methods=['POST'])
 def bulk_csv():
@@ -219,11 +262,11 @@ def bulk_csv():
     url = request.form['url']
     email = request.form['email']
     csv_file = request.files['csvfile']
-    
+
     if csv_file:
         csvData = csv.reader(io.StringIO(csv_file.read().decode('utf-8-sig')))
         # Process CSV data as needed
-        
+
         # Get the headers (keys) from the first row of the CSV
         keys = next(csvData)
         # Initialize an empty dictionary
@@ -242,25 +285,26 @@ def bulk_csv():
             aws_access_key_id=os.environ["ACCESS_ID"],
             aws_secret_access_key=os.environ["ACCESS_KEY"],
         )
-        sqs = session.resource('sqs','us-east-1',)
-        
+        sqs = session.resource('sqs', 'us-east-1',)
+
         # Get the SQS queue by its name
         queue_name = 'bulktransactions.fifo'
         queue = sqs.get_queue_by_name(QueueName=queue_name)
 
         # Enable content-based deduplication on the queue
         queue.set_attributes(Attributes={'ContentBasedDeduplication': 'true'})
-        message_group_id = str(uuid.uuid4()) 
+        message_group_id = str(uuid.uuid4())
         for key, value in data_dict.items():
             print(key, json.dumps(value))
-             
-            message_body = str(value)
-            message_deduplication_id=str(uuid.uuid4())
-            print(message_group_id)
-            queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id,MessageDeduplicationId=message_deduplication_id )
 
-        print("Messages sent to SQS successfully.") 
-        
+            message_body = str(value)
+            message_deduplication_id = str(uuid.uuid4())
+            print(message_group_id)
+            queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id,
+                               MessageDeduplicationId=message_deduplication_id)
+
+        print("Messages sent to SQS successfully.")
+
         # Send each item in the dictionary collection to the SQS queue
         # for item in data_dict:
         #     message_body = str(item)
@@ -268,18 +312,17 @@ def bulk_csv():
         #     queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id)
         # print("Messages sent to SQS successfully.")
 
-
-
-
         # print(data_dict[2])
-        
+
         # key = 'xCardNum'
         # for item_key, item_value in data_dict.items():
         #     if key in item_value:
         #         print(item_value[key])
-        
-        responsedata = {'message':'Form data and CSV file uploaded successfully','groupid':message_group_id}
+
+        responsedata = {
+            'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
     return json.dumps(responsedata)
+
 
 @app.route('/dynamobatchdata')
 def your_endpoint():
@@ -291,8 +334,7 @@ def your_endpoint():
     )
     dynamodb = session.client('dynamodb', region_name='us-east-1')
 
-
-        # Define the table name
+    # Define the table name
     try:
         group_id = request.args.get('groupid')
 
@@ -300,26 +342,26 @@ def your_endpoint():
         table_name = 'transactionresponses'
 
         # Specify the desired GroupId value
-        
 
         query_params = {
             'TableName': table_name,
             'KeyConditionExpression': 'GroupId = :group_id',
             'ExpressionAttributeValues': {
-                ':group_id': {'S': group_id}  # Assuming the GroupId is a number (change to 'S' if it's a string)                
+                # Assuming the GroupId is a number (change to 'S' if it's a string)
+                ':group_id': {'S': group_id}
             }
         }
         # Query the table
         response = dynamodb.query(**query_params)
         # Extract the items from the response
-    
 
         items = response['Items']
         clean_items = []
         for item in items:
             clean_item = {}
             for key, value in item.items():
-                clean_item[key] = list(value.values())[0]  # Extracting the value without the data type
+                # Extracting the value without the data type
+                clean_item[key] = list(value.values())[0]
             clean_items.append(clean_item)
 
         # Convert the list of dictionaries to a JSON string
@@ -331,9 +373,12 @@ def your_endpoint():
         return jsonify(json_string)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
 @app.route('/note')
 def note():
     return render_template('note.html')
+
 
 if __name__ == '__main__':
     app.run()
