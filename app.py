@@ -65,7 +65,7 @@ def sendtocardknox():
         print("POST request failed. Status code:", response.status_code)
         print("Response:", response.text)
 
-    return {'message': 'ok'}
+    return response.json()
 
 
 @app.route('/webhookpin', methods=['GET', 'POST'])
