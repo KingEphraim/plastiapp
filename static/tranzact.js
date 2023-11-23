@@ -8,7 +8,7 @@ const appendAlert = (message, type) => {
     '</div>'
   ].join('')
 
-  alertPlaceholder.append(wrapper)
+  alertPlaceholder.insertBefore(wrapper,alertPlaceholder.firstChild)
 }
 
 
@@ -39,7 +39,12 @@ button.addEventListener("click", () => {
     })
         .then(response => response.json())
         .then(data => {
-            appendAlert(JSON.stringify(data), 'success');
+            if (data.xResult == "A"){
+                appendAlert(JSON.stringify(data), 'success');
+            }else{
+                appendAlert(JSON.stringify(data), 'info');
+            }
+            
 
         })
         .catch(error => console.error(error));
