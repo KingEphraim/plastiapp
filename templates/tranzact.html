@@ -1,61 +1,111 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  </head>
-  <body>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
     <div class="container-fluid">
-    <h1>Tranzact</h1>
+        <h1>Tranzact</h1>
 
 
 
-    <form class="row g-3">
-        <div class="col-md-6">
-          <label for="inputEmail4" class="form-label">Email</label>
-          <input type="email" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-md-6">
-          <label for="inputPassword4" class="form-label">Password</label>
-          <input type="password" class="form-control" id="inputPassword4">
-        </div>
-        <div class="col-12">
-          <label for="inputAddress" class="form-label">Address</label>
-          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-        </div>
-        <div class="col-12">
-          <label for="inputAddress2" class="form-label">Address 2</label>
-          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-        </div>
-        <div class="col-md-6">
-          <label for="inputCity" class="form-label">City</label>
-          <input type="text" class="form-control" id="inputCity">
-        </div>
-        <div class="col-md-4">
-          <label for="inputState" class="form-label">State</label>
-          <select id="inputState" class="form-select">
-            <option selected>Choose...</option>
-            <option>...</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label for="inputZip" class="form-label">Zip</label>
-          <input type="text" class="form-control" id="inputZip">
-        </div>
-        <div class="col-12">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-              Check me out
-            </label>
-          </div>
-        </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">Go!</button>
-        </div>
-      </form>
+        <form class="row g-3">
+            <div class="col-md-6 form-floating">
+                <input type="text" class="form-control" id="name" placeholder="Name">
+                <label for="name" class="text-muted">Name</label>
+            </div>
+            <div class="col-md-6 form-floating">
+                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                <label for="inputEmail4" class="text-muted">Email</label>
+            </div>
+            <div class="col-md-3 form-floating">
+                <input type="text" class="form-control" id="address" placeholder="Address">
+                <label for="address" class="text-muted">Address</label>
+            </div>
+            <div class="col-md-3 form-floating">
+                <input type="text" class="form-control" id="city" placeholder="City">
+                <label for="city" class="text-muted">City</label>
+            </div>
+            <div class="col-md-3">
+                <div class="form-floating">
+                    <select id="inputState" class="form-select">
+                        <option >......</option>                        
+                        <option label="Alabama">AL</option>
+                        <option label="Alaska">AK</option>
+                        <option label="Arizona">AZ</option>
+                        <option label="Arkansas">AR</option>
+                        <option label="California">CA</option>
+                        <option label="Colorado">CO</option>
+                        <option label="Connecticut">CT</option>
+                        <option label="Delaware">DE</option>
+                        <option label="Florida">FL</option>
+                        <option label="Georgia">GA</option>
+                        <option label="Hawaii">HI</option>
+                        <option label="Idaho">ID</option>
+                        <option label="Illinois">IL</option>
+                        <option label="Indiana">IN</option>
+                        <option label="Iowa">IA</option>
+                        <option label="Kansas">KS</option>
+                        <option label="Kentucky">KY</option>
+                        <option label="Louisiana">LA</option>
+                        <option label="Maine">ME</option>
+                        <option label="Maryland">MD</option>
+                        <option label="Massachusetts">MA</option>
+                        <option label="Michigan">MI</option>
+                        <option label="Minnesota">MN</option>
+                        <option label="Mississippi">MS</option>
+                        <option label="Missouri">MO</option>
+                        <option label="Montana">MT</option>
+                        <option label="Nebraska">NE</option>
+                        <option label="Nevada">NV</option>
+                        <option label="New Hampshire">NH</option>
+                        <option label="New Jersey">NJ</option>
+                        <option label="New Mexico">NM</option>
+                        <option label="New York">NY</option>
+                        <option label="North Carolina">NC</option>
+                        <option label="North Dakota">ND</option>
+                        <option label="Ohio">OH</option>
+                        <option label="Oklahoma">OK</option>
+                        <option label="Oregon">OR</option>
+                        <option label="Pennsylvania">PA</option>
+                        <option label="Rhode Island">RI</option>
+                        <option label="South Carolina">SC</option>
+                        <option label="South Dakota">SD</option>
+                        <option label="Tennessee">TN</option>
+                        <option label="Texas">TX</option>
+                        <option label="Utah">UT</option>
+                        <option label="Vermont">VT</option>
+                        <option label="Virginia">VA</option>
+                        <option label="Washington">WA</option>
+                        <option label="West Virginia">WV</option>
+                        <option label="Wisconsin">WI</option>
+                        <option label="Wyoming">WY</option>
+                    </select>
+                    <label for="inputState" class="text-muted">State</label>
+                </div>
+            </div>
+            <div class="col-md-3 form-floating">
+                <input type="text" class="form-control" id="inputZip" placeholder="Zip">
+                <label for="inputZip" class="text-muted">Zip</label>
+            </div>
+            <!-- <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck">
+                    <label class="form-check-label" for="gridCheck">
+                        Check me out
+                    </label>
+                </div>
+            </div> -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Go!</button>
+            </div>
+        </form>
     </div>
 
 
@@ -73,6 +123,9 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>
