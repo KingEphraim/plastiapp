@@ -139,12 +139,25 @@
                     </button>
                 </h2>
                 <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordion">
-                    <div class="accordion-body">Placeholder content.</div>
+                    <form class="row g-3 p-4" id="transactinfo">
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="card" placeholder="Card Number">
+                            <label for="card" class="text-muted">Card Number</label>
+                        </div>
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="exp" placeholder="Expiration Date">
+                            <label for="exp" class="text-muted">Expiration Date</label>
+                        </div>
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="cvv" placeholder="Cvv">
+                            <label for="cvv" class="text-muted">Cvv</label>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Go!</button>
+        <div class="d-grid gap-2 p-4">
+            <button class="btn btn-primary" type="button" id="sbmtbtn">Button</button>
         </div>
     </div>
 
