@@ -23,6 +23,13 @@ def ewiclist():
 def tranzact():
     return render_template('tranzact.html')
 
+@app.route('/sendtocardknox', methods=['POST'])
+def sendtocardknox():
+
+
+    
+    return {'message':'ok'}
+
 @app.route('/webhookpin', methods=['GET', 'POST'])
 def webhookpin():
     if request.method == 'POST':
