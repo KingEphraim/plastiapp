@@ -1,3 +1,18 @@
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type) => {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('')
+
+  alertPlaceholder.append(wrapper)
+}
+
+
+
 const button = document.getElementById("sbmtbtn");
 button.addEventListener("click", () => {
     
@@ -12,8 +27,8 @@ button.addEventListener("click", () => {
     var formDataJSON = JSON.stringify(formData);
 
     // Display JSON in the console (for testing)
-    console.log(formDataJSON);
-
+    // console.log(formDataJSON);
+    // appendAlert(formDataJSON, 'success');
 
     fetch('/sendtocardknox', {
         method: 'POST',
@@ -23,7 +38,11 @@ button.addEventListener("click", () => {
         body: JSON.stringify(formDataJSON)
     })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+            appendAlert(JSON.stringify(data), 'success');
+
+        })
         .catch(error => console.error(error));
 
 });
+
