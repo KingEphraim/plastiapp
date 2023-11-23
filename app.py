@@ -25,9 +25,9 @@ def tranzact():
 
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox():
+    json_data = request.get_json()
+    print(json_data)
 
-
-    
     return {'message':'ok'}
 
 @app.route('/webhookpin', methods=['GET', 'POST'])
