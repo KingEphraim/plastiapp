@@ -19,6 +19,9 @@ def index():
 @app.route('/ewiclist')
 def ewiclist():
     return render_template('ewiclist.html')
+@app.route('/tranzact')
+def tranzact():
+    return render_template('tranzact.html')
 
 @app.route('/webhookpin', methods=['GET', 'POST'])
 def webhookpin():
