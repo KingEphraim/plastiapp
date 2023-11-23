@@ -15,97 +15,137 @@
 
 
 
-        <form class="row g-3">
-            <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="name" placeholder="Name">
-                <label for="name" class="text-muted">Name</label>
-            </div>
-            <div class="col-md-6 form-floating">
-                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-                <label for="inputEmail4" class="text-muted">Email</label>
-            </div>
-            <div class="col-md-3 form-floating">
-                <input type="text" class="form-control" id="address" placeholder="Address">
-                <label for="address" class="text-muted">Address</label>
-            </div>
-            <div class="col-md-3 form-floating">
-                <input type="text" class="form-control" id="city" placeholder="City">
-                <label for="city" class="text-muted">City</label>
-            </div>
-            <div class="col-md-3">
-                <div class="form-floating">
-                    <select id="inputState" class="form-select">
-                        <option >......</option>                        
-                        <option label="Alabama">AL</option>
-                        <option label="Alaska">AK</option>
-                        <option label="Arizona">AZ</option>
-                        <option label="Arkansas">AR</option>
-                        <option label="California">CA</option>
-                        <option label="Colorado">CO</option>
-                        <option label="Connecticut">CT</option>
-                        <option label="Delaware">DE</option>
-                        <option label="Florida">FL</option>
-                        <option label="Georgia">GA</option>
-                        <option label="Hawaii">HI</option>
-                        <option label="Idaho">ID</option>
-                        <option label="Illinois">IL</option>
-                        <option label="Indiana">IN</option>
-                        <option label="Iowa">IA</option>
-                        <option label="Kansas">KS</option>
-                        <option label="Kentucky">KY</option>
-                        <option label="Louisiana">LA</option>
-                        <option label="Maine">ME</option>
-                        <option label="Maryland">MD</option>
-                        <option label="Massachusetts">MA</option>
-                        <option label="Michigan">MI</option>
-                        <option label="Minnesota">MN</option>
-                        <option label="Mississippi">MS</option>
-                        <option label="Missouri">MO</option>
-                        <option label="Montana">MT</option>
-                        <option label="Nebraska">NE</option>
-                        <option label="Nevada">NV</option>
-                        <option label="New Hampshire">NH</option>
-                        <option label="New Jersey">NJ</option>
-                        <option label="New Mexico">NM</option>
-                        <option label="New York">NY</option>
-                        <option label="North Carolina">NC</option>
-                        <option label="North Dakota">ND</option>
-                        <option label="Ohio">OH</option>
-                        <option label="Oklahoma">OK</option>
-                        <option label="Oregon">OR</option>
-                        <option label="Pennsylvania">PA</option>
-                        <option label="Rhode Island">RI</option>
-                        <option label="South Carolina">SC</option>
-                        <option label="South Dakota">SD</option>
-                        <option label="Tennessee">TN</option>
-                        <option label="Texas">TX</option>
-                        <option label="Utah">UT</option>
-                        <option label="Vermont">VT</option>
-                        <option label="Virginia">VA</option>
-                        <option label="Washington">WA</option>
-                        <option label="West Virginia">WV</option>
-                        <option label="Wisconsin">WI</option>
-                        <option label="Wyoming">WY</option>
-                    </select>
-                    <label for="inputState" class="text-muted">State</label>
+
+        <div class="accordion" id="accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Customer Information
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <form class="row g-3 p-4" id="custinfo">
+                        <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control" id="name" placeholder="Name">
+                            <label for="name" class="text-muted">Name</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                            <label for="inputEmail4" class="text-muted">Email</label>
+                        </div>
+                        <div class="col-md-3 form-floating">
+                            <input type="text" class="form-control" id="address" placeholder="Address">
+                            <label for="address" class="text-muted">Address</label>
+                        </div>
+                        <div class="col-md-3 form-floating">
+                            <input type="text" class="form-control" id="city" placeholder="City">
+                            <label for="city" class="text-muted">City</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <select id="inputState" class="form-select">
+                                    <option>......</option>
+                                    <option label="Alabama">AL</option>
+                                    <option label="Alaska">AK</option>
+                                    <option label="Arizona">AZ</option>
+                                    <option label="Arkansas">AR</option>
+                                    <option label="California">CA</option>
+                                    <option label="Colorado">CO</option>
+                                    <option label="Connecticut">CT</option>
+                                    <option label="Delaware">DE</option>
+                                    <option label="Florida">FL</option>
+                                    <option label="Georgia">GA</option>
+                                    <option label="Hawaii">HI</option>
+                                    <option label="Idaho">ID</option>
+                                    <option label="Illinois">IL</option>
+                                    <option label="Indiana">IN</option>
+                                    <option label="Iowa">IA</option>
+                                    <option label="Kansas">KS</option>
+                                    <option label="Kentucky">KY</option>
+                                    <option label="Louisiana">LA</option>
+                                    <option label="Maine">ME</option>
+                                    <option label="Maryland">MD</option>
+                                    <option label="Massachusetts">MA</option>
+                                    <option label="Michigan">MI</option>
+                                    <option label="Minnesota">MN</option>
+                                    <option label="Mississippi">MS</option>
+                                    <option label="Missouri">MO</option>
+                                    <option label="Montana">MT</option>
+                                    <option label="Nebraska">NE</option>
+                                    <option label="Nevada">NV</option>
+                                    <option label="New Hampshire">NH</option>
+                                    <option label="New Jersey">NJ</option>
+                                    <option label="New Mexico">NM</option>
+                                    <option label="New York">NY</option>
+                                    <option label="North Carolina">NC</option>
+                                    <option label="North Dakota">ND</option>
+                                    <option label="Ohio">OH</option>
+                                    <option label="Oklahoma">OK</option>
+                                    <option label="Oregon">OR</option>
+                                    <option label="Pennsylvania">PA</option>
+                                    <option label="Rhode Island">RI</option>
+                                    <option label="South Carolina">SC</option>
+                                    <option label="South Dakota">SD</option>
+                                    <option label="Tennessee">TN</option>
+                                    <option label="Texas">TX</option>
+                                    <option label="Utah">UT</option>
+                                    <option label="Vermont">VT</option>
+                                    <option label="Virginia">VA</option>
+                                    <option label="Washington">WA</option>
+                                    <option label="West Virginia">WV</option>
+                                    <option label="Wisconsin">WI</option>
+                                    <option label="Wyoming">WY</option>
+                                </select>
+                                <label for="inputState" class="text-muted">State</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-floating">
+                            <input type="text" class="form-control" id="inputZip" placeholder="Zip">
+                            <label for="inputZip" class="text-muted">Zip</label>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="col-md-3 form-floating">
-                <input type="text" class="form-control" id="inputZip" placeholder="Zip">
-                <label for="inputZip" class="text-muted">Zip</label>
-            </div>
-            <!-- <div class="col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                    <label class="form-check-label" for="gridCheck">
-                        Check me out
-                    </label>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        Transaction Details
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <form class="row g-3 p-4" id="transactinfo">
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="invoice" placeholder="Invoice Number">
+                            <label for="invoice" class="text-muted">Invoice Number</label>
+                        </div>
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="comments" placeholder="Comments">
+                            <label for="comments" class="text-muted">Comments</label>
+                        </div>
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="amount" placeholder="Amount">
+                            <label for="amount" class="text-muted">Amount</label>
+                        </div>
+                    </form>
                 </div>
-            </div> -->
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Go!</button>
             </div>
-        </form>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                        Payment Information
+                    </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                    <div class="accordion-body">Placeholder content.</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Go!</button>
+        </div>
     </div>
 
 
