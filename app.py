@@ -31,8 +31,11 @@ def tranzact():
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox():
     datafromuser = json.loads(request.get_json())
-    print(datafromuser)
+    print(datafromuser)   
+    
 
+    
+    
     url = "https://x1.cardknox.com/gatewayjson"
     data = {
         "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
@@ -40,12 +43,14 @@ def sendtocardknox():
         "xSoftwareName": "tranzact",
         "xSoftwareVersion": "1.0",
         "xCommand": "cc:sale",
-        "xName": datafromuser['name'],
+        "xBillFirstName": str.join(' ',datafromuser['name'].split()[:-1]) if datafromuser['name'] else "",
+        "xBillLastName": datafromuser['name'].split()[-1] if datafromuser['name'] else "",
         "xEmail": datafromuser['email'],
-        "xStreet": datafromuser['address'],
+        "xBillPhone": datafromuser['phone'],
+        "xBillStreet": datafromuser['address'],
         "xBillCity": datafromuser['city'],
         "xBillState": datafromuser['state'],
-        "xZip": datafromuser['zip'],
+        "xBillZip": datafromuser['zip'],
         "xInvoice": datafromuser['invoice'],
         "xDescription": datafromuser['comments'],
         "xAmount": datafromuser['amount'],

@@ -24,13 +24,17 @@
                 </h2>
                 <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
                     <form class="row g-3 p-4" id="custinfo">
-                        <div class="col-md-6 form-floating">
-                            <input type="text" class="form-control" id="name" placeholder="Name">
-                            <label for="name" class="text-muted">Name</label>
+                        <div class="col-md-4 form-floating">
+                            <input type="text" class="form-control" id="name" placeholder="Full Name">
+                            <label for="name" class="text-muted">Full Name</label>
                         </div>
-                        <div class="col-md-6 form-floating">
+                        <div class="col-md-4 form-floating">
                             <input type="email" class="form-control" id="email" placeholder="Email">
                             <label for="email" class="text-muted">Email</label>
+                        </div>
+                        <div class="col-md-4 form-floating">
+                            <input type="number" class="form-control" id="phone" placeholder="Phone Number">
+                            <label for="phone" class="text-muted">Phone Number</label>
                         </div>
                         <div class="col-md-3 form-floating">
                             <input type="text" class="form-control" id="address" placeholder="Address">
@@ -141,7 +145,7 @@
                         <div class="col-md-4 form-floating">
                             <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number" src="https://cdn.cardknox.com/ifields/2.15.2309.2601/ifield.htm"></iframe>
                             <input type="hidden" class="form-control" id="card" placeholder="Card Number" data-ifields-id="card-number-token">
-                            <label for="card" class="text-muted">Card Number</label>
+                            <!-- <label for="card" class="text-muted">Card Number</label> -->
                         </div>
                         <div class="col-md-4 form-floating">
                             <input type="text" class="form-control" id="exp" placeholder="Expiration Date">
@@ -150,7 +154,7 @@
                         <div class="col-md-4 form-floating">
                             <iframe data-ifields-id="cvv" data-ifields-placeholder="CVV" src="https://cdn.cardknox.com/ifields/2.15.2309.2601/ifield.htm" ></iframe>
                             <input type="hidden" class="form-control" id="cvv" placeholder="Cvv" data-ifields-id="cvv-token">
-                            <label for="cvv" class="text-muted">Cvv</label>
+                            <!-- <label for="cvv" class="text-muted">Cvv</label> -->
                         </div>
                     </form>
                 </div>

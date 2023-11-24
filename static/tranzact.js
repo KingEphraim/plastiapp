@@ -15,10 +15,10 @@ const appendAlert = (message, type) => {
 
 const button = document.getElementById("sbmtbtn");
 button.addEventListener("click", () => {
-    setAccount("ifields_cardkndemodevc039cbc0007b426295100ecf", "tranzact", "1.0");
+    setAccount("ifields_cardkndemodevc039cbc0007b426295100ecf", "tranzact", "1.0");    
     getTokens(function () {
         var formData = {};
-        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv"];
+        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
 
         fields.forEach(function (field) {
             formData[field] = document.getElementById(field).value;
