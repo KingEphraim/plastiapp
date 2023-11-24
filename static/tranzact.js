@@ -20,7 +20,7 @@ button.addEventListener("click", () => {
     function handle3DSResults(actionCode, xCavv, xEciFlag, xRefNum, xAuthenticateStatus, xSignatureVerification) {
 
         var postData = {
-            tranzType:"V",
+            tranzType: "V",
             xRefNum: xRefNum,
             xCavv: xCavv,
             xEci: xEciFlag,
@@ -29,12 +29,7 @@ button.addEventListener("click", () => {
             x3dsActionCode: actionCode,
             x3dsError: ck3DS.error
         };
-
-        console.log(postData)
-
-
         sendtoserver(JSON.stringify(postData))
-        
     }
 
 
@@ -55,11 +50,11 @@ button.addEventListener("click", () => {
 
         sendtoserver(formDataJSON)
 
- 
+
     }, 10000,);
 });
 
-function sendtoserver(serverdata){
+function sendtoserver(serverdata) {
 
     fetch('/sendtocardknox', {
         method: 'POST',
