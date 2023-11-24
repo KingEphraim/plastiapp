@@ -56,7 +56,7 @@ button.addEventListener("click", () => {
         sendtoserver(formDataJSON)
 
  
-    }, 30000,);
+    }, 10000,);
 });
 
 function sendtoserver(serverdata){
