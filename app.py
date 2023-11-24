@@ -30,36 +30,52 @@ def tranzact():
 
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox():
-    datafromuser = json.loads(request.get_json())
+    #print(request.data)
+    datafromuser = request.get_json()
     print(datafromuser)   
     
 
+    if(datafromuser['tranzType'] == 'R'):
     
-    
-    url = "https://x1.cardknox.com/gatewayjson"
-    data = {
-        "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
-        "xVersion": "5.0.0",
-        "xSoftwareName": "tranzact",
-        "xSoftwareVersion": "1.0",
-        "xCommand": "cc:sale",
-        "xBillFirstName": str.join(' ',datafromuser['name'].split()[:-1]) if datafromuser['name'] else "",
-        "xBillLastName": datafromuser['name'].split()[-1] if datafromuser['name'] else "",
-        "xEmail": datafromuser['email'],
-        "xBillPhone": datafromuser['phone'],
-        "xBillStreet": datafromuser['address'],
-        "xBillCity": datafromuser['city'],
-        "xBillState": datafromuser['state'],
-        "xBillZip": datafromuser['zip'],
-        "xInvoice": datafromuser['invoice'],
-        "xDescription": datafromuser['comments'],
-        "xAmount": datafromuser['amount'],
-        "xCardnum": datafromuser['card'],
-        "xExp": datafromuser['exp'],
-        "xCvv": datafromuser['cvv'],
-
-
-    }
+        url = "https://x1.cardknox.com/gatewayjson"
+        data = {
+            "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
+            "xVersion": "5.0.0",
+            "xSoftwareName": "tranzact",
+            "xSoftwareVersion": "1.0",
+            "xCommand": "cc:sale",
+            "xBillFirstName": str.join(' ',datafromuser['name'].split()[:-1]) if datafromuser['name'] else "",
+            "xBillLastName": datafromuser['name'].split()[-1] if datafromuser['name'] else "",
+            "xEmail": datafromuser['email'],
+            "xBillPhone": datafromuser['phone'],
+            "xBillStreet": datafromuser['address'],
+            "xBillCity": datafromuser['city'],
+            "xBillState": datafromuser['state'],
+            "xBillZip": datafromuser['zip'],
+            "xInvoice": datafromuser['invoice'],
+            "xDescription": datafromuser['comments'],
+            "xAmount": datafromuser['amount'],
+            "xCardnum": datafromuser['card'],
+            "xExp": datafromuser['exp'],
+            "xCvv": datafromuser['cvv'],
+        }
+    elif(datafromuser['tranzType'] == 'V'):
+        url = "https://x1.cardknox.com/verifyjson"
+        data = {
+            "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
+            "xVersion": "5.0.0",
+            "xSoftwareName": "tranzact",
+            "xSoftwareVersion": "1.0",
+            "xRefNum": datafromuser['xRefNum'],
+            "xCavv": datafromuser['xCavv'],
+            "xEci": datafromuser['xEci'],
+            "x3dsAuthenticationStatus": datafromuser['x3dsAuthenticationStatus'],
+            "x3dsSignatureVerificationStatus": datafromuser['x3dsSignatureVerificationStatus'],
+            "x3dsActionCode": datafromuser['x3dsActionCode'],
+            "x3dsError": datafromuser['x3dsError']
+        }
+    else:
+        return {'message':'missing tranzType'}
     json_data = json.dumps(data)
     headers = {"Content-Type": "application/json"}
     response = requests.post(url, data=json_data, headers=headers)

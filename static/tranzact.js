@@ -15,7 +15,29 @@ const appendAlert = (message, type) => {
 
 const button = document.getElementById("sbmtbtn");
 button.addEventListener("click", () => {
-    setAccount("ifields_cardkndemodevc039cbc0007b426295100ecf", "tranzact", "1.0");    
+    setAccount("ifields_cardkndemodevc039cbc0007b426295100ecf", "tranzact", "1.0");
+    enable3DS('staging', handle3DSResults);
+    function handle3DSResults(actionCode, xCavv, xEciFlag, xRefNum, xAuthenticateStatus, xSignatureVerification) {
+
+        var postData = {
+            tranzType:"V",
+            xRefNum: xRefNum,
+            xCavv: xCavv,
+            xEci: xEciFlag,
+            x3dsAuthenticationStatus: xAuthenticateStatus,
+            x3dsSignatureVerificationStatus: xSignatureVerification,
+            x3dsActionCode: actionCode,
+            x3dsError: ck3DS.error
+        };
+
+        console.log(postData)
+
+
+        sendtoserver(JSON.stringify(postData))
+        
+    }
+
+
     getTokens(function () {
         var formData = {};
         var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
@@ -23,7 +45,7 @@ button.addEventListener("click", () => {
         fields.forEach(function (field) {
             formData[field] = document.getElementById(field).value;
         });
-
+        formData['tranzType'] = "R";
         // Convert JSON to string for display or further processing
         var formDataJSON = JSON.stringify(formData);
 
@@ -31,25 +53,35 @@ button.addEventListener("click", () => {
         // console.log(formDataJSON);
         // appendAlert(formDataJSON, 'success');
 
-        fetch('/sendtocardknox', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataJSON)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.xResult == "A") {
-                    appendAlert(JSON.stringify(data), 'success');
-                } else {
-                    appendAlert(JSON.stringify(data), 'info');
-                }
-            })
-            .catch(error => console.error(error));
+        sendtoserver(formDataJSON)
+
+ 
     }, 30000,);
 });
 
+function sendtoserver(serverdata){
+
+    fetch('/sendtocardknox', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: serverdata
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.xResult == "A") {
+                appendAlert(JSON.stringify(data), 'success');
+            } else if (data.xResult == "V") {
+                verify3DS(data)
+                appendAlert(JSON.stringify(data), 'info');
+            }
+            else {
+                appendAlert(JSON.stringify(data), 'danger');
+            }
+        })
+        .catch(error => console.error(error));
+}
 
 
 
