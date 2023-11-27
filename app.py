@@ -38,11 +38,12 @@ def sendtocardknox():
 
         url = "https://x1.cardknox.com/gatewayjson"
         data = {
-            "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
+            "xkey": config['xKey'],
             "xVersion": "5.0.0",
             "xSoftwareName": "tranzact",
             "xSoftwareVersion": "1.0",
             "xCommand": "cc:sale",
+            "xVendorID": "128717",
             "xBillFirstName": str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else "",
             "xBillLastName": datafromuser['name'].split()[-1] if datafromuser['name'] else "",
             "xEmail": datafromuser['email'],
@@ -61,7 +62,7 @@ def sendtocardknox():
     elif (datafromuser['tranzType'] == 'V'):
         url = "https://x1.cardknox.com/verifyjson"
         data = {
-            "xKey": "cardkndemodev59e8bef403ed4aa08318b954f2d1107c",
+            "xkey": config['xKey'],
             "xVersion": "5.0.0",
             "xSoftwareName": "tranzact",
             "xSoftwareVersion": "1.0",
