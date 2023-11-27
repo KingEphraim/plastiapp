@@ -1,4 +1,5 @@
-window.onload = function() {
+window.onload = function () {
+    enable3DS('staging', handle3DSResults);
     let style = {
         display: 'block',
         width: '90%',
@@ -15,7 +16,21 @@ window.onload = function() {
     };
     setIfieldStyle('card-number', style);
     setIfieldStyle('cvv', style);
-  };
+};
+function handle3DSResults(actionCode, xCavv, xEciFlag, xRefNum, xAuthenticateStatus, xSignatureVerification) {
+
+    var postData = {
+        tranzType: "V",
+        xRefNum: xRefNum,
+        xCavv: xCavv,
+        xEci: xEciFlag,
+        x3dsAuthenticationStatus: xAuthenticateStatus,
+        x3dsSignatureVerificationStatus: xSignatureVerification,
+        x3dsActionCode: actionCode,
+        x3dsError: ck3DS.error
+    };
+    sendtoserver(JSON.stringify(postData))
+}
 
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 const appendAlert = (message, type) => {
@@ -35,21 +50,8 @@ const appendAlert = (message, type) => {
 const button = document.getElementById("sbmtbtn");
 button.addEventListener("click", () => {
     setAccount("ifields_cardkndemodevc039cbc0007b426295100ecf", "tranzact", "1.0");
-    enable3DS('staging', handle3DSResults);
-    function handle3DSResults(actionCode, xCavv, xEciFlag, xRefNum, xAuthenticateStatus, xSignatureVerification) {
 
-        var postData = {
-            tranzType: "V",
-            xRefNum: xRefNum,
-            xCavv: xCavv,
-            xEci: xEciFlag,
-            x3dsAuthenticationStatus: xAuthenticateStatus,
-            x3dsSignatureVerificationStatus: xSignatureVerification,
-            x3dsActionCode: actionCode,
-            x3dsError: ck3DS.error
-        };
-        sendtoserver(JSON.stringify(postData))
-    }
+
 
 
     getTokens(function () {
