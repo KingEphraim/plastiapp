@@ -1,3 +1,22 @@
+window.onload = function() {
+    let style = {
+        display: 'block',
+        width: '90%',
+        'font-size': '1rem',
+        'font-weight': '400',
+        'line-height': '1.5',
+        color: 'var(--bs-body-color)',
+        appearance: 'none',
+        'background-color': 'var(--bs-body-bg)',
+        'background-clip': 'padding-box',
+        border: 'var(--bs-border-width) solid var(--bs-border-color)',
+        'border-radius': 'var(--bs-border-radius)',
+        transition: 'border-color .15s ease-in-out,box-shadow .15s ease-in-out',
+    };
+    setIfieldStyle('card-number', style);
+    setIfieldStyle('cvv', style);
+  };
+
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 const appendAlert = (message, type) => {
     const wrapper = document.createElement('div')
