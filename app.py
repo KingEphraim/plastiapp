@@ -400,6 +400,10 @@ def your_endpoint():
 def note():
     return render_template('note.html')
 
+@app.route('/justbored')
+def justbored():
+    return render_template('justbored.html')
+
 
 if __name__ == '__main__':
     app.run()
