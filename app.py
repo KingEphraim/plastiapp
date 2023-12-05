@@ -403,3 +403,5 @@ def note():
 
 if __name__ == '__main__':
     app.run()
+    #dev
+    # app.run(debug=True)

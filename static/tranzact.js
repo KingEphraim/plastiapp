@@ -1,18 +1,18 @@
 window.onload = function () {
     enable3DS('staging', handle3DSResults);
     let style = {
-        display: 'block',
-        width: '90%',
-        'font-size': '1rem',
-        'font-weight': '400',
-        'line-height': '1.5',
-        color: 'var(--bs-body-color)',
-        appearance: 'none',
-        'background-color': 'var(--bs-body-bg)',
-        'background-clip': 'padding-box',
-        border: 'var(--bs-border-width) solid var(--bs-border-color)',
-        'border-radius': 'var(--bs-border-radius)',
-        transition: 'border-color .15s ease-in-out,box-shadow .15s ease-in-out',
+        'background-color': 'rgb(255, 255, 255)',
+        'border-color': 'rgb(222, 226, 230)',
+        'border-radius': '6px',
+        'border-style': 'solid',
+         'border-width': '1px',        
+         display: 'block',
+         'box-sizing': 'border-box',
+          width: '100%',
+         'overflow': 'hidden',
+         'font-size': '1rem',
+         'font-weight': '400',
+         'line-height': '24px',
     };
     setIfieldStyle('card-number', style);
     setIfieldStyle('cvv', style);
