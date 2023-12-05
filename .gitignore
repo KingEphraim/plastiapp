@@ -2,3 +2,7 @@
 *.json
 # Ignore the virtualenv
 env/
+
+__pycache__/
+*.pyc
+systemlogs.log

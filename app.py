@@ -7,6 +7,7 @@ import io
 import boto3
 import uuid
 import os
+import systemlogs
 with open('config.json') as f:
     config = json.load(f)
 
@@ -30,9 +31,12 @@ def tranzact():
 
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox():
+    systemlogs.configure_logging()
     # print(request.data)
     datafromuser = request.get_json()
     print(datafromuser)
+    
+    systemlogs.log_info(datafromuser)
 
     if (datafromuser['tranzType'] == 'R'):
 
@@ -86,6 +90,7 @@ def sendtocardknox():
         print("POST request failed. Status code:", response.status_code)
         print("Response:", response.text)
 
+    systemlogs.log_info(response.json())
     return response.json()
 
 
