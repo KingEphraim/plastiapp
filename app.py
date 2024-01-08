@@ -401,14 +401,60 @@ def your_endpoint():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/invoice')
-def invoice():
-    return render_template('invoice.html')
 
 @app.route('/customer')
 def justbored():
     return render_template('customer.html')
 
+try:
+    with open('invoices.json', 'r') as file:
+        invoices = json.load(file)
+except FileNotFoundError:
+
+    invoices = []
+
+@app.route('/invoice')
+def invoice():
+    return render_template('invoice.html')
+
+
+@app.route('/create_invoice', methods=['POST'])
+def create_invoice():
+    customer_name = request.form.get('customer_name')
+    amount = request.form.get('amount')
+    email = request.form.get('customer_email')
+
+    # Create invoice dictionary
+    invoice_data = {
+        'customer_name': customer_name,
+        'amount': amount,
+        'email': email,
+    }
+
+    # Add invoice to the list
+    invoices.append(invoice_data)
+
+    # Save invoices to a JSON file
+    save_invoices_to_json()
+
+    return jsonify({'status': 'success'})
+
+@app.route('/delete_invoice/<int:index>', methods=['DELETE'])
+def delete_invoice(index):
+    if 0 <= index < len(invoices):
+        del invoices[index]
+        save_invoices_to_json()
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid index'})
+
+@app.route('/invoices')
+def show_invoices():
+    return jsonify({'invoices': invoices})
+
+def save_invoices_to_json():
+    with open('invoices.json', 'w') as file:
+        json.dump(invoices, file)
 
 if __name__ == '__main__':
     app.run()
