@@ -401,13 +401,13 @@ def your_endpoint():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/note')
-def note():
-    return render_template('note.html')
+@app.route('/invoice')
+def invoice():
+    return render_template('invoice.html')
 
-@app.route('/justbored')
+@app.route('/customer')
 def justbored():
-    return render_template('justbored.html')
+    return render_template('customer.html')
 
 
 if __name__ == '__main__':
