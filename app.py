@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from databaseop import add_item_to_database, update_item_in_database
 import requests
 import json
 import hashlib
@@ -34,14 +35,20 @@ def sendtocardknox():
     systemlogs.configure_logging()
     # print(request.data)
     datafromuser = request.get_json()
-    print(datafromuser)
+    #print(datafromuser)
     
     systemlogs.log_info(datafromuser)
+
+    try:
+        inserted_id = add_item_to_database(datafromuser)        
+        print(f"Item added to the database with ID: {inserted_id}")
+    except Exception as e:
+        print(f"Error: {e}")
 
     if (datafromuser['tranzType'] == 'R'):
 
         url = "https://x1.cardknox.com/gatewayjson"
-        data = {
+        tockdata = {
             "xkey": config['xKey'],
             "xVersion": "5.0.0",
             "xSoftwareName": "tranzact",
@@ -65,7 +72,7 @@ def sendtocardknox():
         }
     elif (datafromuser['tranzType'] == 'V'):
         url = "https://x1.cardknox.com/verifyjson"
-        data = {
+        tockdata = {
             "xkey": config['xKey'],
             "xVersion": "5.0.0",
             "xSoftwareName": "tranzact",
@@ -80,8 +87,20 @@ def sendtocardknox():
         }
     else:
         return {'message': 'missing tranzType'}
-    json_data = json.dumps(data)
-    headers = {"Content-Type": "application/json"}
+    
+    
+   
+
+
+    
+    try:
+        print(tockdata)
+        json_data = json.dumps(tockdata)
+        
+    except Exception as e:
+        print("Error:", e)
+
+    headers = {"Content-Type": "application/json"} 
     response = requests.post(url, data=json_data, headers=headers)
     if response.status_code == 200:
         print("POST request successful!")
@@ -90,7 +109,11 @@ def sendtocardknox():
         print("POST request failed. Status code:", response.status_code)
         print("Response:", response.text)
 
+    item_id = inserted_id
+    result = update_item_in_database(item_id, response.json())
+
     systemlogs.log_info(response.json())
+    
     return response.json()
 
 
