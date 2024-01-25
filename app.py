@@ -49,41 +49,41 @@ def sendtocardknox():
 
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
-            "xkey": config['xKey'],
-            "xVersion": "5.0.0",
-            "xSoftwareName": "tranzact",
-            "xSoftwareVersion": "1.0",
-            "xCommand": "cc:sale",
-            "xVendorID": "128717",
-            "xBillFirstName": str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else "",
-            "xBillLastName": datafromuser['name'].split()[-1] if datafromuser['name'] else "",
-            "xEmail": datafromuser['email'],
-            "xBillPhone": datafromuser['phone'],
-            "xBillStreet": datafromuser['address'],
-            "xBillCity": datafromuser['city'],
-            "xBillState": datafromuser['state'],
-            "xBillZip": datafromuser['zip'],
-            "xInvoice": datafromuser['invoice'],
-            "xDescription": datafromuser['comments'],
-            "xAmount": datafromuser['amount'],
-            "xCardnum": datafromuser['card'],
-            "xExp": datafromuser['exp'],
-            "xCvv": datafromuser['cvv'],
+            'xkey': config['xKey'],
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xCommand': 'cc:sale',
+            'xVendorID': '128717',
+            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
+            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
+            'xEmail': datafromuser['email'],
+            'xBillPhone': datafromuser['phone'],
+            'xBillStreet': datafromuser['address'],
+            'xBillCity': datafromuser['city'],
+            'xBillState': datafromuser['state'],
+            'xBillZip': datafromuser['zip'],
+            'xInvoice': datafromuser['invoice'],
+            'xDescription': datafromuser['comments'],
+            'xAmount': datafromuser['amount'],
+            'xCardnum': datafromuser['card'],
+            'xExp': datafromuser['exp'],
+            'xCvv': datafromuser['cvv'],
         }
     elif (datafromuser['tranzType'] == 'V'):
-        url = "https://x1.cardknox.com/verifyjson"
+        url = 'https://x1.cardknox.com/verifyjson'
         tockdata = {
-            "xkey": config['xKey'],
-            "xVersion": "5.0.0",
-            "xSoftwareName": "tranzact",
-            "xSoftwareVersion": "1.0",
-            "xRefNum": datafromuser['xRefNum'],
-            "xCavv": datafromuser['xCavv'],
-            "xEci": datafromuser['xEci'],
-            "x3dsAuthenticationStatus": datafromuser['x3dsAuthenticationStatus'],
-            "x3dsSignatureVerificationStatus": datafromuser['x3dsSignatureVerificationStatus'],
-            "x3dsActionCode": datafromuser['x3dsActionCode'],
-            "x3dsError": datafromuser['x3dsError']
+            'xkey': config['xKey'],
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xRefNum': datafromuser['xRefNum'],
+            'xCavv': datafromuser['xCavv'],
+            'xEci': datafromuser['xEci'],
+            'x3dsAuthenticationStatus': datafromuser['x3dsAuthenticationStatus'],
+            'x3dsSignatureVerificationStatus': datafromuser['x3dsSignatureVerificationStatus'],
+            'x3dsActionCode': datafromuser['x3dsActionCode'],
+            'x3dsError': datafromuser['x3dsError']
         }
     else:
         return {'message': 'missing tranzType'}
