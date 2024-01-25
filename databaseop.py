@@ -1,9 +1,13 @@
 from pymongo import MongoClient
+import json
+
+with open('config.json') as f:
+    config = json.load(f)
 
 def add_item_to_database(item):
     try:
         # Connect to MongoDB
-        client = MongoClient('mongodb+srv://ephraim:RT4zza2QBLyac750@transactions.zevpjvs.mongodb.net/?retryWrites=true&w=majority')
+        client = MongoClient(config['mongodbstring'])
         db = client['tranzact']
 
         
@@ -25,7 +29,7 @@ def add_item_to_database(item):
 def update_item_in_database(item_id, updated_data):
     try:
         # Connect to MongoDB
-        client = MongoClient('mongodb+srv://ephraim:RT4zza2QBLyac750@transactions.zevpjvs.mongodb.net/?retryWrites=true&w=majority')
+        client = MongoClient(config['mongodbstring'])
         db = client['tranzact']
         
         # Specify the collection
