@@ -87,6 +87,30 @@ def sendtocardknox():
             'x3dsActionCode': datafromuser['x3dsActionCode'],
             'x3dsError': datafromuser['x3dsError']
         }
+    elif(datafromuser['tranzType'] == 'GP'):
+
+        url = "https://x1.cardknox.com/gatewayjson"
+        tockdata = {
+            'xkey': config['xKey'],
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xCommand': 'cc:sale',
+            'xVendorID': '128717',
+            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
+            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
+            'xEmail': datafromuser['email'],
+            'xBillPhone': datafromuser['phone'],
+            'xBillStreet': datafromuser['address'],
+            'xBillCity': datafromuser['city'],
+            'xBillState': datafromuser['state'],
+            'xBillZip': datafromuser['zip'],
+            'xInvoice': datafromuser['invoice'],
+            'xDescription': datafromuser['comments'],
+            'xAmount': datafromuser['amount'],
+            'xCardnum': datafromuser['gptoken'],
+            'xDigitalWalletType': 'googlepay',
+        }
     else:
         return {'message': 'missing tranzType'}
     
