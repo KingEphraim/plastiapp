@@ -2,6 +2,7 @@
 *.json
 # Ignore the virtualenv
 env/
+myenv/
 
 __pycache__/
 *.pyc

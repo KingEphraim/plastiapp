@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from databaseop import add_item_to_database, update_item_in_database
+#from databaseop import add_item_to_database, update_item_in_database
 import requests
 import json
 import hashlib
@@ -32,18 +32,20 @@ def tranzact():
 
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox():
+    print("Hi1")
     systemlogs.configure_logging()
+    print("Hi2")
     # print(request.data)
     datafromuser = request.get_json()
     #print(datafromuser)
-    
+    print("Hi3")
     systemlogs.log_info(datafromuser)
 
-    try:
-        inserted_id = add_item_to_database(datafromuser)        
-        print(f"Item added to the database with ID: {inserted_id}")
-    except Exception as e:
-        print(f"Error: {e}")
+    # try:
+    #     inserted_id = add_item_to_database(datafromuser)        
+    #     print(f"Item added to the database with ID: {inserted_id}")
+    # except Exception as e:
+    #     print(f"Error: {e}")
 
     if (datafromuser['tranzType'] == 'R'):
 
@@ -109,8 +111,8 @@ def sendtocardknox():
         print("POST request failed. Status code:", response.status_code)
         print("Response:", response.text)
 
-    item_id = inserted_id
-    result = update_item_in_database(item_id, response.json())
+    # item_id = inserted_id
+    # result = update_item_in_database(item_id, response.json())
 
     systemlogs.log_info(response.json())
     
