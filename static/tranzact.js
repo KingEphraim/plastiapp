@@ -126,7 +126,7 @@ const gpRequest = {
 		return processGP(paymentResponse);
 	},
 	onPaymentCanceled: function () {
-		displayLogToast({ xStatus: "Canceled", xRefNum: "" }, "Google Pay");
+        setTimeout(function () { alert("Payment was canceled") }, 500);
 	},
 };
 //initiates googlepay
@@ -153,6 +153,7 @@ function gpayEnv() {
 //sends token and fields to server
 function processGP(paymentResponse) {
 	return new Promise(function (resolve, reject) {
+        try{
 		paymentToken =
 			paymentResponse.paymentData.paymentMethodData.tokenizationData
 				.token;
@@ -174,18 +175,10 @@ function processGP(paymentResponse) {
         
 
         sendtoserver(formDataJSON)
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.Response.xStatus) {
-					if (data.Response.xStatus === "Approved") {
-						resolve(data);
-					} else {
-						reject(data);
-					}
-				} else {
-					reject(data);
-				}
-				//displayLogToast(data.Response, "Google Pay");
-			});
+			resolve()
+			
+        }catch(err){
+            reject(err);
+        }
 	});
 }
