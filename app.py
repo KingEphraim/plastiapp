@@ -31,14 +31,10 @@ def tranzact():
 
 
 @app.route('/sendtocardknox', methods=['POST'])
-def sendtocardknox():
-    print("Hi1")
-    systemlogs.configure_logging()
-    print("Hi2")
-    # print(request.data)
-    datafromuser = request.get_json()
-    #print(datafromuser)
-    print("Hi3")
+def sendtocardknox(): 
+       
+    systemlogs.configure_logging()        
+    datafromuser = request.get_json()    
     systemlogs.log_info(datafromuser)
 
     # try:
