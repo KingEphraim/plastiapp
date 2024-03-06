@@ -21,17 +21,17 @@ window.onload = function () {
 
 
 };
-function handle3DSResults(actionCode, xCavv, xEciFlag, xRefNum, xAuthenticateStatus, xSignatureVerification) {
+function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticationStatus, x3dsSignatureVerificationStatus) {
 
     var postData = {
         tranzType: "V",
-        xRefNum: xRefNum,
+        x3dsActionCode: x3dsActionCode,
         xCavv: xCavv,
-        xEci: xEciFlag,
-        x3dsAuthenticationStatus: xAuthenticateStatus,
-        x3dsSignatureVerificationStatus: xSignatureVerification,
-        x3dsActionCode: actionCode,
-        x3dsError: ck3DS.error
+        xEci: xEci,
+        xRefNum: xRefNum, 
+        x3dsAuthenticationStatus: x3dsAuthenticationStatus,
+        x3dsSignatureVerificationStatus: x3dsSignatureVerificationStatus,
+        //x3dsError: ck3DS.error
     };
     sendtoserver(JSON.stringify(postData))
 }

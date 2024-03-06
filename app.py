@@ -76,13 +76,13 @@ def sendtocardknox():
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
-            'xRefNum': datafromuser['xRefNum'],
+            'x3dsActionCode': datafromuser['x3dsActionCode'],
             'xCavv': datafromuser['xCavv'],
             'xEci': datafromuser['xEci'],
+            'xRefNum': datafromuser['xRefNum'],
             'x3dsAuthenticationStatus': datafromuser['x3dsAuthenticationStatus'],
-            'x3dsSignatureVerificationStatus': datafromuser['x3dsSignatureVerificationStatus'],
-            'x3dsActionCode': datafromuser['x3dsActionCode'],
-            'x3dsError': datafromuser['x3dsError']
+            'x3dsSignatureVerificationStatus': datafromuser['x3dsSignatureVerificationStatus'],            
+            #'x3dsError': datafromuser['x3dsError']
         }
     elif(datafromuser['tranzType'] == 'GP'):
 
@@ -232,9 +232,14 @@ def receipt():
 def handle_webhook():
     try:
         content_type = request.headers['Content-Type']
-        print(content_type)
+        mylogs.add_to_log(f'content_type: {content_type}')
     except KeyError:
         return "Content-Type header is missing", 400
+    try:
+        cksig = request.headers['ck-signature']
+        mylogs.add_to_log(f'ck-sig: {cksig}')
+    except KeyError:
+        mylogs.add_to_log(f'missing ck signature')
 
     ck_signature = request.headers.get('ck-signature')
     if content_type == 'application/json':
