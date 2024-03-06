@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify
-#from databaseop import add_item_to_database, update_item_in_database
 import requests
 import json
 import hashlib
@@ -8,10 +7,10 @@ import io
 import boto3
 import uuid
 import os
-import systemlogs
+import mylogs
+#from databaseop import add_item_to_database, update_item_in_database
 with open('config.json') as f:
-    config = json.load(f)
-
+    config = json.load(f) 
 app = Flask(__name__)
 
 
@@ -32,10 +31,12 @@ def tranzact():
 
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox(): 
-       
-    systemlogs.configure_logging()        
-    datafromuser = request.get_json()    
-    systemlogs.log_info(datafromuser)
+    mylogs.add_to_log(f'Incoming data: {request.data}')    
+      
+    
+    
+
+    datafromuser = request.get_json()  
 
     # try:
     #     inserted_id = add_item_to_database(datafromuser)        
@@ -105,7 +106,7 @@ def sendtocardknox():
             'xDescription': datafromuser['comments'],
             'xAmount': datafromuser['amount'],
             'xCardnum': datafromuser['gptoken'],
-            'xDigitalWalletType': 'googlepay',
+            'xDigitalWalletType': 'GooglePay',
         }
     else:
         return {'message': 'missing tranzType'}
@@ -116,25 +117,25 @@ def sendtocardknox():
 
     
     try:
-        print(tockdata)
         json_data = json.dumps(tockdata)
         
     except Exception as e:
         print("Error:", e)
 
     headers = {"Content-Type": "application/json"} 
+    mylogs.add_to_log(f'Data sent to ck: {json_data}')  
     response = requests.post(url, data=json_data, headers=headers)
     if response.status_code == 200:
-        print("POST request successful!")
-        print("Response:", response.json())
+        ck_response = response.json()
+        mylogs.add_to_log(f'Ck 200 response: {ck_response}')  
+        
     else:
-        print("POST request failed. Status code:", response.status_code)
-        print("Response:", response.text)
+        mylogs.add_to_log(f'Ck fail response: statuscode - {response.status_code} - error{response.text}')
+        
 
     # item_id = inserted_id
     # result = update_item_in_database(item_id, response.json())
 
-    systemlogs.log_info(response.json())
     
     return response.json()
 

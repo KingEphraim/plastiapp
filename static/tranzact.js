@@ -18,7 +18,7 @@ window.onload = function () {
     setIfieldStyle('card-number', style);
     setIfieldStyle('cvv', style);
 
-    
+
 };
 function handle3DSResults(actionCode, xCavv, xEciFlag, xRefNum, xAuthenticateStatus, xSignatureVerification) {
 
@@ -105,80 +105,70 @@ function sendtoserver(serverdata) {
 //googlepay object
 
 const gpRequest = {
-	merchantInfo: {
-		merchantName: "test1",
-	},
-	buttonOptions: {
-		buttonSizeMode: GPButtonSizeMode.fill,
-	},
-	billingParams: {
-		billingAddressRequired: true,
-		billingAddressFormat: GPBillingAddressFormat.full,
-	},
-	onGetTransactionInfo: function () {
-		return {
-			totalPriceStatus: "FINAL",
-			currencyCode: "USD",
-			totalPrice: amount.value,
-		};
-	},
-	onProcessPayment: function (paymentResponse) {
-		return processGP(paymentResponse);
-	},
-	onPaymentCanceled: function () {
+    merchantInfo: {
+        merchantName: "Tranzact",
+    },
+    buttonOptions: {
+        buttonSizeMode: GPButtonSizeMode.fill,
+    },
+    billingParams: {
+        billingAddressRequired: true,
+        billingAddressFormat: GPBillingAddressFormat.full,
+    },
+    onGetTransactionInfo: function () {
+        return {
+            totalPriceStatus: "FINAL",
+            currencyCode: "USD",
+            totalPrice: amount.value,
+        };
+    },
+    onProcessPayment: function (paymentResponse) {
+        return processGP(paymentResponse);
+    },
+    onPaymentCanceled: function () {
         setTimeout(function () { alert("Payment was canceled") }, 500);
-	},
+    },
 };
 //initiates googlepay
 function initGP() {
-	console.log("googlepay init");
-	return {
-		merchantInfo: gpRequest.merchantInfo,
-		buttonOptions: gpRequest.buttonOptions,
-		onGetTransactionInfo: "gpRequest.onGetTransactionInfo",
-		billingParameters: gpRequest.billingParams,
-		onProcessPayment: "gpRequest.onProcessPayment",
-		onPaymentCanceled: "gpRequest.onPaymentCanceled",
-	};
+    console.log("googlepay init");
+    return {
+        merchantInfo: gpRequest.merchantInfo,
+        buttonOptions: gpRequest.buttonOptions,
+        onGetTransactionInfo: "gpRequest.onGetTransactionInfo",
+        environment: "PRODUCTION",
+        billingParameters: gpRequest.billingParams,
+        onProcessPayment: "gpRequest.onProcessPayment",
+        onPaymentCanceled: "gpRequest.onPaymentCanceled",
+    };
 }
-//checks if test or production for googlepay
-function gpayEnv() {
-	const gpenv = document.getElementById("gpay-environment").value;
-	if (gpenv === "production") {
-		return "PRODUCTION";
-	} else {
-		return "TEST";
-	}
-}
+
 //sends token and fields to server
 function processGP(paymentResponse) {
-	return new Promise(function (resolve, reject) {
-        try{
-		paymentToken =
-			paymentResponse.paymentData.paymentMethodData.tokenizationData
-				.token;
-		encodedToken = window.btoa(paymentToken);
-		
-		console.log(JSON.stringify({  paymentResponse, encodedToken }));
-        
-        var formData = {};
-        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount",  "phone"];
+    return new Promise(function (resolve, reject) {
+        try {
+            paymentToken = paymentResponse.paymentData.paymentMethodData.tokenizationData.token;
+            encodedToken = window.btoa(paymentToken);
+            console.log(JSON.stringify({ paymentResponse, encodedToken }));
 
-        fields.forEach(function (field) {
-            formData[field] = document.getElementById(field).value;
-        });
-        formData['tranzType'] = "GP";
-        formData['gptoken'] = encodedToken;
-        
-        var formDataJSON = JSON.stringify(formData);
+            var formData = {};
+            var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
 
-        
+            fields.forEach(function (field) {
+                formData[field] = document.getElementById(field).value;
+            });
+            formData['tranzType'] = "GP";
+            formData['gptoken'] = encodedToken;
 
-        sendtoserver(formDataJSON)
-			resolve()
-			
-        }catch(err){
+            var formDataJSON = JSON.stringify(formData);
+
+
+
+            sendtoserver(formDataJSON)
+            resolve()
+
+        } catch (err) {
             reject(err);
         }
-	});
+    });
 }
