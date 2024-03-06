@@ -109,7 +109,9 @@ const gpRequest = {
         merchantName: "Tranzact",
     },
     buttonOptions: {
-        buttonSizeMode: GPButtonSizeMode.fill,
+        buttonColor: GPButtonColor.default,
+        buttonType: GPButtonType.plain,
+        buttonSizeMode: GPButtonSizeMode.fill
     },
     billingParams: {
         billingAddressRequired: true,
