@@ -7,6 +7,7 @@ window.onload = function () {
         'border-radius': '6px',
         'border-style': 'solid',
         'border-width': '1px',
+        padding: '1rem .75rem',
         display: 'block',
         'box-sizing': 'border-box',
         width: '100%',
