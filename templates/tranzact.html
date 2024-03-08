@@ -176,9 +176,12 @@
 
         <form class="row g-3 p-4" id="cardinfo">
             <div class="col-12 ">
-                
-                    <button class="btn btn-primary d-grid gap-2 col-6 mx-auto" type="button" id="sbmtbtn">Pay Now</button>
-                
+                <div class=" d-grid gap-2 col-6 mx-auto">
+                    <button class="btn btn-primary " type="button" id="sbmtbtn"  >    
+                        <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span id="sbmtbtncont" role="status">Pay Now</span>
+                      </button>
+                </div>
             </div>
             <div class="col-12 ">
                 

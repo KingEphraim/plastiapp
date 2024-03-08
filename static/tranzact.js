@@ -1,3 +1,21 @@
+//global params
+const sbmtbtn = document.getElementById("sbmtbtn");
+const sbmtbtnspin = document.getElementById("sbmtbtnspin");
+const sbmtbtncont = document.getElementById("sbmtbtncont");
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type) => {
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('')
+
+    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
+    sbmtbtntoggle('on');
+}
+
 window.onload = function () {
     ckGooglePay.enableGooglePay({ amountField: "amount" });
     enable3DS('staging', handle3DSResults);
@@ -28,7 +46,7 @@ function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticati
         x3dsActionCode: x3dsActionCode,
         xCavv: xCavv,
         xEci: xEci,
-        xRefNum: xRefNum, 
+        xRefNum: xRefNum,
         x3dsAuthenticationStatus: x3dsAuthenticationStatus,
         x3dsSignatureVerificationStatus: x3dsSignatureVerificationStatus,
         //x3dsError: ck3DS.error
@@ -36,28 +54,15 @@ function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticati
     sendtoserver(JSON.stringify(postData))
 }
 
-const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-const appendAlert = (message, type) => {
-    const wrapper = document.createElement('div')
-    wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-    ].join('')
-
-    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
-}
 
 
 
-const button = document.getElementById("sbmtbtn");
-button.addEventListener("click", () => {
+
+
+
+sbmtbtn.addEventListener("click", () => {
+    sbmtbtntoggle('off');
     setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
-
-
-
-
     getTokens(function () {
         var formData = {};
         var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
@@ -174,4 +179,30 @@ function processGP(paymentResponse) {
             reject(err);
         }
     });
+}
+
+//PayButtonToggle
+function sbmtbtntoggle(state) {
+
+
+
+    if (state === 'on') {
+        sbmtbtn.disabled = false;
+        sbmtbtnspin.hidden = true;
+        sbmtbtncont.textContent = "Pay Now";
+        // Perform actions when the switch is turned on
+        console.log('Switch is ON');
+        // Add more code as needed
+    } else if (state === 'off') {
+        sbmtbtn.disabled = true;
+        sbmtbtnspin.hidden = false;
+        sbmtbtncont.textContent = "Please Wait";
+
+        // Perform actions when the switch is turned off
+        console.log('Switch is OFF');
+        // Add more code as needed
+    } else {
+        // Handle invalid state
+        console.error('Invalid state. Please provide "on" or "off".');
+    }
 }
