@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for,session
 import requests
 import json
 import hashlib
@@ -8,24 +8,93 @@ import boto3
 import uuid
 import os
 import mylogs
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+from pymongo.errors import OperationFailure
+from werkzeug.security import generate_password_hash, check_password_hash
 #from databaseop import add_item_to_database, update_item_in_database
 with open('config.json') as f:
     config = json.load(f) 
 app = Flask(__name__)
+
+app.secret_key = config['secret_key']  # Change this to a secure secret key
+client = MongoClient(config['client'],server_api=ServerApi('1'))
+db = client[config['db']]  # Change this to your actual database name
+users_collection = db["users"]
+
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/register')
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template('register.html')
+    try:
+        client.admin.command('ping')       
+        mylogs.add_to_log("Pinged your deployment. You successfully connected to MongoDB!")  
+    except Exception as e:        
+        mylogs.add_to_log(f"MongoFail: {e}")  
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
 
-@app.route('/login')
+        try:
+            # Check if username already exists
+            if users_collection.find_one({"username": username}):
+                return render_template("register.html", message="Username already exists.")
+
+            # Hash the password using the 'scrypt' method
+            hashed_password = generate_password_hash(password, method="scrypt")
+
+            # Insert the user into the database
+            users_collection.insert_one({"username": username, "password": hashed_password})
+
+            return redirect(url_for("login"))
+
+        except OperationFailure as e:
+            # Handle MongoDB OperationFailure
+            error_message = str(e)
+            return render_template("register.html", message=f"Registration failed: {error_message}")
+
+    return render_template("register.html")
+
+# Login route
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template('login.html')
+    try:
+        client.admin.command('ping')
+        mylogs.add_to_log("Pinged your deployment. You successfully connected to MongoDB!")  
+    except Exception as e:
+        mylogs.add_to_log(f"MongoFail: {e}")  
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
 
+        # Check if the username exists
+        user = users_collection.find_one({"username": username})
+
+        if user and check_password_hash(user["password"], password):
+            # Set the user session
+            session["username"] = username
+            return redirect(url_for("dashboard"))
+        else:
+            return render_template("login.html", message="Invalid username or password.")
+
+    return render_template("login.html")
+
+@app.route("/dashboard")
+def dashboard():
+    if "username" in session:
+        return f"Welcome, {session['username']}! This is your dashboard."
+    else:
+        return redirect(url_for("login"))
+
+# Logout route
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    return redirect(url_for("login"))
 
 @app.route('/ewiclist')
 def ewiclist():

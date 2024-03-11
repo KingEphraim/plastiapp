@@ -24,23 +24,30 @@
   
   <div class="login-box">
     <h2>Login</h2>
-    <form>
+    <form method="post" action="/login" id="loginform">
       <div class="user-box">
-        <input type="text" name="" required="">
+        <input type="text" id="username" name="username" required>
         <label>Username</label>
       </div>
       <div class="user-box">
-        <input type="password" name="" required="">
+        <input type="password" id="password" name="password" required>
         <label>Password</label>
       </div>
-      <a href="#">
+      <a href="#" onclick="submitForm()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        Submit
-      </a>
+        Login
+    </a>
     </form>
+
+    
+
+    <p>Don't have an account? <a href="/register">Register here</a> .</p>
+    {% if message %}
+        <p style="color: red;">{{ message }}</p>
+    {% endif %}
   </div>
 
 

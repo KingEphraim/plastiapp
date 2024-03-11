@@ -22,25 +22,35 @@
 
   {% block content %}
   
+  <h2>User Registration</h2>
+    
+
   <div class="login-box">
-    <h2>Login</h2>
-    <form>
+    <h2>Register</h2>
+    <form method="post" action="/register" id="registerform">
       <div class="user-box">
-        <input type="text" name="" required="">
+        <input type="text" id="username" name="username" required>
         <label>Username</label>
       </div>
       <div class="user-box">
-        <input type="password" name="" required="">
+        <input type="password" id="password" name="password" required>
         <label>Password</label>
       </div>
-      <a href="#">
+      <a href="#" onclick="submitForm()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        Submit
-      </a>
+        Register
+    </a>
     </form>
+
+    
+
+    <p>Already have an account? <a href="/login">Login here</a> .</p>
+    {% if message %}
+        <p style="color: red;">{{ message }}</p>
+    {% endif %}
   </div>
 
 

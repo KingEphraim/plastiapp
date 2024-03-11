@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.8-slim-buster
+FROM python:slim-buster
 
 # Set the working directory to /app
 WORKDIR /app
