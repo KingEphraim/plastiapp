@@ -5,6 +5,7 @@ import hashlib
 import csv
 import io
 import boto3
+from botocore.exceptions import ClientError
 import uuid
 import os
 import mylogs
@@ -449,47 +450,46 @@ def bulk_csv():
             # Add the row dictionary to the main data dictionary
             data_dict[len(data_dict)+1] = row_dict
 
-        session = boto3.Session(
-            aws_access_key_id=os.environ["ACCESS_ID"],
-            aws_secret_access_key=os.environ["ACCESS_KEY"],
-        )
-        sqs = session.resource('sqs', 'us-east-1',)
+        try:
+            session = boto3.Session(
+                aws_access_key_id=config['aws_access_key_id'],
+                aws_secret_access_key=config['aws_secret_access_key'],               
+                region_name='us-east-1',  # Update with the correct region
+                
+            )
+            s3_client = session.client('s3')
+            try:
+                response = s3_client.list_buckets()
+                print("Successfully connected to AWS. Here are your S3 buckets:")
+                for bucket in response['Buckets']:
+                    print(bucket['Name'])
+            except Exception as e:
+                print("Failed to connect to AWS. Error:", e)
 
-        # Get the SQS queue by its name
-        queue_name = 'bulktransactions.fifo'
-        queue = sqs.get_queue_by_name(QueueName=queue_name)
+            sqs = session.resource('sqs') 
+            queue_name = 'bulktransactions.fifo'
+            queue = sqs.get_queue_by_name(QueueName=queue_name)
+            queue.set_attributes(Attributes={'ContentBasedDeduplication': 'true'})
+            message_group_id = str(uuid.uuid4())
+            for key, value in data_dict.items():
+                print(key, json.dumps(value))
 
-        # Enable content-based deduplication on the queue
-        queue.set_attributes(Attributes={'ContentBasedDeduplication': 'true'})
-        message_group_id = str(uuid.uuid4())
-        for key, value in data_dict.items():
-            print(key, json.dumps(value))
+                message_body = str(value)
+                message_deduplication_id = str(uuid.uuid4())
+                print(message_group_id)
+                queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id, MessageDeduplicationId=message_deduplication_id)
+                print("Messages sent to SQS successfully.")
+                responsedata = {'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
+            return json.dumps(responsedata)
+        except ClientError as e:
+            mylogs.add_to_log(e)
+            if e.response['Error']['Code'] == 'InvalidClientTokenId':
+                print("Error: Invalid AWS credentials or permissions.")
+            else:
+                print(f"An error occurred: {e}")  
 
-            message_body = str(value)
-            message_deduplication_id = str(uuid.uuid4())
-            print(message_group_id)
-            queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id,
-                               MessageDeduplicationId=message_deduplication_id)
-
-        print("Messages sent to SQS successfully.")
-
-        # Send each item in the dictionary collection to the SQS queue
-        # for item in data_dict:
-        #     message_body = str(item)
-        #     message_group_id = 'group1'  # Replace with your desired message group ID
-        #     queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id)
-        # print("Messages sent to SQS successfully.")
-
-        # print(data_dict[2])
-
-        # key = 'xCardNum'
-        # for item_key, item_value in data_dict.items():
-        #     if key in item_value:
-        #         print(item_value[key])
-
-        responsedata = {
-            'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
-    return json.dumps(responsedata)
+    return json.dumps({'error':'e'})
+        
 
 
 @app.route('/dynamobatchdata')
@@ -497,8 +497,8 @@ def your_endpoint():
 
     # Create a DynamoDB client
     session = boto3.Session(
-        aws_access_key_id=os.environ["ACCESS_ID"],
-        aws_secret_access_key=os.environ["ACCESS_KEY"],
+        aws_access_key_id=config['aws_access_key_id'],
+        aws_secret_access_key=config['aws_secret_access_key'],
     )
     dynamodb = session.client('dynamodb', region_name='us-east-1')
 
