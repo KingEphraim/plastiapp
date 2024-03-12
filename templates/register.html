@@ -27,7 +27,7 @@
 
   <div class="login-box">
     <h2>Register</h2>
-    <form method="post" action="/register" id="registerform">
+    <form  id="registerform">
       <div class="user-box">
         <input type="text" id="username" name="username" required>
         <label>Username</label>
@@ -36,7 +36,7 @@
         <input type="password" id="password" name="password" required>
         <label>Password</label>
       </div>
-      <a href="#" onclick="submitForm()">
+      <a href="#" id="registerbtn">
         <span></span>
         <span></span>
         <span></span>
@@ -48,9 +48,9 @@
     
 
     <p>Already have an account? <a href="/login">Login here</a> .</p>
-    {% if message %}
-        <p style="color: red;">{{ message }}</p>
-    {% endif %}
+    
+        <p id="message" ></p>
+    
   </div>
 
 

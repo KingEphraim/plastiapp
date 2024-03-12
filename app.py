@@ -36,26 +36,32 @@ def register():
     except Exception as e:        
         mylogs.add_to_log(f"MongoFail: {e}")  
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        datafromuser = json.loads(request.get_json())  
+        print(datafromuser)
+        username = datafromuser['username']
+        password = datafromuser['password']
 
         try:
             # Check if username already exists
             if users_collection.find_one({"username": username}):
-                return render_template("register.html", message="Username already exists.")
+                #return render_template("register.html", message="Username already exists.")                
+                message = "Username already exists."
+                return jsonify({'status':'fail','message': message})
+                
 
             # Hash the password using the 'scrypt' method
             hashed_password = generate_password_hash(password, method="scrypt")
 
             # Insert the user into the database
             users_collection.insert_one({"username": username, "password": hashed_password})
-
-            return redirect(url_for("login"))
+           
+            return jsonify({'status': 'success', 'redirect': url_for('login')})
 
         except OperationFailure as e:
             # Handle MongoDB OperationFailure
             error_message = str(e)
-            return render_template("register.html", message=f"Registration failed: {error_message}")
+            #return render_template("register.html", message=f"Registration failed: {error_message}")
+            return jsonify({'status': 'error', 'message': str(error_message)})
 
     return render_template("register.html")
 
