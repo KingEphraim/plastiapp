@@ -26,7 +26,15 @@ users_collection = db["users"]
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if "username" in session:
+        username = session.get('username', 'Guest')  # Use 'Guest' as a default if 'username' is not in the session    
+        message = f"You are logged in as {username}! This is your dashboard."    
+        user_is_logged_in = session.get('user_is_logged_in', True)
+        return render_template('index.html', message=message,user_is_logged_in=user_is_logged_in)
+    else:
+        return redirect(url_for("login"))
+    
+    
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -83,7 +91,7 @@ def login():
         if user and check_password_hash(user["password"], password):
             # Set the user session
             session["username"] = username
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("index"))
         else:
             return render_template("login.html", message="Invalid username or password.")
 
