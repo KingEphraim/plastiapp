@@ -420,7 +420,7 @@ def handle_slackrefnum():
 
 
 @app.route('/bulk')
-def handle_bulk():
+def bulk():
     return render_template('bulk.html')
 
 
