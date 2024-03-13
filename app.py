@@ -457,29 +457,22 @@ def bulk_csv():
                 region_name='us-east-1',  # Update with the correct region
                 
             )
-            s3_client = session.client('s3')
-            try:
-                response = s3_client.list_buckets()
-                print("Successfully connected to AWS. Here are your S3 buckets:")
-                for bucket in response['Buckets']:
-                    print(bucket['Name'])
-            except Exception as e:
-                print("Failed to connect to AWS. Error:", e)
-
+            
             sqs = session.resource('sqs') 
             queue_name = 'bulktransactions.fifo'
             queue = sqs.get_queue_by_name(QueueName=queue_name)
             queue.set_attributes(Attributes={'ContentBasedDeduplication': 'true'})
             message_group_id = str(uuid.uuid4())
+            mylogs.add_to_log(f'MGI: {message_group_id}')
             for key, value in data_dict.items():
-                print(key, json.dumps(value))
-
                 message_body = str(value)
                 message_deduplication_id = str(uuid.uuid4())
-                print(message_group_id)
-                queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id, MessageDeduplicationId=message_deduplication_id)
-                print("Messages sent to SQS successfully.")
+                mylogs.add_to_log(f'Transaction # {key} Data: {value} Message_deduplication_id: {message_deduplication_id}')
+                result = queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id, MessageDeduplicationId=message_deduplication_id)  
+                mylogs.add_to_log(f'Send_message result: {result}')
                 responsedata = {'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
+
+
             return json.dumps(responsedata)
         except ClientError as e:
             mylogs.add_to_log(e)
