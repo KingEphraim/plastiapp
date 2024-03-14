@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="en">  
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,11 +17,11 @@
 </head>
 
 <body>
-  {% extends "head.html" %}
+  {% include 'navbar.html' %}
 
-  {% block content %}
   
-  <div class="login-box">
+  
+  <div class="login-box ">
     <h2>Login</h2>
     <form method="post" action="/login" id="loginform">
       <div class="user-box">
@@ -60,7 +59,7 @@
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
-  {% endblock %}
+  
 
 </body>
 

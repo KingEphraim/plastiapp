@@ -27,6 +27,7 @@ users_collection = db["users"]
 
 @app.route('/')
 def index():
+    mylogs.add_to_log(f"Visit to / Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
     if "username" in session:
         username = session.get('username', 'Guest')  # Use 'Guest' as a default if 'username' is not in the session    
         message = f"You are logged in as {username}! This is your dashboard."    
@@ -34,19 +35,22 @@ def index():
         return render_template('index.html', message=message,user_is_logged_in=user_is_logged_in)
     else:
         return redirect(url_for("login"))
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    
+    return 'OK', 200
     
     
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    try:
-        client.admin.command('ping')       
-        mylogs.add_to_log("Pinged your deployment. You successfully connected to MongoDB!")  
-    except Exception as e:        
-        mylogs.add_to_log(f"MongoFail: {e}")  
+         
+    mylogs.add_to_log(f"Visit to /register Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
+          
+        
     if request.method == "POST":
-        datafromuser = json.loads(request.get_json())  
-        print(datafromuser)
+        datafromuser = json.loads(request.get_json()) 
         username = datafromuser['username']
         password = datafromuser['password']
 
@@ -77,11 +81,8 @@ def register():
 # Login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    try:
-        client.admin.command('ping')
-        mylogs.add_to_log("Pinged your deployment. You successfully connected to MongoDB!")  
-    except Exception as e:
-        mylogs.add_to_log(f"MongoFail: {e}")  
+    mylogs.add_to_log(f"Visit to /login Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
