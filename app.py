@@ -487,37 +487,42 @@ def bulk_csv():
 
 
 @app.route('/dynamobatchdata')
-def your_endpoint():
-
-    # Create a DynamoDB client
-    session = boto3.Session(
-        aws_access_key_id=config['aws_access_key_id'],
-        aws_secret_access_key=config['aws_secret_access_key'],
-    )
-    dynamodb = session.client('dynamodb', region_name='us-east-1')
-
-    # Define the table name
+def dynamobatchdata():
     try:
+        # Get the 'groupid' parameter from the request
         group_id = request.args.get('groupid')
+        
+        # Check if 'groupid' parameter is missing
+        if not group_id:
+            return jsonify({'error': 'groupid parameter is missing'}), 400
 
-        # Replace 'your_table_name' with the actual name of your DynamoDB table
+        # Create a DynamoDB client
+        session = boto3.Session(
+            aws_access_key_id=config['aws_access_key_id'],
+            aws_secret_access_key=config['aws_secret_access_key'],
+        )
+        dynamodb = session.client('dynamodb', region_name='us-east-1')
+
+        # Define the table name
         table_name = 'transactionresponses'
 
         # Specify the desired GroupId value
-
         query_params = {
             'TableName': table_name,
             'KeyConditionExpression': 'GroupId = :group_id',
             'ExpressionAttributeValues': {
-                # Assuming the GroupId is a number (change to 'S' if it's a string)
+                # Assuming the GroupId is a string (change to 'N' if it's a number)
                 ':group_id': {'S': group_id}
             }
         }
+        
         # Query the table
         response = dynamodb.query(**query_params)
+        
         # Extract the items from the response
+        items = response.get('Items', [])
 
-        items = response['Items']
+        # Clean up the items
         clean_items = []
         for item in items:
             clean_item = {}
@@ -526,16 +531,11 @@ def your_endpoint():
                 clean_item[key] = list(value.values())[0]
             clean_items.append(clean_item)
 
-        # Convert the list of dictionaries to a JSON string
-        json_string = json.dumps(clean_items)
-
-        # Print the JSON string
-        print(json_string)
-
-        return jsonify(json_string)
+        # Return the clean items as JSON response
+        return jsonify(clean_items)
+    
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 
 @app.route('/customer')

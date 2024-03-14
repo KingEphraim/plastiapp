@@ -116,7 +116,7 @@ function getbatchresponsedata(groupid) {
     },
     success: function (response) {
       // Handle the response from the server
-      console.log(JSON.parse(response));
+      console.log(response);
       // Process the data or update the DOM accordingly
       addtotable(response)
     },
@@ -132,7 +132,11 @@ function addtotable(transactionlist) {
   try {
     // Check if transactionlist is a valid JSON string
     if (typeof transactionlist !== 'string') {
-      throw new Error('Input is not a string.');
+      // If it's not a string, try converting it to a string
+      transactionlist = JSON.stringify(transactionlist);
+      if (!transactionlist) {
+        throw new Error('Input is not a string or cannot be converted to a string.');
+      }
     }
 
     // Parse JSON data into an array of objects
