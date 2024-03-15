@@ -443,20 +443,21 @@ def bulk_csv():
         data_dict = {}
         # Loop through the remaining rows of the CSV
         for row in csvData:
-            # Initialize an empty dictionary for each row of data
-            row_dict = {}
-            # Loop through each column of data and add it to the row dictionary
-            for i, value in enumerate(row):
-                row_dict[keys[i]] = value
-            # Add the row dictionary to the main data dictionary
-            data_dict[len(data_dict)+1] = row_dict
+            # Check if the row contains any non-empty values
+            if any(row):
+                # Initialize an empty dictionary for each row of data
+                row_dict = {}
+                # Loop through each column of data and add it to the row dictionary
+                for i, value in enumerate(row):
+                    row_dict[keys[i]] = value
+                # Add the row dictionary to the main data dictionary
+                data_dict[len(data_dict)+1] = row_dict
 
         try:
             session = boto3.Session(
                 aws_access_key_id=config['aws_access_key_id'],
                 aws_secret_access_key=config['aws_secret_access_key'],               
                 region_name='us-east-1',  # Update with the correct region
-                
             )
             
             sqs = session.resource('sqs') 
@@ -471,9 +472,7 @@ def bulk_csv():
                 mylogs.add_to_log(f'Transaction # {key} Data: {value} Message_deduplication_id: {message_deduplication_id}')
                 result = queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id, MessageDeduplicationId=message_deduplication_id)  
                 mylogs.add_to_log(f'Send_message result: {result}')
-                responsedata = {'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
-
-
+            responsedata = {'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
             return json.dumps(responsedata)
         except ClientError as e:
             mylogs.add_to_log(e)
@@ -483,7 +482,6 @@ def bulk_csv():
                 print(f"An error occurred: {e}")  
 
     return json.dumps({'error':'e'})
-        
 
 
 @app.route('/dynamobatchdata')
@@ -491,7 +489,7 @@ def dynamobatchdata():
     try:
         # Get the 'groupid' parameter from the request
         group_id = request.args.get('groupid')
-        
+
         # Check if 'groupid' parameter is missing
         if not group_id:
             return jsonify({'error': 'groupid parameter is missing'}), 400
@@ -506,25 +504,40 @@ def dynamobatchdata():
         # Define the table name
         table_name = 'transactionresponses'
 
-        # Specify the desired GroupId value
+        # Initialize an empty list to hold all items
+        all_items = []
+
+        # Define the initial query parameters for the first page
         query_params = {
             'TableName': table_name,
             'KeyConditionExpression': 'GroupId = :group_id',
             'ExpressionAttributeValues': {
-                # Assuming the GroupId is a string (change to 'N' if it's a number)
                 ':group_id': {'S': group_id}
             }
         }
-        
-        # Query the table
-        response = dynamodb.query(**query_params)
-        
-        # Extract the items from the response
-        items = response.get('Items', [])
+
+        # Loop to retrieve all pages of data
+        while True:
+            # Query the table for the current page
+            response = dynamodb.query(**query_params)
+
+            # Extract the items from the response
+            items = response.get('Items', [])
+
+            # Append the items from the current page to the list of all items
+            all_items.extend(items)
+
+            # Check if there are more pages to retrieve
+            if 'LastEvaluatedKey' in response:
+                # Set the exclusive start key for the next page
+                query_params['ExclusiveStartKey'] = response['LastEvaluatedKey']
+            else:
+                # If no more pages, break out of the loop
+                break
 
         # Clean up the items
         clean_items = []
-        for item in items:
+        for item in all_items:
             clean_item = {}
             for key, value in item.items():
                 # Extracting the value without the data type
@@ -533,11 +546,9 @@ def dynamobatchdata():
 
         # Return the clean items as JSON response
         return jsonify(clean_items)
-    
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
 @app.route('/customer')
 def justbored():
     return render_template('customer.html')
