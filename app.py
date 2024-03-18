@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for,session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import requests
 import json
 import hashlib
@@ -7,7 +7,6 @@ import io
 import boto3
 from botocore.exceptions import ClientError
 import uuid
-import os
 import mylogs
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
