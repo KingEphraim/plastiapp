@@ -109,7 +109,6 @@ function sendtoserver(serverdata) {
 }
 
 //googlepay object
-
 const gpRequest = {
     merchantInfo: {
         merchantName: "Tranzact",
@@ -130,8 +129,7 @@ const gpRequest = {
         return {
             totalPriceStatus: "FINAL",
             currencyCode: "USD",
-            totalPrice: amount.value ? amount.value : "0",
-            
+            totalPrice: amount.value ? amount.value : "0",            
         };
     },
     onProcessPayment: function (paymentResponse) {
@@ -141,6 +139,7 @@ const gpRequest = {
         setTimeout(function () { appendAlert("Payment was canceled", 'info') }, 500);
     },
 };
+
 //initiates googlepay
 function initGP() {
     console.log("googlepay init");
@@ -155,33 +154,23 @@ function initGP() {
     };
 }
 
-//sends token and fields to server
+//process googlepay
 function processGP(paymentResponse) {
     return new Promise(function (resolve, reject) {
         try {
             paymentToken = paymentResponse.paymentData.paymentMethodData.tokenizationData.token;
             encodedToken = window.btoa(paymentToken);
             console.log(JSON.stringify({ paymentResponse, encodedToken }));
-
             var formData = {};
             var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
-
             fields.forEach(function (field) {
                 formData[field] = document.getElementById(field).value;
-            });
-            
-            
-
+            });        
             formData['tranzType'] = "GP";
             formData['gptoken'] = encodedToken;
-
             var formDataJSON = JSON.stringify(formData);
-
-
-
             sendtoserver(formDataJSON)
             resolve()
-
         } catch (err) {
             reject(err);
         }
