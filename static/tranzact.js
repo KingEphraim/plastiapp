@@ -120,6 +120,9 @@ const gpRequest = {
         buttonSizeMode: GPButtonSizeMode.fill
     },
     billingParams: {
+        //allowedAuthMethods:["PAN_ONLY"],
+        //allowedCardNetworks:["AMEX", "DISCOVER", "MASTERCARD", "VISA"],
+        phoneNumberRequired: false,
         billingAddressRequired: true,
         billingAddressFormat: GPBillingAddressFormat.full,
     },
@@ -127,14 +130,15 @@ const gpRequest = {
         return {
             totalPriceStatus: "FINAL",
             currencyCode: "USD",
-            totalPrice: amount.value,
+            totalPrice: amount.value ? amount.value : "0",
+            
         };
     },
     onProcessPayment: function (paymentResponse) {
         return processGP(paymentResponse);
     },
     onPaymentCanceled: function () {
-        setTimeout(function () { alert("Payment was canceled") }, 500);
+        setTimeout(function () { appendAlert("Payment was canceled", 'info') }, 500);
     },
 };
 //initiates googlepay
@@ -165,6 +169,9 @@ function processGP(paymentResponse) {
             fields.forEach(function (field) {
                 formData[field] = document.getElementById(field).value;
             });
+            
+            
+
             formData['tranzType'] = "GP";
             formData['gptoken'] = encodedToken;
 
