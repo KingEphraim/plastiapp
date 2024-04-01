@@ -24,77 +24,86 @@ users_collection = db["users"]
 
 
 
+
 @app.route('/')
 def index():
     mylogs.add_to_log(f"Visit to / Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
     if "username" in session:
-        username = session.get('username', 'Guest')  # Use 'Guest' as a default if 'username' is not in the session    
+        username = session.get('username', 'Guest')    
         message = f"You are logged in as {username}! This is your dashboard."    
         user_is_logged_in = session.get('user_is_logged_in', True)
-        return render_template('index.html', message=message,user_is_logged_in=user_is_logged_in)
+        return render_template('index.html', message=message, user_is_logged_in=user_is_logged_in)
     else:
-        return redirect(url_for("login"))
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    
-    return 'OK', 200
-    
-    
+        return redirect(url_for("login"))   
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-         
-    mylogs.add_to_log(f"Visit to /register Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
-          
-        
+    mylogs.add_to_log(f"Visit to /register Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}")
+
     if request.method == "POST":
-        datafromuser = json.loads(request.get_json()) 
-        username = datafromuser['username']
-        password = datafromuser['password']
+        datafromuser = request.get_json()
+        if datafromuser:
+            try:
+                username = datafromuser.get('username')
+                useremail = datafromuser.get('email')
+                password = datafromuser.get('password')
 
-        try:
-            # Check if username already exists
-            if users_collection.find_one({"username": username}):
-                #return render_template("register.html", message="Username already exists.")                
-                message = "Username already exists."
-                return jsonify({'status':'fail','message': message})
-                
+                if not username or not useremail or not password:
+                    return jsonify({'status': 'fail', 'message': 'Missing username, email, or password.'})
 
-            # Hash the password using the 'scrypt' method
-            hashed_password = generate_password_hash(password, method="scrypt")
+                # Check if username already exists
+                if users_collection.find_one({"username": username}):
+                    return jsonify({'status': 'fail', 'message': 'Username already exists.'})
 
-            # Insert the user into the database
-            users_collection.insert_one({"username": username, "password": hashed_password})
-           
-            return jsonify({'status': 'success', 'redirect': url_for('login')})
+                # Hash the password using the 'scrypt' method
+                hashed_password = generate_password_hash(password, method="scrypt")
 
-        except OperationFailure as e:
-            # Handle MongoDB OperationFailure
-            error_message = str(e)
-            #return render_template("register.html", message=f"Registration failed: {error_message}")
-            return jsonify({'status': 'error', 'message': str(error_message)})
+                # Insert the user into the database
+                users_collection.insert_one({"username": username, "useremail": useremail, "password": hashed_password})
+
+                return jsonify({'status': 'success', 'redirect': url_for('login')})
+
+            except OperationFailure as e:
+                # Handle MongoDB OperationFailure
+                error_message = str(e)
+                return jsonify({'status': 'error', 'message': error_message})
+
+        else:
+            return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
 
     return render_template("register.html")
 
-# Login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    mylogs.add_to_log(f"Visit to /login Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
-
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        datafromuser = request.get_json()
+        if datafromuser:
+            try:
+                username = datafromuser.get('username')
+                password = datafromuser.get('password')
 
-        # Check if the username exists
-        user = users_collection.find_one({"username": username})
+                if not username or not password:
+                    return jsonify({'status': 'fail', 'message': 'Missing username or password.'})
 
-        if user and check_password_hash(user["password"], password):
-            # Set the user session
-            session["username"] = username
-            return redirect(url_for("index"))
+                user = users_collection.find_one({"username": username})
+
+                if not user:
+                    return jsonify({'status': 'fail', 'message': 'User not found.'})
+
+                if not check_password_hash(user['password'], password):
+                    return jsonify({'status': 'fail', 'message': 'Incorrect password.'})
+
+                session['username'] = username
+                session['user_is_logged_in'] = True
+
+                return jsonify({'status': 'success', 'message': 'Login successful.'})
+
+            except Exception as e:
+                error_message = str(e)
+                return jsonify({'status': 'error', 'message': error_message})
+
         else:
-            return render_template("login.html", message="Invalid username or password.")
+            return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
 
     return render_template("login.html")
 
@@ -146,6 +155,7 @@ def sendtocardknox():
             'xSoftwareVersion': '1.0',
             'xCommand': 'cc:sale',
             'xVendorID': '128717',
+            #'xAllowNonAuthenticated': 'true',
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
             'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
             'xEmail': datafromuser['email'],

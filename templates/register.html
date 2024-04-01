@@ -20,40 +20,34 @@
 <body>
   {% include 'navbar.html' %}
   
-  <h2>User Registration</h2>
-    
-
-  <div class="login-box">
-    <h2>Register</h2>
-    <form  id="registerform">
-      <div class="user-box">
-        <input type="text" id="username" name="username" required>
-        <label>Email</label>
-      </div>
-      <div class="user-box">
-        <input type="password" id="password" name="password" required>
-        <label>Password</label>
-      </div>
-      <a href="#" id="registerbtn">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        Register
-    </a>
-    </form>
-
-    
-    <p id="message" ></p>
-    <p>Already have an account? <a href="/login">Login here</a> .</p>
-    
-        
-    
-  </div>
-
-
-
-  
+  <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="register-form">
+                <h2 class="text-center mb-4">Register</h2>
+                <p id="message"></p>
+                <div >
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-block" id="registerbtn">Register</button>
+                    </div>
+                  </div>
+                <p>Already have an account? <a href="/login">Login here</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
   <script src="{{url_for('static', filename='register.js')}}"></script>
