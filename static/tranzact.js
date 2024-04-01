@@ -19,18 +19,19 @@ const appendAlert = (message, type) => {
 window.onload = function () {
     ckGooglePay.enableGooglePay({ amountField: "amount" });
     enable3DS('staging', handle3DSResults);
+
     let style = {
         'background-color': 'rgb(255, 255, 255)',
-        'border-color': 'rgb(222, 226, 230)',
+        'border-color': '#ccc',       
         'border-radius': '6px',
         'border-style': 'solid',
-        'border-width': '1px',
-        padding: '1rem .75rem',
+        'border-width': '2px',
+        padding: '10px',
         display: 'block',
         'box-sizing': 'border-box',
         width: '100%',
         'overflow': 'hidden',
-        'font-size': '1rem',
+        'font-size': '16px',
         'font-weight': '400',
         'line-height': '24px',
     };
@@ -39,6 +40,9 @@ window.onload = function () {
 
 
 };
+
+
+
 function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticationStatus, x3dsSignatureVerificationStatus) {
 
     var postData = {
@@ -129,7 +133,7 @@ const gpRequest = {
         return {
             totalPriceStatus: "FINAL",
             currencyCode: "USD",
-            totalPrice: amount.value ? amount.value : "0",            
+            totalPrice: amount.value ? amount.value : "0",
         };
     },
     onProcessPayment: function (paymentResponse) {
@@ -165,7 +169,7 @@ function processGP(paymentResponse) {
             var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
             fields.forEach(function (field) {
                 formData[field] = document.getElementById(field).value;
-            });        
+            });
             formData['tranzType'] = "GP";
             formData['gptoken'] = encodedToken;
             var formDataJSON = JSON.stringify(formData);

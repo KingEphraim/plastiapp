@@ -16,7 +16,7 @@
     {% include 'navbar.html' %}
 
 
-    <div class="container-fluid">
+    <div class="container-sm">
         <h1>Tranzact</h1>
         <div class="accordion" id="accordion">
             <div class="accordion-item">
@@ -26,31 +26,35 @@
                         Customer Information
                     </button>
                 </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                <div id="flush-collapseOne" class="accordion-collapse collapse" >
                     <form class="row g-3 p-4" id="custinfo">
-                        <div class="col-md-4 form-floating">
-                            <input type="text" class="form-control" id="name" placeholder="Full Name">
-                            <label for="name" class="text-muted">Full Name</label>
+                        <div class="col-md-4 ">
+                            <label class="control_label">Full name</label>
+                            <input type="text" class="form-control input-style" id="name" placeholder="Full name">                            
                         </div>
-                        <div class="col-md-4 form-floating">
-                            <input type="email" class="form-control" id="email" placeholder="Email">
-                            <label for="email" class="text-muted">Email</label>
+                        <div class="col-md-4 ">
+                            <label class="control_label">Email</label>
+                            <input type="email" class="form-control input-style" id="email" placeholder="Email">
+                            
                         </div>
-                        <div class="col-md-4 form-floating">
-                            <input type="number" class="form-control" id="phone" placeholder="Phone Number">
-                            <label for="phone" class="text-muted">Phone Number</label>
+                        <div class="col-md-4 ">
+                            <label class="control_label">Phone number</label>
+                            <input type="number" class="form-control input-style" id="phone" placeholder="Phone number">
+                           
                         </div>
-                        <div class="col-md-3 form-floating">
-                            <input type="text" class="form-control" id="address" placeholder="Address">
-                            <label for="address" class="text-muted">Address</label>
+                        <div class="col-md-3 ">
+                            <label class="control_label">Address</label>
+                            <input type="text" class="form-control input-style" id="address" placeholder="Address">
+                            
                         </div>
-                        <div class="col-md-3 form-floating">
-                            <input type="text" class="form-control" id="city" placeholder="City">
-                            <label for="city" class="text-muted">City</label>
+                        <div class="col-md-3 ">
+                            <label class="control_label">City</label>
+                            <input type="text" class="form-control input-style" id="city" placeholder="City">
+                            
                         </div>
                         <div class="col-md-3">
-                            <div class="form-floating">
-                                <select id="state" class="form-select">
+                            <label class="control_label">State</label>
+                                <select id="state" class="form-select input-style">
                                     <option>......</option>
                                     <option label="Alabama">AL</option>
                                     <option label="Alaska">AK</option>
@@ -103,12 +107,13 @@
                                     <option label="Wisconsin">WI</option>
                                     <option label="Wyoming">WY</option>
                                 </select>
-                                <label for="state" class="text-muted">State</label>
-                            </div>
+                               
+                            
                         </div>
-                        <div class="col-md-3 form-floating">
-                            <input type="text" class="form-control" id="zip" placeholder="Zip">
-                            <label for="zip" class="text-muted">Zip</label>
+                        <div class="col-md-3 ">
+                            <label class="control_label">Zip</label>
+                            <input type="text" class="form-control input-style" id="zip" placeholder="Zip">
+                            
                         </div>
                     </form>
                 </div>
@@ -120,19 +125,19 @@
                         Transaction Details
                     </button>
                 </h2>
-                <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" >
                     <form class="row g-3 p-4" id="transactinfo">
-                        <div class="col-md-4 form-floating">
-                            <input type="text" class="form-control" id="invoice" placeholder="Invoice Number">
-                            <label for="invoice" class="text-muted">Invoice Number</label>
+                        <div class="col-md-4 ">
+                            <input type="text" class="form-control input-style" id="invoice" placeholder="Invoice Number">
+                            
                         </div>
-                        <div class="col-md-4 form-floating">
-                            <input type="text" class="form-control" id="comments" placeholder="Comments">
-                            <label for="comments" class="text-muted">Comments</label>
+                        <div class="col-md-4 ">
+                            <input type="text" class="form-control input-style" id="comments" placeholder="Comments">
+                            
                         </div>
-                        <div class="col-md-4 form-floating">
-                            <input type="text" class="form-control" id="amount" placeholder="Amount">
-                            <label for="amount" class="text-muted">Amount</label>
+                        <div class="col-md-4 ">
+                            <input type="text" class="form-control input-style" id="amount" placeholder="Amount">
+                          
                         </div>
                     </form>
                 </div>
@@ -144,9 +149,9 @@
                         Payment Information
                     </button>
                 </h2>
-                <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                <div id="flush-collapseThree" class="accordion-collapse collapse" >
                     <form class="row g-3 p-4" id="cardinfo">
-                        <div class="col-md-4 form-floating">
+                        <div class="col-md-4 ">
                             <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number"
                                 src="https://cdn.cardknox.com/ifields/2.15.2401.3101/ifield.htm"
                                 id="cardiframe"></iframe>
@@ -154,11 +159,10 @@
                                 data-ifields-id="card-number-token">
                             <!-- <label for="card" class="text-muted">Card Number</label> -->
                         </div>
-                        <div class="col-md-4 form-floating">
-                            <input type="text" class="form-control" id="exp" placeholder="Expiration Date">
-                            <label for="exp" class="text-muted">Expiration Date</label>
+                        <div class="col-md-4 ">
+                            <input type="text" class="form-control input-style" id="exp" placeholder="Expiration Date">
                         </div>
-                        <div class="col-md-4 form-floating">
+                        <div class="col-md-4 ">
                             <iframe data-ifields-id="cvv" data-ifields-placeholder="CVV"
                                 src="https://cdn.cardknox.com/ifields/2.15.2401.3101/ifield.htm"
                                 id="cvviframe"></iframe>
