@@ -1,3 +1,18 @@
+html 
+{
+   font-size: 1em;
+   font-family: sans-serif;
+   
+   
+}
+.tranzact-form {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    background: 		linear-gradient(rgba(245, 245, 245, 0.397), rgba(240, 240, 240, 0.6));
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
 #cardiframe {
     border: 0 solid black;
     width: 100%;
@@ -13,7 +28,10 @@
     padding: 0px;
     margin-bottom: 5px;
 }
+#igp{
 
+    height: 50px;
+}
 .input-style {
     padding: 10px;
     border: 2px solid #ccc;
@@ -40,12 +58,15 @@
     box-shadow: 0 0 0 0;
 }
 
+.accordion-button{
+    padding: 0.5rem;
+}
 .accordion-button:focus {
     box-shadow: 0 0 0 0;
-    background-color: #e2e2e2a1;
+    background-color: #ffffff00;
 }
 
 .accordion-button:not(.collapsed) {
     box-shadow: 0 0 0 0;
-    background-color: #e2e2e2a1;
+    background-color: #ffffff00;
 }

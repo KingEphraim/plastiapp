@@ -16,13 +16,29 @@ const appendAlert = (message, type) => {
     sbmtbtntoggle('on');
 }
 
+// Function to format the "exp" field
+function formatExp(exp) {
+    // Remove any non-numeric characters
+    var formattedExp = exp.replace(/\D/g, '');
+
+    // If the input is in "MM/YY" format, convert it to "MMYY"
+    if (formattedExp.length >= 4) {
+        var month = formattedExp.substring(0, 2);
+        var year = formattedExp.substring(2);
+        formattedExp = month + year;
+    }
+
+    return formattedExp;
+}
+
+
 window.onload = function () {
     ckGooglePay.enableGooglePay({ amountField: "amount" });
     enable3DS('staging', handle3DSResults);
 
     let style = {
         'background-color': 'rgb(255, 255, 255)',
-        'border-color': '#ccc',       
+        'border-color': '#ccc',
         'border-radius': '6px',
         'border-style': 'solid',
         'border-width': '2px',
@@ -74,13 +90,15 @@ sbmtbtn.addEventListener("click", () => {
         fields.forEach(function (field) {
             formData[field] = document.getElementById(field).value;
         });
+
+
+
+        // Format the "exp" field
+        formData['exp'] = formatExp(formData['exp']);
+
         formData['tranzType'] = "R";
         // Convert JSON to string for display or further processing
         var formDataJSON = JSON.stringify(formData);
-
-        // Display JSON in the console (for testing)
-        // console.log(formDataJSON);
-        // appendAlert(formDataJSON, 'success');
 
         sendtoserver(formDataJSON)
 
