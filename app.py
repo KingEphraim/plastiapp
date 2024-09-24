@@ -228,7 +228,14 @@ def ewiclist():
 
 @app.route('/tranzact')
 def tranzact():
-    return render_template('tranzact.html')
+    if "username" in session:
+        username = session.get('username', 'Guest')    
+        message = f"You are logged in as {username}! This is your dashboard."    
+        user_is_logged_in = session.get('user_is_logged_in', True)        
+        return render_template('tranzact.html', message=message, user_is_logged_in=user_is_logged_in)
+    else:
+        return render_template('tranzact.html')     
+    
 
 
 @app.route('/sendtocardknox', methods=['POST'])
