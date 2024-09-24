@@ -37,7 +37,7 @@ window.onload = function () {
     enable3DS('staging', handle3DSResults);
 
     let style = {
-        'background-color': 'rgb(255, 255, 255)',
+        'background-color': '#fafbff',
         'border-color': '#e6e6e6',
         'border-radius': '10px',
         'border-style': 'solid',
@@ -49,7 +49,41 @@ window.onload = function () {
         'overflow': 'hidden',
         'font-size': '1em',
         'font-weight': '400',
-        'line-height': '21px',       
+        'line-height': '28px',       
+        'font-family': '"Inter", "sans-serif"',
+        
+    };
+    let cardfocus = {
+        'background-color': '#fafbff',
+        'border-color': '#e6e6e6',
+        'border-radius': '10px',
+        'border-style': 'solid',
+        'border-width': '2px',
+        padding: '10px',
+        display: 'block',
+        'box-sizing': 'border-box',
+        width: '100%',
+        'overflow': 'hidden',
+        'font-size': '1em',
+        'font-weight': '400',
+        'line-height': '28px',       
+        'font-family': '"Inter", "sans-serif"',
+        
+    };
+    let cvvfocus = {
+        'background-color': '#fafbff',
+        'border-color': '#e6e6e6',
+        'border-radius': '10px',
+        'border-style': 'solid',
+        'border-width': '2px',
+        padding: '10px',
+        display: 'block',
+        'box-sizing': 'border-box',
+        width: '100%',
+        'overflow': 'hidden',
+        'font-size': '1em',
+        'font-weight': '400',
+        'line-height': '28px',       
         'font-family': '"Inter", "sans-serif"',
         
     };
@@ -58,6 +92,10 @@ window.onload = function () {
 
 
 };
+
+addIfieldCallback('focus', function(data) {
+    console.log(data)
+ });
 
 
 

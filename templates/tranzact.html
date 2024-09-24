@@ -21,210 +21,150 @@
             <div class="col-md-12">
                 <div class="tranzact-form">
                     <h1>Tranzact</h1>
-                    <div class="accordion" id="accordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
-                                    Customer Information
-                                </button>
-                            </h2>
-                            <div id="flush-collapseOne" class="accordion-collapse show">
-                                <form class="row g-3 p-4" id="custinfo">
-                                    <div class="col-md-4 ">
-                                        <label class="control_label">Full name</label>
-                                        <input type="text" class="form-control input-style" id="name"
-                                            placeholder="Full name">
-                                    </div>
-                                    <div class="col-md-4 ">
-                                        <label class="control_label">Email</label>
-                                        <input type="email" class="form-control input-style" id="email"
-                                            placeholder="Email">
-
-                                    </div>
-                                    <div class="col-md-4 ">
-                                        <label class="control_label">Phone number</label>
-                                        <input type="number" class="form-control input-style" id="phone"
-                                            placeholder="Phone number">
-
-                                    </div>
-                                    <div class="col-md-3 ">
-                                        <label class="control_label">Address</label>
-                                        <input type="text" class="form-control input-style" id="address"
-                                            placeholder="Address">
-
-                                    </div>
-                                    <div class="col-md-3 ">
-                                        <label class="control_label">City</label>
-                                        <input type="text" class="form-control input-style" id="city"
-                                            placeholder="City">
-
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="control_label">State</label>
-                                        <select id="state" class="form-select input-style">
-                                            <option>......</option>
-                                            <option label="Alabama">AL</option>
-                                            <option label="Alaska">AK</option>
-                                            <option label="Arizona">AZ</option>
-                                            <option label="Arkansas">AR</option>
-                                            <option label="California">CA</option>
-                                            <option label="Colorado">CO</option>
-                                            <option label="Connecticut">CT</option>
-                                            <option label="Delaware">DE</option>
-                                            <option label="Florida">FL</option>
-                                            <option label="Georgia">GA</option>
-                                            <option label="Hawaii">HI</option>
-                                            <option label="Idaho">ID</option>
-                                            <option label="Illinois">IL</option>
-                                            <option label="Indiana">IN</option>
-                                            <option label="Iowa">IA</option>
-                                            <option label="Kansas">KS</option>
-                                            <option label="Kentucky">KY</option>
-                                            <option label="Louisiana">LA</option>
-                                            <option label="Maine">ME</option>
-                                            <option label="Maryland">MD</option>
-                                            <option label="Massachusetts">MA</option>
-                                            <option label="Michigan">MI</option>
-                                            <option label="Minnesota">MN</option>
-                                            <option label="Mississippi">MS</option>
-                                            <option label="Missouri">MO</option>
-                                            <option label="Montana">MT</option>
-                                            <option label="Nebraska">NE</option>
-                                            <option label="Nevada">NV</option>
-                                            <option label="New Hampshire">NH</option>
-                                            <option label="New Jersey">NJ</option>
-                                            <option label="New Mexico">NM</option>
-                                            <option label="New York">NY</option>
-                                            <option label="North Carolina">NC</option>
-                                            <option label="North Dakota">ND</option>
-                                            <option label="Ohio">OH</option>
-                                            <option label="Oklahoma">OK</option>
-                                            <option label="Oregon">OR</option>
-                                            <option label="Pennsylvania">PA</option>
-                                            <option label="Rhode Island">RI</option>
-                                            <option label="South Carolina">SC</option>
-                                            <option label="South Dakota">SD</option>
-                                            <option label="Tennessee">TN</option>
-                                            <option label="Texas">TX</option>
-                                            <option label="Utah">UT</option>
-                                            <option label="Vermont">VT</option>
-                                            <option label="Virginia">VA</option>
-                                            <option label="Washington">WA</option>
-                                            <option label="West Virginia">WV</option>
-                                            <option label="Wisconsin">WI</option>
-                                            <option label="Wyoming">WY</option>
-                                        </select>
-
-
-                                    </div>
-                                    <div class="col-md-3 ">
-                                        <label class="control_label">Zip</label>
-                                        <input type="text" class="form-control input-style" id="zip" placeholder="Zip">
-
-                                    </div>
-                                </form>
-                            </div>
+                    <form class="row g-3 p-4" id="custinfo">
+                        <div class="col-md-4">
+                            <label class="control_label">Full name</label>
+                            <input type="text" class="form-control input-style" id="name" placeholder="Full name">
                         </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseTwo" aria-expanded="false"
-                                    aria-controls="flush-collapseTwo">
-                                    Transaction Details
-                                </button>
-                            </h2>
-                            <div id="flush-collapseTwo" class="accordion-collapse show">
-                                <form class="row g-3 p-4" id="transactinfo">
-                                    <div class="col-md-4 ">
-                                        <input type="text" class="form-control input-style" id="invoice"
-                                            placeholder="Invoice Number">
-
-                                    </div>
-                                    <div class="col-md-4 ">
-                                        <input type="text" class="form-control input-style" id="comments"
-                                            placeholder="Comments">
-
-                                    </div>
-                                    <div class="col-md-4 ">
-                                        <input type="text" class="form-control input-style" id="amount"
-                                            placeholder="Amount">
-
-                                    </div>
-                                </form>
-                            </div>
+                        <div class="col-md-4">
+                            <label class="control_label">Email</label>
+                            <input type="email" class="form-control input-style" id="email" placeholder="Email">
                         </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
-                                    aria-controls="flush-collapseThree">
-                                    Payment Information
-                                </button>
-                            </h2>
-                            <div id="flush-collapseThree" class="accordion-collapse show">
-                                <form class="row g-3 p-4" id="cardinfo">
-                                    <div class="col-md-4 ">
-                                        <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number"
-                                            src="https://cdn.cardknox.com/ifields/2.15.2401.3101/ifield.htm"
-                                            id="cardiframe"></iframe>
-                                        <input type="hidden" class="form-control" id="card" placeholder="Card Number"
-                                            data-ifields-id="card-number-token">
-                                        <!-- <label for="card" class="text-muted">Card Number</label> -->
-                                    </div>
-                                    <div class="col-md-4 ">
-                                        <input type="text" class="form-control input-style" id="exp"
-                                            placeholder="Expiration Date">
-                                    </div>
-                                    <div class="col-md-4 ">
-                                        <iframe data-ifields-id="cvv" data-ifields-placeholder="CVV"
-                                            src="https://cdn.cardknox.com/ifields/2.15.2401.3101/ifield.htm"
-                                            id="cvviframe"></iframe>
-                                        <input type="hidden" class="form-control" id="cvv" placeholder="Cvv"
-                                            data-ifields-id="cvv-token">
-                                        <!-- <label for="cvv" class="text-muted">Cvv</label> -->
-                                    </div>
-                                </form>
-                            </div>
+                        <div class="col-md-4">
+                            <label class="control_label">Phone number</label>
+                            <input type="number" class="form-control input-style" id="phone" placeholder="Phone number">
                         </div>
-                    </div>
-
-
+                        <div class="col-md-3">
+                            <label class="control_label">Address</label>
+                            <input type="text" class="form-control input-style" id="address" placeholder="Address">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control_label">City</label>
+                            <input type="text" class="form-control input-style" id="city" placeholder="City">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control_label">State</label>
+                            <select id="state" class="form-select input-style">
+                                <option>......</option>
+                                <option label="Alabama">AL</option>
+                                <option label="Alaska">AK</option>
+                                <option label="Arizona">AZ</option>
+                                <option label="Arkansas">AR</option>
+                                <option label="California">CA</option>
+                                <option label="Colorado">CO</option>
+                                <option label="Connecticut">CT</option>
+                                <option label="Delaware">DE</option>
+                                <option label="Florida">FL</option>
+                                <option label="Georgia">GA</option>
+                                <option label="Hawaii">HI</option>
+                                <option label="Idaho">ID</option>
+                                <option label="Illinois">IL</option>
+                                <option label="Indiana">IN</option>
+                                <option label="Iowa">IA</option>
+                                <option label="Kansas">KS</option>
+                                <option label="Kentucky">KY</option>
+                                <option label="Louisiana">LA</option>
+                                <option label="Maine">ME</option>
+                                <option label="Maryland">MD</option>
+                                <option label="Massachusetts">MA</option>
+                                <option label="Michigan">MI</option>
+                                <option label="Minnesota">MN</option>
+                                <option label="Mississippi">MS</option>
+                                <option label="Missouri">MO</option>
+                                <option label="Montana">MT</option>
+                                <option label="Nebraska">NE</option>
+                                <option label="Nevada">NV</option>
+                                <option label="New Hampshire">NH</option>
+                                <option label="New Jersey">NJ</option>
+                                <option label="New Mexico">NM</option>
+                                <option label="New York">NY</option>
+                                <option label="North Carolina">NC</option>
+                                <option label="North Dakota">ND</option>
+                                <option label="Ohio">OH</option>
+                                <option label="Oklahoma">OK</option>
+                                <option label="Oregon">OR</option>
+                                <option label="Pennsylvania">PA</option>
+                                <option label="Rhode Island">RI</option>
+                                <option label="South Carolina">SC</option>
+                                <option label="South Dakota">SD</option>
+                                <option label="Tennessee">TN</option>
+                                <option label="Texas">TX</option>
+                                <option label="Utah">UT</option>
+                                <option label="Vermont">VT</option>
+                                <option label="Virginia">VA</option>
+                                <option label="Washington">WA</option>
+                                <option label="West Virginia">WV</option>
+                                <option label="Wisconsin">WI</option>
+                                <option label="Wyoming">WY</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control_label">Zip</label>
+                            <input type="text" class="form-control input-style" id="zip" placeholder="Zip">
+                        </div>
+                    
+                        <div class="col-md-4">
+                            <label class="control_label">Invoice</label>
+                            <input type="text" class="form-control input-style" id="invoice" placeholder="Invoice Number">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control_label">Comments</label>
+                            <input type="text" class="form-control input-style" id="comments" placeholder="Comments">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control_label">Amount</label>
+                            <input type="text" class="form-control input-style" id="amount" placeholder="Amount">
+                        </div>
+                    
+                        <div class="col-md-4">
+                            <label class="control_label">Card Number</label>
+                            <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number"
+                                src="https://cdn.cardknox.com/ifields/2.15.2401.3101/ifield.htm" id="cardiframe"></iframe>
+                            <input type="hidden" class="form-control" id="card" placeholder="Card Number"
+                                data-ifields-id="card-number-token">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control_label">Expiration Date</label>
+                            <input type="text" class="form-control input-style" id="exp" placeholder="Expiration Date">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control_label">Cvv</label>
+                            <iframe data-ifields-id="cvv" data-ifields-placeholder="Cvv"
+                                src="https://cdn.cardknox.com/ifields/2.15.2401.3101/ifield.htm" id="cvviframe"></iframe>
+                            <input type="hidden" class="form-control" id="cvv" placeholder="Cvv" data-ifields-id="cvv-token">
+                        </div>
+                    </form>
+    
                     <form class="row g-3 p-4" id="cardinfo">
-                        <div class="col-12 ">
-                            <div class=" d-grid gap-2 col-6 mx-auto">
-                                <button class="btn btn-primary " type="button" id="sbmtbtn">
+                        <div class="col-12">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                <button class="btn btn-primary" type="button" id="sbmtbtn">
                                     <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm"
                                         aria-hidden="true"></span>
                                     <span id="sbmtbtncont" role="status">Pay Now</span>
                                 </button>
                             </div>
                         </div>
-                        <div class="col-12 ">
-
+                        <div class="col-12">
                             <iframe id="igp" class="gp hidden d-grid gap-2 col-6 mx-auto" data-ifields-id="igp"
-                                data-ifields-oninit="initGP" src=https://cdn.cardknox.com/ifields/2.15.2401.3101/igp.htm
-                                allowpaymentrequest
+                                data-ifields-oninit="initGP"
+                                src="https://cdn.cardknox.com/ifields/2.15.2401.3101/igp.htm" allowpaymentrequest
                                 sandbox="allow-popups allow-modals allow-scripts allow-same-origin allow-forms allow-popups-to-escape-sandbox allow-top-navigation">
                             </iframe>
-
                         </div>
-                        <div class="col-12 ">
+                        <div class="col-12">
                             <label id="card-data-error" style="color: red;"></label>
                         </div>
                         <div class="col-12 overflow-auto">
-
                             <div id="liveAlertPlaceholder" class="text-break"
                                 style="max-height: 200px;border-color: black;"></div>
-
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
