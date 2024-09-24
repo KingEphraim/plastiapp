@@ -3,15 +3,18 @@ const savebtnspin = document.getElementById("sbmtbtnspin");
 const savebtncont = document.getElementById("sbmtbtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 const appendAlert = (message, type) => {
-    const wrapper = document.createElement('div')
+    // Clear the existing alerts
+    alertPlaceholder.innerHTML = '';
+
+    const wrapper = document.createElement('div');
     wrapper.innerHTML = [
         `<div class="alert alert-${type} alert-dismissible" role="alert">`,
         `   <div>${message}</div>`,
         '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
         '</div>'
-    ].join('')
+    ].join('');
 
-    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
+    alertPlaceholder.appendChild(wrapper); // Use appendChild to add the new alert
     savebtntoggle('on');
 }
 // Function to toggle the Save button state
@@ -59,12 +62,9 @@ function sendtoserver(serverdata) {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.xResult == "A") {
+            if (data.status == "success") {
                 appendAlert(JSON.stringify(data), 'success');
-            } else if (data.xResult == "V") {
-                verify3DS(data);
-                appendAlert(JSON.stringify(data), 'info');
-            } else {
+            }else {
                 appendAlert(JSON.stringify(data), 'danger');
             }
         })
