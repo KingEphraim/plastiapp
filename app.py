@@ -223,16 +223,18 @@ def settings():
 
 @app.route('/ewiclist')
 def ewiclist():
-    return render_template('ewiclist.html')
+    if "username" in session: 
+        user_is_logged_in = session.get('user_is_logged_in', True)        
+        return render_template('ewiclist.html', user_is_logged_in=user_is_logged_in)
+    else:
+        return render_template('ewiclist.html')  
 
 
 @app.route('/tranzact')
 def tranzact():
-    if "username" in session:
-        username = session.get('username', 'Guest')    
-        message = f"You are logged in as {username}! This is your dashboard."    
+    if "username" in session: 
         user_is_logged_in = session.get('user_is_logged_in', True)        
-        return render_template('tranzact.html', message=message, user_is_logged_in=user_is_logged_in)
+        return render_template('tranzact.html', user_is_logged_in=user_is_logged_in)
     else:
         return render_template('tranzact.html')     
     
@@ -538,9 +540,13 @@ def handle_slackrefnum():
 
 
 @app.route('/bulk')
-def bulk():
-    return render_template('bulk.html')
+def bulk():   
 
+    if "username" in session: 
+        user_is_logged_in = session.get('user_is_logged_in', True)        
+        return render_template('bulk.html', user_is_logged_in=user_is_logged_in)
+    else:
+        return render_template('bulk.html')  
 
 @app.route('/bulk_csv', methods=['POST'])
 def bulk_csv():
