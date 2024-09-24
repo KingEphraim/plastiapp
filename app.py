@@ -107,6 +107,74 @@ def login():
 
     return render_template("login.html")
 
+@app.route('/save_settings', methods=['POST'])
+def save_settings():
+    mylogs.add_to_log(f"Visit to /save_settings Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}")
+
+    if "username" not in session:
+        return jsonify({'status': 'fail', 'message': 'User not logged in.'}), 403
+
+    username = session.get('username')
+
+    if request.method == "POST":
+        settings_data = request.get_json()
+        if settings_data:
+            try:
+                # Retrieve settings from the JSON data
+                new_email = settings_data.get('email')
+                new_key = settings_data.get('key')
+                new_phone = settings_data.get('phone')
+
+                # Ensure required fields are provided
+                if not new_email or not new_key or not new_phone:
+                    return jsonify({'status': 'fail', 'message': 'Missing email or key or phone.'})
+
+                # Update the user's settings in the database
+                users_collection.update_one(
+                    {"username": username},
+                    {"$set": {"useremail": new_email, "key": new_key,"phone": new_phone}}
+                )
+
+                return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
+
+            except OperationFailure as e:
+                # Handle MongoDB OperationFailure
+                error_message = str(e)
+                return jsonify({'status': 'error', 'message': error_message})
+        
+        else:
+            return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
+
+    return jsonify({'status': 'fail', 'message': 'Invalid request method.'})
+
+
+@app.route('/load_settings', methods=['GET'])
+def load_settings():
+    mylogs.add_to_log(f"Visit to /load_settings Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}")
+
+    if "username" not in session:
+        return jsonify({'status': 'fail', 'message': 'User not logged in.'}), 403
+
+    username = session.get('username')
+
+    if request.method == "GET":
+        try:
+            # Retrieve user settings from the database
+            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1})
+            
+            if user_settings:
+                return jsonify({'status': 'success', 'settings': user_settings})
+            else:
+                return jsonify({'status': 'fail', 'message': 'Settings not found.'})
+
+        except OperationFailure as e:
+            # Handle MongoDB OperationFailure
+            error_message = str(e)
+            return jsonify({'status': 'error', 'message': error_message})
+
+    return jsonify({'status': 'fail', 'message': 'Invalid request method.'})
+
+
 @app.route("/dashboard")
 def dashboard():
     if "username" in session:

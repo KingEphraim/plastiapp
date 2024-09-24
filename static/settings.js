@@ -14,56 +14,43 @@ const appendAlert = (message, type) => {
     alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
     savebtntoggle('on');
 }
+// Function to toggle the Save button state
 function savebtntoggle(state) {
-
-
-
     if (state === 'on') {
         savebtn.disabled = false;
         savebtnspin.hidden = true;
-        savebtncont.textContent = "Pay Now";
-        // Perform actions when the switch is turned on
+        savebtncont.textContent = "Save Settings";
         console.log('Switch is ON');
-        // Add more code as needed
     } else if (state === 'off') {
         savebtn.disabled = true;
         savebtnspin.hidden = false;
         savebtncont.textContent = "Please Wait";
-
-        // Perform actions when the switch is turned off
         console.log('Switch is OFF');
-        // Add more code as needed
     } else {
-        // Handle invalid state
         console.error('Invalid state. Please provide "on" or "off".');
     }
 }
 
+// Save button event listener
 savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
-
     var formData = {};
-    var fields = ["key", "email","phone"];
+    var fields = ["key", "email", "phone"];
 
     fields.forEach(function (field) {
         formData[field] = document.getElementById(field).value;
     });
 
     formData['tranzType'] = "S";
-    // Convert JSON to string for display or further processing
     var formDataJSON = JSON.stringify(formData);
 
-    sendtoserver(formDataJSON)
-
-
-
+    sendtoserver(formDataJSON);
 });
 
-
+// Function to send data to the server
 function sendtoserver(serverdata) {
-
-    fetch('/sendtocardknox', {
+    fetch('/save_settings', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -75,12 +62,43 @@ function sendtoserver(serverdata) {
             if (data.xResult == "A") {
                 appendAlert(JSON.stringify(data), 'success');
             } else if (data.xResult == "V") {
-                verify3DS(data)
+                verify3DS(data);
                 appendAlert(JSON.stringify(data), 'info');
-            }
-            else {
+            } else {
                 appendAlert(JSON.stringify(data), 'danger');
             }
         })
         .catch(error => console.error(error));
 }
+
+// Function to load settings from the server
+function loadSettings() {
+    fetch('/load_settings', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Populate the form fields with loaded settings
+            document.getElementById('email').value = data.settings.useremail || '';
+            document.getElementById('key').value = data.settings.key || '';
+            document.getElementById('phone').value = data.settings.phone || '';
+
+            appendAlert('Settings loaded successfully!', 'success');
+        } else {
+            appendAlert(data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        appendAlert('Failed to load settings. Please try again.', 'danger');
+    });
+}
+
+// Automatically load settings when the page loads
+window.onload = function() {
+    loadSettings();
+};
