@@ -22,6 +22,26 @@ client = MongoClient(config['client'],server_api=ServerApi('1'))
 db = client[config['db']]  # Change this to your actual database name
 users_collection = db["users"]
 
+class UserSettingsManager:
+    def __init__(self, session):
+        self.user_settings = None
+        self.load_user_settings(session)
+
+    def load_user_settings(self, session):
+        try:
+            username = session.get('username')
+            print(username)
+            if username is None:
+                raise ValueError("Username not found in session.")
+            
+            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1})
+            print(self.user_settings['key'])
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            self.user_settings = None
+
+
+
 
 
 
@@ -210,24 +230,24 @@ def tranzact():
 
 @app.route('/sendtocardknox', methods=['POST'])
 def sendtocardknox(): 
-    mylogs.add_to_log(f'Incoming data: {request.data}')    
-      
+    mylogs.add_to_log(f'Incoming data: {request.data}')      
+    user_manager = UserSettingsManager(session)
+    
+    settings = user_manager.user_settings or {
+        "useremail": "",
+        "key": config['xKey'],
+        "phone": "",
+        }
     
     
 
-    datafromuser = request.get_json()  
-
-    # try:
-    #     inserted_id = add_item_to_database(datafromuser)        
-    #     print(f"Item added to the database with ID: {inserted_id}")
-    # except Exception as e:
-    #     print(f"Error: {e}")
+    datafromuser = request.get_json()     
 
     if (datafromuser['tranzType'] == 'R'):
 
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
-            'xkey': config['xKey'],
+            'xkey': settings['key'],
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
@@ -252,7 +272,7 @@ def sendtocardknox():
     elif (datafromuser['tranzType'] == 'V'):
         url = 'https://x1.cardknox.com/verifyjson'
         tockdata = {
-            'xkey': config['xKey'],
+            'xkey': settings['key'],
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
@@ -268,7 +288,7 @@ def sendtocardknox():
 
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
-            'xkey': config['xKey'],
+            'xkey': settings['key'],
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
