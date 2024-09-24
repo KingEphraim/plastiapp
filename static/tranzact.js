@@ -38,8 +38,8 @@ window.onload = function () {
 
     let style = {
         'background-color': 'rgb(255, 255, 255)',
-        'border-color': '#ccc',
-        'border-radius': '6px',
+        'border-color': '#e6e6e6',
+        'border-radius': '10px',
         'border-style': 'solid',
         'border-width': '2px',
         padding: '10px',
@@ -47,9 +47,11 @@ window.onload = function () {
         'box-sizing': 'border-box',
         width: '100%',
         'overflow': 'hidden',
-        'font-size': '16px',
+        'font-size': '1em',
         'font-weight': '400',
-        'line-height': '24px',
+        'line-height': '21px',       
+        'font-family': '"Inter", "sans-serif"',
+        
     };
     setIfieldStyle('card-number', style);
     setIfieldStyle('cvv', style);
