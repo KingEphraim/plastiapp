@@ -97,3 +97,22 @@ body {
     box-shadow: 0 0 0 0;
     background-color: #ffffff00;
 }
+
+.login-form {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 20PX;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  .register-form {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 20PX;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
