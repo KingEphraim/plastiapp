@@ -120,6 +120,16 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("login"))
 
+@app.route('/settings')
+def settings():
+    if "username" in session:
+        username = session.get('username', 'Guest')    
+        message = f"You are logged in as {username}! This is your settings."    
+        user_is_logged_in = session.get('user_is_logged_in', True)
+        return render_template('settings.html', message=message, user_is_logged_in=user_is_logged_in)
+    else:
+        return redirect(url_for("login"))  
+
 @app.route('/ewiclist')
 def ewiclist():
     return render_template('ewiclist.html')
