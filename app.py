@@ -147,6 +147,7 @@ def save_settings():
                 new_email = settings_data.get('email')
                 new_key = settings_data.get('key')
                 new_phone = settings_data.get('phone')
+                new_threeds = settings_data.get('threeds')
 
                 # Ensure required fields are provided
                 if not new_email or not new_key or not new_phone:
@@ -155,7 +156,7 @@ def save_settings():
                 # Update the user's settings in the database
                 users_collection.update_one(
                     {"username": username},
-                    {"$set": {"useremail": new_email, "key": new_key,"phone": new_phone}}
+                    {"$set": {"useremail": new_email, "key": new_key,"phone": new_phone,"threeds": new_threeds}}
                 )
 
                 return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
@@ -183,7 +184,7 @@ def load_settings():
     if request.method == "GET":
         try:
             # Retrieve user settings from the database
-            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1})
+            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1, "threeds": 1})
             
             if user_settings:
                 return jsonify({'status': 'success', 'settings': user_settings})

@@ -1,4 +1,7 @@
-//global params
+let userEmail = '';
+let userKey = '';
+let userPhone = '';
+let user3ds = false;
 const sbmtbtn = document.getElementById("sbmtbtn");
 const sbmtbtnspin = document.getElementById("sbmtbtnspin");
 const sbmtbtncont = document.getElementById("sbmtbtncont");
@@ -15,6 +18,38 @@ const appendAlert = (message, type) => {
     alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
     sbmtbtntoggle('on');
 }
+
+
+
+// Function to load settings from the server
+async function loadSettings() {
+    try {
+        const response = await fetch('/load_settings', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            // Assign settings to variables
+            userEmail = data.settings.useremail || '';
+            userKey = data.settings.key || '';
+            userPhone = data.settings.phone || '';
+            user3ds = data.settings.threeds;
+
+            
+
+            console.log('Settings loaded successfully!', data);
+        } else {
+            console.log(data.message);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 // Function to format the "exp" field
 function formatExp(exp) {
@@ -34,7 +69,19 @@ function formatExp(exp) {
 
 window.onload = function () {
     ckGooglePay.enableGooglePay({ amountField: "amount" });
-    enable3DS('staging', handle3DSResults);
+    (async () => {
+        await loadSettings();        
+        console.log(userEmail, userKey, userPhone, user3ds);
+        if (user3ds === true) {
+            console.log("threeds is true");
+            enable3DS('staging', handle3DSResults);
+        } else if (user3ds === false) {
+            console.log("threeds is false");
+        } else {
+            console.log("threeds is neither true nor false");
+        }
+    })();
+    
 
     let style = {
         'background-color': '#fafbff',

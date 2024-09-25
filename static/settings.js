@@ -39,10 +39,14 @@ savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
     var formData = {};
-    var fields = ["key", "email", "phone"];
+    var fields = ["key", "email", "phone", "threeds"]; 
 
     fields.forEach(function (field) {
-        formData[field] = document.getElementById(field).value;
+        if (field === "threeds") {
+            formData[field] = document.getElementById(field).checked; // Get checkbox status (true/false)
+        } else {
+            formData[field] = document.getElementById(field).value;
+        }
     });
 
     formData['tranzType'] = "S";
@@ -86,6 +90,7 @@ function loadSettings() {
             document.getElementById('email').value = data.settings.useremail || '';
             document.getElementById('key').value = data.settings.key || '';
             document.getElementById('phone').value = data.settings.phone || '';
+            document.getElementById('threeds').checked = data.settings.threeds || false; 
 
             appendAlert('Settings loaded successfully!', 'success');
         } else {
