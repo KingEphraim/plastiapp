@@ -353,32 +353,53 @@ def sendtocardknox():
     return response.json()
 
 
+import hashlib
+import urllib.parse
+from flask import Flask, request, jsonify, render_template
+
+app = Flask(__name__)
+
+import hashlib
+import urllib.parse
+from flask import Flask, request, jsonify, render_template
+
+app = Flask(__name__)
+
 @app.route('/webhookpin', methods=['GET', 'POST'])
 def webhookpin():
     if request.method == 'POST':
-
         trnsdata = request.form.get('data')
         pin = request.form.get('pin')
 
-        lines = trnsdata.split('\n')
+        # Check if trnsdata is in query string format
+        if '=' in trnsdata and '&' in trnsdata:
+            # Parse the URL-encoded data
+            parsed_data = urllib.parse.parse_qs(trnsdata)
 
-        # Remove empty lines
-        lines = [line for line in lines if line.strip()]
+            # Convert to a flat dictionary with lowercase keys
+            pairs = {key.lower(): value[0] for key, value in parsed_data.items()}
 
-        # Parse key-value pairs
-        pairs = {}
-        for i in range(0, len(lines), 2):
-            key = lines[i].strip()
-            value = lines[i+1].strip().strip("'")
-            pairs[key] = value
+        else:
+            # Handle the case where data is in the original format
+            lines = trnsdata.split('\n')
+            lines = [line for line in lines if line.strip()]
+            pairs = {}
+            for i in range(0, len(lines), 2):
+                key = lines[i].strip().lower()
+                value = lines[i + 1].strip().strip("'")
+                pairs[key] = value
 
+        # Sort the dictionary by keys
         sorted_dict = dict(sorted(pairs.items(), key=lambda item: item[0]))
+
+        # Extract values and concatenate with PIN
         values_string = ''.join([str(value) for value in sorted_dict.values()])
-        print(values_string)
         values_string_pin = values_string + pin
+
+        # Hash the concatenated string using MD5
         md5_hash = hashlib.md5(values_string_pin.encode()).hexdigest()
-        print(md5_hash)
-        # process the form data and return a response
+
+        # Process the form data and return a response
         return jsonify(md5_hash)
     else:
         return render_template('webhookpin.html')
