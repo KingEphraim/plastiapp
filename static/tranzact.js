@@ -84,18 +84,19 @@ window.onload = function () {
     
 
     let style = {
-        'font-family': 'sans-serif',
-        'background-color': '#fafbff',
-        'border-color': '#e6e6e6',
-        'border-radius': '10px',
-        'border-style': 'solid',
+        'font-family': "'Inter', sans-serif",
+        color: '#1f2937',
+        border: '2px solid #d1d5db', 
+        'background-color': '#f9fafb',        
+        'border-radius': '8px',        
         'border-width': '2px',
-        padding: '10px',
-        display: 'block',
+        'box-shadow': '0 2px 4px rgba(0, 0, 0, 0.05)' , 
+        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+        padding: '10px',        
         'box-sizing': 'border-box',
         width: '100%',
         'overflow': 'hidden',
-        'font-size': '1em',
+        'font-size': '16px',
         'font-weight': '400',
         'line-height': '28px',       
         

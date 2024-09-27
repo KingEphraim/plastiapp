@@ -70,30 +70,31 @@ h1 {
 
 .input-style {
     padding: 12px;
-    border: 2px solid #e6e6e6;
-    border-radius: 10px;
+    border: 2px solid #d1d5db; /* Light gray */
+    border-radius: 8px; /* Slightly smaller radius for modern look */
     font-family: 'Inter', sans-serif;
     font-size: 16px;
-    color: #2c2c2c;
+    color: #1f2937; /* Darker gray for text */
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fafbff;
-    /* Light background to input */
+    background-color: #f9fafb; /* Light background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow for subtle depth */
 }
 
 .input-style:focus {
-    border-color: #000000;
-    box-shadow: none;
-
+    border-color: #000000; /* Soft blue for focus */
+    box-shadow: none
 }
 
 .control_label {
     font-size: 14px;
     line-height: 18px;
     font-weight: 600;
-    color: #252525;
-    /* Matched color */
+    color: #374151; /* Medium gray for text */
+    margin-bottom: 8px;
+    display: block;
 }
+
 
 .accordion-item,
 .accordion-header {
