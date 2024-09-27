@@ -84,6 +84,7 @@ window.onload = function () {
     
 
     let style = {
+        'font-family': 'sans-serif',
         'background-color': '#fafbff',
         'border-color': '#e6e6e6',
         'border-radius': '10px',
@@ -97,10 +98,11 @@ window.onload = function () {
         'font-size': '1em',
         'font-weight': '400',
         'line-height': '28px',       
-        'font-family': '"Inter", "sans-serif"',
+        
         
     };
     let cardfocus = {
+        'font-family': 'sans-serif',
         'background-color': '#fafbff',
         'border-color': '#e6e6e6',
         'border-radius': '10px',
@@ -114,10 +116,11 @@ window.onload = function () {
         'font-size': '1em',
         'font-weight': '400',
         'line-height': '28px',       
-        'font-family': '"Inter", "sans-serif"',
+        
         
     };
     let cvvfocus = {
+        'font-family': 'sans-serif',
         'background-color': '#fafbff',
         'border-color': '#e6e6e6',
         'border-radius': '10px',
@@ -131,7 +134,7 @@ window.onload = function () {
         'font-size': '1em',
         'font-weight': '400',
         'line-height': '28px',       
-        'font-family': '"Inter", "sans-serif"',
+        
         
     };
     setIfieldStyle('card-number', style);
