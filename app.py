@@ -396,6 +396,7 @@ def process_data():
     
     apltype = request.args.get('apltype')
     aplstate = request.args.get('state')
+    aplenvironment = request.args.get('environment')
     print(aplstate)
     print(apltype)
     url = "https://x1.cardknox.com/reportjson/"
@@ -405,7 +406,7 @@ def process_data():
         "xsoftwarename": "PlatiappAPL",
         "xsoftwareversion": "1.0",
         "xCommand": "report:ebtwapl",
-        "xewicaplenvironment": "production",
+        "xewicaplenvironment": aplenvironment,
         "xebtwstate": aplstate
     })
     headers = {

@@ -8,6 +8,7 @@ document.getElementById("pullprodreport").addEventListener("click", pulprodrepor
 function pulcatreport() {
   $table.bootstrapTable('destroy')
   $state = document.getElementById("state").value 
+  $environment = document.getElementById("environment").value 
   $('#table').bootstrapTable({
     
     url: '/aplpull',
@@ -15,7 +16,7 @@ function pulcatreport() {
     search: true,
     showSearchClearButton: true,
     visibleSearch: false,
-    queryParams:"apltype=catg&state="+$state,
+    queryParams:"apltype=catg&state="+$state+"&environment="+$environment,
     columns: [{
       sortable: true,
       field: 'CategoryCode',
@@ -57,6 +58,7 @@ function pulcatreport() {
 function pulprodreport() {
   $table.bootstrapTable('destroy')
   $state = document.getElementById("state").value 
+  $environment = document.getElementById("environment").value 
   //let data = { 'name': 'John', 'age': 30 };
   // fetch('/prod', {
   //   method: 'POST',
@@ -75,7 +77,7 @@ function pulprodreport() {
       search: true,
       showSearchClearButton: true,
       visibleSearch: false,
-      queryParams:"apltype=prod&state="+$state,
+      queryParams:"apltype=prod&state="+$state+"&environment="+$environment,
       columns: [{
         sortable: true,
         field: 'UPC_PLU',
