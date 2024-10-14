@@ -386,13 +386,21 @@ def webhookpin():
 
 @app.route('/aplpull', methods=['POST', 'GET'])
 def process_data():
+    user_manager = UserSettingsManager(session)
+    
+    settings = user_manager.user_settings or {
+        "useremail": "",
+        "key": config['xKey'],
+        "phone": "",
+        }
+    
     apltype = request.args.get('apltype')
     aplstate = request.args.get('state')
     print(aplstate)
     print(apltype)
     url = "https://x1.cardknox.com/reportjson/"
     payload = json.dumps({
-        "xkey": config['xKey'],
+        'xkey': settings['key'],
         "xversion": "5.0.0",
         "xsoftwarename": "PlatiappAPL",
         "xsoftwareversion": "1.0",
