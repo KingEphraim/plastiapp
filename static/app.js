@@ -48,8 +48,17 @@ function pulcatreport() {
       title: 'Search',
       align: 'left',
       visible: false
-    }]
-  })
+    }],
+    onLoadError: function (status, res) {
+      let message;
+      if (status === 404) {
+        message = 'No report found for the selected criteria.';
+      } else {
+        message = 'An error occurred while loading the report.';
+      }
+      alert(`${message}\n\nServer Response: ${res.responseText}`);
+    }
+  });
 
 
 
@@ -160,8 +169,17 @@ function pulprodreport() {
         title: 'Search',
         align: 'left',
         visible: false
-      }]
-    })
+      }],
+      onLoadError: function (status, res) {
+        let message;
+        if (status === 404) {
+          message = 'No report found for the selected criteria.';
+        } else {
+          message = 'An error occurred while loading the report.';
+        }
+        alert(`${message}\n\nServer Response: ${res.responseText}`);
+      }
+    });
 
 }
 var $table = $('#table')

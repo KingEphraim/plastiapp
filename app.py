@@ -392,13 +392,15 @@ def process_data():
         "useremail": "",
         "key": config['xKey'],
         "phone": "",
-        }
+    }
     
     apltype = request.args.get('apltype')
     aplstate = request.args.get('state')
     aplenvironment = request.args.get('environment')
+    
     print(aplstate)
     print(apltype)
+    
     url = "https://x1.cardknox.com/reportjson/"
     payload = json.dumps({
         'xkey': settings['key'],
@@ -412,22 +414,47 @@ def process_data():
     headers = {
         'Content-Type': 'application/json'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    responseparse = json.loads(response.text)
-    for item in responseparse["xReportData"]:
-        if item['Type'] == 'Products':
-            products_url = item['URL']
-        elif item['Type'] == 'Categories':
-            categories_url = item['URL']
+
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise an HTTPError for bad responses (4xx or 5xx)
+        
+        responseparse = response.json()
+        
+        # Check for specific error response
+        if responseparse.get("xResult") == "E" and responseparse.get("xStatus") == "Error":
+            error_message = responseparse.get("xError", "Unknown error occurred.")
+            ref_num = responseparse.get("xRefNum", "N/A")
+            return f"Error: {error_message} (Reference Number: {ref_num})", 400
+        
+    except requests.exceptions.RequestException as e:
+        return f"Error: {str(e)}", 500
+    except ValueError as e:
+        return f"Error parsing JSON: {str(e)}", 500
+
+    products_url = categories_url = None
+    for item in responseparse.get("xReportData", []):
+        if item.get('Type') == 'Products':
+            products_url = item.get('URL')
+        elif item.get('Type') == 'Categories':
+            categories_url = item.get('URL')
             break
+    
+    urlreport = None
     if apltype == "prod":
         urlreport = products_url
     elif apltype == "catg":
         urlreport = categories_url
-
-    print(urlreport)
-    prodresponse = requests.get(urlreport)
-    return prodresponse.text
+    
+    if not urlreport:
+        return "Error: No report URL found.", 404
+    
+    try:
+        prodresponse = requests.get(urlreport)
+        prodresponse.raise_for_status()
+        return prodresponse.text
+    except requests.exceptions.RequestException as e:
+        return f"Error fetching report: {str(e)}", 500
 
 
 @app.route('/receipt')
