@@ -1,3 +1,20 @@
+const alertUser = document.getElementById('alertUser');
+
+const appendAlert = (message, type) => {
+  alertUser.innerHTML = `
+    <div class="alert alert-${type} alert-dismissible" role="alert">
+      <div>${message}</div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  `;
+};
+
+const closeAlert = () => {
+  const alertDiv = alertUser.querySelector('.alert');
+  if (alertDiv) bootstrap.Alert.getOrCreateInstance(alertDiv).close();
+};
+
+
 async function fetchAsync(url) {
   let response = await fetch(url);
   let data = await response.json();
@@ -7,6 +24,7 @@ document.getElementById("pullcatreport").addEventListener("click", pulcatreport)
 document.getElementById("pullprodreport").addEventListener("click", pulprodreport);
 function pulcatreport() {
   $table.bootstrapTable('destroy')
+  closeAlert()
   $state = document.getElementById("state").value 
   $environment = document.getElementById("environment").value 
   $('#table').bootstrapTable({
@@ -55,8 +73,9 @@ function pulcatreport() {
         message = 'No report found for the selected criteria.';
       } else {
         message = 'An error occurred while loading the report.';
-      }
-      alert(`${message}\n\nServer Response: ${res.responseText}`);
+      }      
+      appendAlert(`${message}\n\nServer Response: ${res.responseText}`, 'danger');
+      
     }
   });
 
@@ -66,6 +85,7 @@ function pulcatreport() {
 }
 function pulprodreport() {
   $table.bootstrapTable('destroy')
+  closeAlert()
   $state = document.getElementById("state").value 
   $environment = document.getElementById("environment").value 
   //let data = { 'name': 'John', 'age': 30 };
@@ -177,7 +197,7 @@ function pulprodreport() {
         } else {
           message = 'An error occurred while loading the report.';
         }
-        alert(`${message}\n\nServer Response: ${res.responseText}`);
+        appendAlert(`${message}\n\nServer Response: ${res.responseText}`, 'danger');
       }
     });
 
