@@ -23,7 +23,7 @@
       app.cardknox.link
     </div>
     <div class="card-body">
-      <h5 class="card-title">Settings</h5>
+      <h3 class="card-title">Settings</h3>
       <p class="card-text">{{ message }}</p>
       <form class="row g-3 p-4" id="custinfo">
         <div class="col-md-4">
@@ -38,12 +38,45 @@
           <label class="control_label" for="phone">Phone number</label>
           <input type="tel" class="form-control input-style" id="phone" placeholder="Phone number" required>
         </div>
-
-        <div class="col-md-12">
+        <div class="col-md-12 text-center">
+          <label class="control_label">3DS Verification</label>
           <input type="checkbox" class="btn-check" id="threeds" autocomplete="off">
           <label class="btn btn-primary" for="threeds">3DS</label>
         </div>
+        
+        <hr class="my-4">
+        <h5 class="card-title">Cloudim Settings</h5>
+        <div class="col-md-12">
+          <label class="control_label">Cloudim</label>
+          <input type="checkbox" class="btn-check" id="ccdevice" autocomplete="off">
+          <label class="btn btn-primary" for="ccdevice">cloudim</label>
+        </div>
+        <div class="col-md-4">
+          <label class="control_label" for="deviceSerialNumber">Device Serial Number</label>
+          <input type="text" class="form-control input-style" id="deviceSerialNumber" placeholder="Device Serial Number" required>
+        </div>
+        <div class="col-md-4">
+          <label class="control_label" for="deviceMake">Device Make</label>
+          <input type="text" class="form-control input-style" id="deviceMake" placeholder="Device Make" required>
+        </div>
+        <div class="col-md-4">
+          <label class="control_label" for="deviceFriendlyName">Device Friendly Name</label>
+          <input type="text" class="form-control input-style" id="deviceFriendlyName" placeholder="Device Friendly Name" required>
+        </div>
+        <div class="col-md-4">
+          <label class="control_label" for="deviceId">Device Id</label>
+          <input type="text" class="form-control input-style" id="deviceId" placeholder="Device Id"  readonly>
+        </div>
+        <div class="col-12">
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <button class="btn btn-primary" type="button" id="createdevicebtn">
+              <span hidden id="createdevicebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              <span id="createdevicebtncont" role="status">Add device</span>
+            </button>
+          </div>
+        </div>
 
+        <hr class="my-4">
         <div class="col-12">
           <div class="d-grid gap-2 col-6 mx-auto">
             <button class="btn btn-primary" type="button" id="savebtn">
@@ -52,6 +85,7 @@
             </button>
           </div>
         </div>
+        
       </form>
 
       <div class="col-12 overflow-auto">

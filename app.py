@@ -34,7 +34,7 @@ class UserSettingsManager:
             if username is None:
                 raise ValueError("Username not found in session.")
             
-            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1})
+            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1,"deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1})
             print(self.user_settings['key'])
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -147,16 +147,21 @@ def save_settings():
                 new_email = settings_data.get('email')
                 new_key = settings_data.get('key')
                 new_phone = settings_data.get('phone')
+                new_deviceSerialNumber = settings_data.get('deviceSerialNumber')
+                new_deviceMake= settings_data.get('deviceMake')
+                new_deviceFriendlyName = settings_data.get('deviceFriendlyName')
+                new_deviceId = settings_data.get('deviceId')
                 new_threeds = settings_data.get('threeds')
+                new_ccdevice = settings_data.get('ccdevice')
 
                 # Ensure required fields are provided
                 if not new_email or not new_key or not new_phone:
-                    return jsonify({'status': 'fail', 'message': 'Missing email or key or phone.'})
+                    return jsonify({'status': 'fail', 'message': 'Missing email or key or phone or other.'})
 
                 # Update the user's settings in the database
                 users_collection.update_one(
                     {"username": username},
-                    {"$set": {"useremail": new_email, "key": new_key,"phone": new_phone,"threeds": new_threeds}}
+                    {"$set": {"useremail": new_email, "key": new_key,"phone": new_phone,"deviceSerialNumber": new_deviceSerialNumber,"deviceMake": new_deviceMake,"deviceFriendlyName": new_deviceFriendlyName,"deviceId": new_deviceId,"threeds": new_threeds,"ccdevice": new_ccdevice}}
                 )
 
                 return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
@@ -184,7 +189,7 @@ def load_settings():
     if request.method == "GET":
         try:
             # Retrieve user settings from the database
-            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1, "threeds": 1})
+            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1, "deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1, "threeds": 1, "ccdevice": 1})
             
             if user_settings:
                 return jsonify({'status': 'success', 'settings': user_settings})
@@ -250,14 +255,18 @@ def sendtocardknox():
         "useremail": "",
         "key": config['xKey'],
         "phone": "",
+        "deviceSerialNumber": "",
+        "deviceMake": "",
+        "deviceFriendlyName": "",
+        "deviceId": "",
         }
     
     
-
+    headers = {"Content-Type": "application/json"} 
     datafromuser = request.get_json()     
 
     if (datafromuser['tranzType'] == 'R'):
-
+        tockmethod ='post'
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
             'xkey': settings['key'],
@@ -283,6 +292,7 @@ def sendtocardknox():
             'xCvv': datafromuser['cvv'],
         }
     elif (datafromuser['tranzType'] == 'V'):
+        tockmethod ='post'
         url = 'https://x1.cardknox.com/verifyjson'
         tockdata = {
             'xkey': settings['key'],
@@ -296,9 +306,48 @@ def sendtocardknox():
             'x3dsAuthenticationStatus': datafromuser['x3dsAuthenticationStatus'],
             'x3dsSignatureVerificationStatus': datafromuser['x3dsSignatureVerificationStatus'],            
             #'x3dsError': datafromuser['x3dsError']
-        }
-    elif(datafromuser['tranzType'] == 'GP'):
+        }     
+    elif (datafromuser['tranzType'] == 'createdevice'):
+        tockmethod ='post'
+        url = 'https://device.cardknox.com/v1/device'
+        tockdata = {
+            'xDeviceSerialNumber': settings['deviceSerialNumber'],
+            'xDeviceMake': settings['deviceMake'],
+            'xDeviceFriendlyName': settings['deviceFriendlyName'],
+            
+        }  
+        headers['Authorization'] = settings['key'] 
 
+    elif (datafromuser['tranzType'] == 'polldevicesession'):
+        tockmethod ='get'   
+        url = f'https://device.cardknox.com/v1/Session/{datafromuser['sessionid']}'
+        tockdata = {
+            'xDeviceSerialNumber': settings['deviceSerialNumber'],
+            'xDeviceMake': settings['deviceMake'],
+            'xDeviceFriendlyName': settings['deviceFriendlyName'],
+            
+        }  
+        headers['Authorization'] = settings['key']
+              
+
+    elif (datafromuser['tranzType'] == 'sessioninitiate'):
+        tockmethod ='post'
+        url = 'https://device.cardknox.com/v1/Session/initiate'
+        tockdata = {
+            "xPayload":{
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xAmount': datafromuser['amount'],
+            'xCommand': 'cc:sale',
+            'xExternalRequestId': datafromuser['invoice'],
+            'xInvoice': datafromuser['invoice']
+            },
+            "xDeviceId":   settings['deviceId']
+        }  
+        headers['Authorization'] = settings['key'] 
+
+    elif(datafromuser['tranzType'] == 'GP'):
+        tockmethod ='post'
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
             'xkey': settings['key'],
@@ -335,12 +384,21 @@ def sendtocardknox():
     except Exception as e:
         print("Error:", e)
 
-    headers = {"Content-Type": "application/json"} 
+    
     mylogs.add_to_log(f'Data sent to ck: {json_data}')  
-    response = requests.post(url, data=json_data, headers=headers)
+    if (tockmethod == 'get'):
+        response = requests.get(url, headers=headers)
+    else:        
+        response = requests.post(url, data=json_data, headers=headers)
+    
+        
+
+
+    
     if response.status_code == 200:
         ck_response = response.json()
         mylogs.add_to_log(f'Ck 200 response: {ck_response}')  
+           
         
     else:
         mylogs.add_to_log(f'Ck fail response: statuscode - {response.status_code} - error{response.text}')
@@ -392,6 +450,10 @@ def process_data():
         "useremail": "",
         "key": config['xKey'],
         "phone": "",
+        "deviceSerialNumber": "",
+        "deviceMake": "",
+        "deviceFriendlyName": "",
+        "deviceId": "",
     }
     
     apltype = request.args.get('apltype')

@@ -164,7 +164,33 @@ label[for="threeds"]:hover {
 }
 
 /* Hover style for checked */
-#threeds:checked+label[for="threeds"]:hover {
+#ccdevice:checked+label[for="ccdevice"]:hover {
+    background-color: #4B6DF3;
+    /* Hover background color for checked state */
+}
+
+/* Style for unchecked */
+label[for="ccdevice"] {
+    background-color: #AEB6F7;
+    /* Unchecked background color */
+    cursor: pointer;
+}
+
+/* Hover style for unchecked */
+label[for="ccdevice"]:hover {
+    background-color: #3C5AF0;
+    /* Hover background color */
+}
+
+/* Style for checked */
+#ccdevice:checked+label[for="ccdevice"] {
+    background-color: #2E4AD8;
+    /* Checked background color */
+    color: white;
+}
+
+/* Hover style for checked */
+#ccdevice:checked+label[for="ccdevice"]:hover {
     background-color: #4B6DF3;
     /* Hover background color for checked state */
 }

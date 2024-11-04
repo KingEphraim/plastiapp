@@ -1,7 +1,11 @@
 const savebtn = document.getElementById("savebtn");
 const savebtnspin = document.getElementById("sbmtbtnspin");
 const savebtncont = document.getElementById("sbmtbtncont");
+const createdevicebtn = document.getElementById("createdevicebtn");
+const createdevicebtnspin = document.getElementById("createdevicebtnspin");
+const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const inputs = document.querySelectorAll('input');
 const appendAlert = (message, type) => {
     // Clear the existing alerts
     alertPlaceholder.innerHTML = '';
@@ -16,7 +20,17 @@ const appendAlert = (message, type) => {
 
     alertPlaceholder.appendChild(wrapper); // Use appendChild to add the new alert
     savebtntoggle('on');
+    createdevicebtntoggle('on');
 }
+
+inputs.forEach(input => {
+    input.addEventListener('input', () => {
+        
+        createdevicebtntoggle('unsavedChanges');   
+        
+    });
+});
+
 // Function to toggle the Save button state
 function savebtntoggle(state) {
     if (state === 'on') {
@@ -34,15 +48,37 @@ function savebtntoggle(state) {
     }
 }
 
-// Save button event listener
+function createdevicebtntoggle(state) {
+    if (state === 'on') {
+        createdevicebtn.disabled = false;
+        createdevicebtnspin.hidden = true;
+        createdevicebtncont.textContent = "Add device";
+        console.log('Switch is ON');
+    } 
+    else if (state === 'off') {
+        createdevicebtn.disabled = true;
+        createdevicebtnspin.hidden = false;
+        createdevicebtncont.textContent = "Please Wait";
+        console.log('Switch is OFF');
+    } 
+    else if (state === 'unsavedChanges') {
+        createdevicebtn.disabled = true;
+        createdevicebtnspin.hidden = false;
+        createdevicebtncont.textContent = "There are unsaved changes";
+        console.log('Switch is OFF');
+    }else {
+        console.error('Invalid state. Please provide "on" or "off".');
+    }
+}
+
 savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
     var formData = {};
-    var fields = ["key", "email", "phone", "threeds"]; 
+    var fields = ["key", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds", "ccdevice"]; 
 
     fields.forEach(function (field) {
-        if (field === "threeds") {
+        if (field === "threeds" || field === "ccdevice") { // Check for both "threeds" and "ccdevice"
             formData[field] = document.getElementById(field).checked; // Get checkbox status (true/false)
         } else {
             formData[field] = document.getElementById(field).value;
@@ -54,6 +90,51 @@ savebtn.addEventListener("click", () => {
 
     sendtoserver(formDataJSON);
 });
+
+
+createdevicebtn.addEventListener("click", () => {
+    createdevicebtntoggle('off');   
+    
+    var formData = {};
+    var fields = ["deviceSerialNumber", "deviceMake", "deviceFriendlyName"];
+
+    fields.forEach(field => {
+        formData[field] = document.getElementById(field).value;
+    });
+
+    formData['tranzType'] = "createdevice";
+    var formDataJSON = JSON.stringify(formData);
+
+    fetch('/sendtocardknox', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: formDataJSON
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.xResult === "S") {
+                document.getElementById('deviceId').value = data.xDeviceId;
+                savebtn.click();                
+                // Successful case
+                appendAlert(`Device created successfully! ID: ${data.xDeviceId}`, 'success');
+                
+            } else if (data.xResult === "E") {
+                // Error case
+                appendAlert(`Error: ${data.xError} (Ref: ${data.xRefnum})`, 'danger');
+                // Additional logic for error handling can go here
+            } else {
+                // Handle unexpected cases
+                appendAlert(`Unexpected response: ${JSON.stringify(data)}`, 'warning');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            appendAlert(`An error occurred: ${error.message}`, 'danger');
+        });
+});
+
 
 // Function to send data to the server
 function sendtoserver(serverdata) {
@@ -90,7 +171,12 @@ function loadSettings() {
             document.getElementById('email').value = data.settings.useremail || '';
             document.getElementById('key').value = data.settings.key || '';
             document.getElementById('phone').value = data.settings.phone || '';
+            document.getElementById('deviceSerialNumber').value = data.settings.deviceSerialNumber || '';
+            document.getElementById('deviceMake').value = data.settings.deviceMake || '';
+            document.getElementById('deviceFriendlyName').value = data.settings.deviceFriendlyName || '';
+            document.getElementById('deviceId').value = data.settings.deviceId || '';
             document.getElementById('threeds').checked = data.settings.threeds || false; 
+            document.getElementById('ccdevice').checked = data.settings.ccdevice || false; 
 
             appendAlert('Settings loaded successfully!', 'success');
         } else {
