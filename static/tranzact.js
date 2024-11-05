@@ -10,19 +10,20 @@ const ccdevicebtn = document.getElementById("ccdevicebtn");
 const ccdevicebtnspin = document.getElementById("ccdevicebtnspin");
 const ccdevicebtncont = document.getElementById("ccdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-const appendAlert = (message, type) => {
-    const wrapper = document.createElement('div')
+const appendAlert = (message, type, ccDeviceToggle = 'on') => {
+    const wrapper = document.createElement('div');
     wrapper.innerHTML = [
         `<div class="alert alert-${type} alert-dismissible" role="alert">`,
         `   <div>${message}</div>`,
         '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
         '</div>'
-    ].join('')
+    ].join('');
 
-    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild)
+    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild);
     sbmtbtntoggle('on');
-    ccdevicebtntoggle('on');
+    ccdevicebtntoggle(ccDeviceToggle);
 }
+
 
 
 
@@ -253,7 +254,7 @@ function sendtoserver(serverdata) {
                 appendAlert(JSON.stringify(data), 'success');
             }
             else if (data.xResult == "S") {
-                appendAlert(JSON.stringify(data), 'success');
+                appendAlert(JSON.stringify(data), 'success', 'off');
                 pollDeviceSession(data.xSessionId)
             }
             else if (data.xResult == "V") {
@@ -337,6 +338,7 @@ function processGP(paymentResponse) {
 }
 
 function pollDeviceSession(sessionid) {
+    
     const formData = {
         tranzType: "polldevicesession",
         sessionid: sessionid
@@ -364,11 +366,11 @@ function pollDeviceSession(sessionid) {
                 const status = data.xSessionStatus;
                 if (status === "INITIATING" || status === "PROCESSING") {
                     
-                    console.log(`Status: ${status}. Polling again in 3 seconds...`);
-                    appendAlert(JSON.stringify(data), 'info');
-                    ccdevicebtntoggle('off');
-                    setTimeout(poll, 3000);
-                } else if (status === "COMPLETED" || status === "ERROR"|| status === "TIMEOUT"|| status === "USER_CANCELLED"|| status === "API_CANCELLED") {
+                    console.log(`Status: ${status}. Polling again in 1 second...`);
+                    appendAlert(JSON.stringify(data), 'info','off');
+                    
+                    setTimeout(poll, 1000); // Poll every 1 second after the initial delay
+                } else if (status === "COMPLETED" || status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
                     console.log(`Final Status: ${status}`);
                     appendAlert(JSON.stringify(data), 'success');
                 } else {
@@ -381,8 +383,10 @@ function pollDeviceSession(sessionid) {
         .catch(error => console.error('Polling error:', error));
     }
 
-    poll();
+    // Start polling after an initial 6-second delay
+    setTimeout(poll, 5000);
 }
+
 
 
 
@@ -395,7 +399,7 @@ function sbmtbtntoggle(state) {
     if (state === 'on') {
         sbmtbtn.disabled = false;
         sbmtbtnspin.hidden = true;
-        sbmtbtncont.textContent = "Pay Now";
+        sbmtbtncont.textContent = "Pay with card";
         // Perform actions when the switch is turned on
         console.log('Switch is ON');
         // Add more code as needed
