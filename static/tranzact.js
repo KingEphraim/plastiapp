@@ -254,7 +254,7 @@ function sendtoserver(serverdata) {
                 appendAlert(JSON.stringify(data), 'success');
             }
             else if (data.xResult == "S") {
-                appendAlert(JSON.stringify(data), 'success', 'off');
+                appendAlert(JSON.stringify(data), 'info', 'off');
                 pollDeviceSession(data.xSessionId)
             }
             else if (data.xResult == "V") {
@@ -370,9 +370,12 @@ function pollDeviceSession(sessionid) {
                     appendAlert(JSON.stringify(data), 'info','off');
                     
                     setTimeout(poll, 1000); // Poll every 1 second after the initial delay
-                } else if (status === "COMPLETED" || status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
+                } else if (status === "COMPLETED") {
                     console.log(`Final Status: ${status}`);
                     appendAlert(JSON.stringify(data), 'success');
+                } else if (status === status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
+                    console.log(`Final Status: ${status}`);
+                    appendAlert(JSON.stringify(data), 'danger');
                 } else {
                     console.log(`Unknown Status: ${status}`);
                 }
