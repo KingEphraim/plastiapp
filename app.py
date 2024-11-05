@@ -320,7 +320,7 @@ def sendtocardknox():
 
     elif (datafromuser['tranzType'] == 'polldevicesession'):
         tockmethod ='get'   
-        url = f'https://device.cardknox.com/v1/Session/{datafromuser['sessionid']}'
+        url = f"https://device.cardknox.com/v1/Session/{datafromuser['sessionid']}"
         tockdata = {
             'xDeviceSerialNumber': settings['deviceSerialNumber'],
             'xDeviceMake': settings['deviceMake'],
