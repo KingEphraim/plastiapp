@@ -23,6 +23,26 @@ const appendAlert = (message, type) => {
     createdevicebtntoggle('on');
 }
 
+// Function to update the label based on the checkbox state
+function updateLabel(checkboxId, labelId) {
+    const checkbox = document.getElementById(checkboxId);
+    const label = document.getElementById(labelId);
+    label.textContent = checkbox.checked ? "Enabled" : "Disabled";
+}
+
+// Add event listeners for both checkboxes
+document.getElementById("ccdevice").addEventListener("change", function() {
+    updateLabel("ccdevice", "ccdeviceLabel");
+});
+
+document.getElementById("threeds").addEventListener("change", function() {
+    updateLabel("threeds", "threedsLabel");
+});
+
+
+
+
+
 inputs.forEach(input => {
     input.addEventListener('input', () => {
         
@@ -177,7 +197,8 @@ function loadSettings() {
             document.getElementById('deviceId').value = data.settings.deviceId || '';
             document.getElementById('threeds').checked = data.settings.threeds || false; 
             document.getElementById('ccdevice').checked = data.settings.ccdevice || false; 
-
+            updateLabel("ccdevice", "ccdeviceLabel");
+            updateLabel("threeds", "threedsLabel");
             appendAlert('Settings loaded successfully!', 'success');
         } else {
             appendAlert(data.message, 'danger');
@@ -189,7 +210,8 @@ function loadSettings() {
     });
 }
 
-// Automatically load settings when the page loads
+
 window.onload = function() {
     loadSettings();
+    
 };
