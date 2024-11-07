@@ -249,7 +249,6 @@ def tranzact():
 def sendtocardknox(): 
     mylogs.add_to_log(f'Incoming data: {request.data}')      
     user_manager = UserSettingsManager(session)
-    
     settings = user_manager.user_settings or {
         "useremail": "",
         "key": config['xKey'],
@@ -267,13 +266,13 @@ def sendtocardknox():
 
     if (datafromuser['tranzType'] == 'R'):
         tockmethod ='post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = "https://x1.cardknox.com/gatewayjson"        
         tockdata = {
-            'xkey': settings['key'],
+            'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
-            'xCommand': settings['command'],
+            'xCommand': settings.get('command',"cc:sale"),
             'xVendorID': '128717',
             #'xAllowNonAuthenticated': 'true',
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
@@ -295,7 +294,7 @@ def sendtocardknox():
         tockmethod ='post'
         url = 'https://x1.cardknox.com/verifyjson'
         tockdata = {
-            'xkey': settings['key'],
+            'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
@@ -316,7 +315,7 @@ def sendtocardknox():
             'xDeviceFriendlyName': settings['deviceFriendlyName'],
             
         }  
-        headers['Authorization'] = settings['key'] 
+        headers['Authorization'] = settings.get('key', config['xKey'])
 
     elif (datafromuser['tranzType'] == 'polldevicesession'):
         tockmethod ='get'   
@@ -327,7 +326,7 @@ def sendtocardknox():
             'xDeviceFriendlyName': settings['deviceFriendlyName'],
             
         }  
-        headers['Authorization'] = settings['key']
+        headers['Authorization'] = settings.get('key', config['xKey'])
               
 
     elif (datafromuser['tranzType'] == 'sessioninitiate'):
@@ -338,23 +337,23 @@ def sendtocardknox():
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
             'xAmount': datafromuser['amount'],
-            'xCommand': 'cc:sale',
+            'xCommand': settings.get('command',"cc:sale"),
             'xExternalRequestId': datafromuser['invoice'],
             'xInvoice': datafromuser['invoice']
             },
             "xDeviceId":   settings['deviceId']
         }  
-        headers['Authorization'] = settings['key'] 
+        headers['Authorization'] = settings.get('key', config['xKey'])
 
     elif(datafromuser['tranzType'] == 'GP'):
         tockmethod ='post'
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
-            'xkey': settings['key'],
+            'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
-            'xCommand': settings['command'],
+            'xCommand': settings.get('command',"cc:sale"),
             'xVendorID': '128717',
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
             'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
@@ -465,7 +464,7 @@ def process_data():
     
     url = "https://x1.cardknox.com/reportjson/"
     payload = json.dumps({
-        'xkey': settings['key'],
+        'xkey': settings.get('key', config['xKey']),
         "xversion": "5.0.0",
         "xsoftwarename": "PlatiappAPL",
         "xsoftwareversion": "1.0",
