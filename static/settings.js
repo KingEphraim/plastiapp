@@ -199,9 +199,9 @@ function loadSettings() {
             document.getElementById('ccdevice').checked = data.settings.ccdevice || false; 
             updateLabel("ccdevice", "ccdeviceLabel");
             updateLabel("threeds", "threedsLabel");
-            appendAlert('Settings loaded successfully!', 'success');
+            console.log('Settings loaded successfully!', 'success');
         } else {
-            appendAlert(data.message, 'danger');
+            console.log(data.message);
         }
     })
     .catch(error => {
@@ -215,3 +215,73 @@ window.onload = function() {
     loadSettings();
     
 };
+
+// Function to hide all sections
+function hideSections() {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+      section.style.display = 'none';
+    });
+}
+
+// Function to show the clicked section
+function showSection(sectionId) {
+    hideSections();
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.style.display = 'block';
+      updateSectionName(sectionId); // Update the section name when a section is shown
+    }
+}
+
+// Function to update the active link
+function updateActiveLink(activeLinkId) {
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      link.classList.remove('active'); // Remove 'active' class from all links
+    });
+    const activeLink = document.getElementById(activeLinkId);
+    if (activeLink) {
+      activeLink.classList.add('active'); // Add 'active' class to the clicked link
+    }
+}
+
+// Function to update the section name
+function updateSectionName(sectionId) {
+    const sectionNames = {
+      'profile-section': 'Profile',
+      'transaction-section': 'Transactions',
+      'cloudim-section': 'CloudIM'
+    };
+
+    let sectionName = sectionNames[sectionId] || 'Unknown Section';
+    const sectionNameElement = document.getElementById('section-name'); // Get the <h4> element
+
+    // Update the text of the <h4> element
+    if (sectionNameElement) {
+      sectionNameElement.textContent = `${sectionName}`;
+    }
+}
+
+// Add click event listeners to sidebar links
+document.getElementById('profile-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection('profile-section');
+    updateActiveLink('profile-link'); // Highlight the clicked link
+});
+
+document.getElementById('transaction-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection('transaction-section');
+    updateActiveLink('transaction-link'); // Highlight the clicked link
+});
+
+document.getElementById('cloudim-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection('cloudim-section');
+    updateActiveLink('cloudim-link'); // Highlight the clicked link
+});
+
+// Show the profile section by default
+showSection('profile-section');
+updateActiveLink('profile-link'); // Highlight the default section
