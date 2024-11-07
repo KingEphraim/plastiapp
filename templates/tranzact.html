@@ -20,6 +20,9 @@
             <div class="col-md-12">
                 <div class="tranzact-form">
                     <h1>Tranzact</h1>
+                    {% if not user_is_logged_in %}
+                    <p><small>Login to change your settings—because secret powers require proper credentials! 🔒😉</small></p>
+                    {% endif %}
                     <form class="row g-3 p-4" id="custinfo">
                         <div class="col-md-4">
                             <label class="control_label" for="name">Full name</label>
