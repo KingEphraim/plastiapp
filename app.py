@@ -34,8 +34,8 @@ class UserSettingsManager:
             if username is None:
                 raise ValueError("Username not found in session.")
             
-            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1,"deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1})
-            print(self.user_settings['key'])
+            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1,"deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1})
+            
         except Exception as e:
             print(f"An error occurred: {e}")
             self.user_settings = None
@@ -146,6 +146,7 @@ def save_settings():
                 # Retrieve settings from the JSON data
                 new_email = settings_data.get('email')
                 new_key = settings_data.get('key')
+                new_command = settings_data.get('command')
                 new_phone = settings_data.get('phone')
                 new_deviceSerialNumber = settings_data.get('deviceSerialNumber')
                 new_deviceMake= settings_data.get('deviceMake')
@@ -154,14 +155,12 @@ def save_settings():
                 new_threeds = settings_data.get('threeds')
                 new_ccdevice = settings_data.get('ccdevice')
 
-                # Ensure required fields are provided
-                if not new_email or not new_key or not new_phone:
-                    return jsonify({'status': 'fail', 'message': 'Missing email or key or phone or other.'})
+                
 
                 # Update the user's settings in the database
                 users_collection.update_one(
                     {"username": username},
-                    {"$set": {"useremail": new_email, "key": new_key,"phone": new_phone,"deviceSerialNumber": new_deviceSerialNumber,"deviceMake": new_deviceMake,"deviceFriendlyName": new_deviceFriendlyName,"deviceId": new_deviceId,"threeds": new_threeds,"ccdevice": new_ccdevice}}
+                    {"$set": {"useremail": new_email, "key": new_key,"command": new_command,"phone": new_phone,"deviceSerialNumber": new_deviceSerialNumber,"deviceMake": new_deviceMake,"deviceFriendlyName": new_deviceFriendlyName,"deviceId": new_deviceId,"threeds": new_threeds,"ccdevice": new_ccdevice}}
                 )
 
                 return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
@@ -189,7 +188,7 @@ def load_settings():
     if request.method == "GET":
         try:
             # Retrieve user settings from the database
-            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "phone": 1, "deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1, "threeds": 1, "ccdevice": 1})
+            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1, "deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1, "threeds": 1, "ccdevice": 1})
             
             if user_settings:
                 return jsonify({'status': 'success', 'settings': user_settings})
@@ -254,6 +253,7 @@ def sendtocardknox():
     settings = user_manager.user_settings or {
         "useremail": "",
         "key": config['xKey'],
+        "command": "cc:sale",
         "phone": "",
         "deviceSerialNumber": "",
         "deviceMake": "",
@@ -273,7 +273,7 @@ def sendtocardknox():
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
-            'xCommand': 'cc:sale',
+            'xCommand': settings['command'],
             'xVendorID': '128717',
             #'xAllowNonAuthenticated': 'true',
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
@@ -354,7 +354,7 @@ def sendtocardknox():
             'xVersion': '5.0.0',
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
-            'xCommand': 'cc:sale',
+            'xCommand': settings['command'],
             'xVendorID': '128717',
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
             'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',

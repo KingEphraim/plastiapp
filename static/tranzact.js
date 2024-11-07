@@ -1,5 +1,6 @@
 let userEmail = '';
 let userKey = '';
+let userCommand = '';
 let userPhone = '';
 let user3ds = false;
 let ccdevice = false;
@@ -42,6 +43,7 @@ async function loadSettings() {
             // Assign settings to variables
             userEmail = data.settings.useremail || '';
             userKey = data.settings.key || '';
+            userCommand = data.settings.userCommand || '';
             userPhone = data.settings.phone || '';
             user3ds = data.settings.threeds;
             ccdevice = data.settings.ccdevice;
@@ -79,7 +81,7 @@ window.onload = function () {
 
     (async () => {
         await loadSettings();
-        console.log(userEmail, userKey, userPhone, user3ds, ccdevice);
+        console.log(userEmail, userKey,userCommand, userPhone, user3ds, ccdevice);
 
         if (user3ds === true) {
             console.log("threeds is true");

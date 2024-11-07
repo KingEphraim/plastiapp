@@ -95,7 +95,7 @@ savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
     var formData = {};
-    var fields = ["key", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds", "ccdevice"]; 
+    var fields = ["key","command", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds", "ccdevice"]; 
 
     fields.forEach(function (field) {
         if (field === "threeds" || field === "ccdevice") { // Check for both "threeds" and "ccdevice"
@@ -190,6 +190,7 @@ function loadSettings() {
             // Populate the form fields with loaded settings
             document.getElementById('email').value = data.settings.useremail || '';
             document.getElementById('key').value = data.settings.key || '';
+            document.getElementById('command').value = data.settings.command || '';
             document.getElementById('phone').value = data.settings.phone || '';
             document.getElementById('deviceSerialNumber').value = data.settings.deviceSerialNumber || '';
             document.getElementById('deviceMake').value = data.settings.deviceMake || '';

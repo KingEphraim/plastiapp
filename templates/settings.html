@@ -97,6 +97,18 @@
                   <label class="control_label" for="key">Key</label>
                   <input type="text" class="form-control input-style" id="key" placeholder="xKey" required>
                 </div>
+
+                <div class="col-md-4">
+                  <label class="control_label" for="state">Transaction Type</label>
+                  <select id="command" class="form-select input-style" required>
+                      <option value="" disabled selected>Select Transaction Type</option>
+                      <option value="cc:sale">Sale</option>
+                      <option value=":cc:authonly">Authorization</option>
+                      <option value="cc:save">Save</option>
+                  </select>
+
+                </div>
+
                 <div class="col-md-12 text-center my-3">
                   <label class="control_label">3DS Verification</label>
                   <input type="checkbox" class="btn-check" id="threeds" autocomplete="off">
