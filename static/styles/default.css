@@ -41,6 +41,9 @@ body {
     /* More hover effect depth */
 }
 
+#settingscontainer{
+    height: calc(100vh - 56px);
+}
 .tranzact-form {
     max-width: 1200px;
     margin: 20px auto;

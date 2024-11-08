@@ -18,161 +18,149 @@
 <body>
   {% include 'navbar.html' %}
 
-  <div class="container-fluid min-vh-100 d-flex p-0">
-    <div class="row flex-grow-1 w-100">
-      <!-- Sidebar -->
-      <div class="col-md-3 d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-          <svg class="bi pe-none me-2" width="40" height="32">
-            <use xlink:href="#bootstrap"></use>
-          </svg>
-          <span class="fs-4">Settings</span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-          <li>
-            <a href="#" class="nav-link" id="profile-link">
-              <svg class="bi pe-none me-2" width="16" height="16">
-                <use xlink:href="#person"></use>
-              </svg>
-              Profile
+  <div id="settingscontainer" class="container-fluid">
+    <div class="row h-100">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-3 d-flex flex-column p-3 bg-body-tertiary">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <svg class="bi pe-none me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">Settings</span>
             </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link" id="transaction-link">
-              <svg class="bi pe-none me-2" width="16" height="16">
-                <use xlink:href="#file-earmark"></use>
-              </svg>
-              Transactions
-            </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link" id="cloudim-link">
-              <svg class="bi pe-none me-2" width="16" height="16">
-                <use xlink:href="#cloud"></use>
-              </svg>
-              Cloudim
-            </a>
-          </li>
-        </ul>
-      
-      </div>
-  
-      <!-- Main Content -->
-      <div class="col p-0 d-flex flex-column">
-        <div class="card flex-grow-1">
-          <div class="card-body">
-            <!-- Save Settings Button (Visible in all sections) -->
-            <div class="row justify-content-between align-items-center border-bottom">
-              <div class="col-6 text-start">
-                <h4 class="m-2" id="section-name"></h4>
-              </div>
-              <div class="col-6 col-md-6 col-lg-4 d-grid gap-2 mx-auto text-end m-2">
-                <button class="btn btn-primary" type="button" id="savebtn">
-                  <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span id="sbmtbtncont" role="status">Save Settings</span>
-                </button>
-              </div>
-            </div>
-  
-            <div class="section" id="profile-section" style="display:none;">
-              <div class="container-fluid">
-                <div class="row g-3 p-4" id="profile-settings">
-                  <div class="col-md-4">
-                    <label class="control_label" for="email">Email</label>
-                    <input type="email" class="form-control input-style" id="email" placeholder="Email" required>
-                  </div>
-                  <div class="col-md-4">
-                    <label class="control_label" for="phone">Phone Number</label>
-                    <input type="tel" class="form-control input-style" id="phone" placeholder="Phone number" required>
-                  </div>
-                </div>
-              </div>
-            </div>
-  
-            <div class="section" id="transaction-section" style="display:none;">
-              <div class="container-fluid">
-                <div class="row g-3 p-4" id="transaction-settings">
-                <div class="col-md-4">
-                  <label class="control_label" for="key">Key</label>
-                  <input type="text" class="form-control input-style" id="key" placeholder="xKey" required>
-                </div>
-
-                <div class="col-md-4">
-                  <label class="control_label" for="state">Transaction Type</label>
-                  <select id="command" class="form-select input-style" required>
-                      <option value="" disabled selected>Select Transaction Type</option>
-                      <option value="cc:sale">Sale</option>
-                      <option value="cc:authonly">Authorization</option>
-                      <option value="cc:save">Save</option>
-                  </select>
-
-                </div>
-
-                <div class="col-md-12 text-center my-3">
-                  <label class="control_label">3DS Verification</label>
-                  <input type="checkbox" class="btn-check" id="threeds" autocomplete="off">
-                  <label class="btn btn-primary" for="threeds" id="threedsLabel">3DS</label>
-                </div>
-              </div>
-              </div>
-            </div>
-  
-            <div class="section" id="cloudim-section" style="display:none;">
-              <div class="container-fluid">
-                <div class="row g-3 p-4" id="transaction-settings">
-                <div class="col-md-12 text-center my-3">
-                  <label class="control_label">Cloudim</label>
-                  <input type="checkbox" class="btn-check" id="ccdevice" autocomplete="off">
-                  <label class="btn btn-primary" for="ccdevice" id="ccdeviceLabel">Enable Cloudim</label>
-                </div>
-  
-                <div class="row">
-                  <div class="col-md-4">
-                    <label class="control_label" for="deviceSerialNumber">Device Serial Number</label>
-                    <input type="text" class="form-control input-style" id="deviceSerialNumber"
-                      placeholder="Device Serial Number" required>
-                  </div>
-  
-                  <div class="col-md-4">
-                    <label class="control_label" for="deviceMake">Device Make</label>
-                    <input type="text" class="form-control input-style" id="deviceMake" placeholder="Device Make"
-                      required>
-                  </div>
-  
-                  <div class="col-md-4">
-                    <label class="control_label" for="deviceFriendlyName">Device Friendly Name</label>
-                    <input type="text" class="form-control input-style" id="deviceFriendlyName"
-                      placeholder="Device Friendly Name" required>
-                  </div>
-                </div>
-  
-                <div class="row mt-3">
-                  <div class="col-md-4">
-                    <label class="control_label" for="deviceId">Device ID</label>
-                    <input type="text" class="form-control input-style" id="deviceId" placeholder="Device Id" readonly>
-                  </div>
-                </div>
-  
-                <div class="d-grid gap-2 d-md-block mt-4">
-                  <button class="btn btn-primary" type="button" id="createdevicebtn">
-                    <span hidden id="createdevicebtnspin" class="spinner-border spinner-border-sm"
-                      aria-hidden="true"></span>
-                    <span id="createdevicebtncont" role="status">Add Device</span>
-                  </button>
-                </div>
-              </div>
-              </div>
-            </div>
-  
-            <div class="col-12 overflow-auto mt-3">
-              <div id="liveAlertPlaceholder" class="text-break" style="max-height: 200px; border-color: black;"></div>
-            </div>
-          </div>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                    <a href="#" class="nav-link" id="profile-link">
+                        <svg class="bi pe-none me-2" width="16" height="16">
+                            <use xlink:href="#person"></use>
+                        </svg>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" id="transaction-link">
+                        <svg class="bi pe-none me-2" width="16" height="16">
+                            <use xlink:href="#file-earmark"></use>
+                        </svg>
+                        Transactions
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" id="cloudim-link">
+                        <svg class="bi pe-none me-2" width="16" height="16">
+                            <use xlink:href="#cloud"></use>
+                        </svg>
+                        Cloudim
+                    </a>
+                </li>
+            </ul>
         </div>
-      </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-9 p-0 d-flex flex-column">
+            <div class="card flex-grow-1">
+                <div class="card-body">
+                    <!-- Save Settings Button (Visible in all sections) -->
+                    <div class="row justify-content-between align-items-center border-bottom mb-3">
+                        <div class="col-6">
+                            <h4 class="m-2" id="section-name"></h4>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-primary" type="button" id="savebtn">
+                                <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                <span id="sbmtbtncont" role="status">Save Settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div class="section" id="profile-section" style="display:none;">
+                        <div class="container-fluid">
+                            <div class="row g-3 p-4">
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="email">Email</label>
+                                    <input type="email" class="form-control input-style" id="email" placeholder="Email" required>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="phone">Phone Number</label>
+                                    <input type="tel" class="form-control input-style" id="phone" placeholder="Phone number" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Section -->
+                    <div class="section" id="transaction-section" style="display:none;">
+                        <div class="container-fluid">
+                            <div class="row g-3 p-4">
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="key">Key</label>
+                                    <input type="text" class="form-control input-style" id="key" placeholder="xKey" required>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="command">Transaction Type</label>
+                                    <select id="command" class="form-select input-style" required>
+                                        <option value="" disabled selected>Select Transaction Type</option>
+                                        <option value="cc:sale">Sale</option>
+                                        <option value="cc:authonly">Authorization</option>
+                                        <option value="cc:authonly">Authorization</option>
+                                        <option value="cc:save">Save</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 text-center my-3">
+                                    <label class="control-label">3DS Verification</label>
+                                    <input type="checkbox" class="btn-check" id="threeds" autocomplete="off">
+                                    <label class="btn btn-primary" for="threeds" id="threedsLabel">3DS</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cloudim Section -->
+                    <div class="section" id="cloudim-section" style="display:none;">
+                        <div class="container-fluid">
+                            <div class="row g-3 p-4">
+                                <div class="col-12 text-center my-3">
+                                    <label class="control-label">Cloudim</label>
+                                    <input type="checkbox" class="btn-check" id="ccdevice" autocomplete="off">
+                                    <label class="btn btn-primary" for="ccdevice" id="ccdeviceLabel">Enable Cloudim</label>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="deviceSerialNumber">Device Serial Number</label>
+                                    <input type="text" class="form-control input-style" id="deviceSerialNumber" placeholder="Device Serial Number" required>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="deviceMake">Device Make</label>
+                                    <input type="text" class="form-control input-style" id="deviceMake" placeholder="Device Make" required>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="deviceFriendlyName">Device Friendly Name</label>
+                                    <input type="text" class="form-control input-style" id="deviceFriendlyName" placeholder="Device Friendly Name" required>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="deviceId">Device ID</label>
+                                    <input type="text" class="form-control input-style" id="deviceId" placeholder="Device Id" readonly>
+                                </div>
+                                <div class="col-12 text-center mt-4">
+                                    <button class="btn btn-primary" type="button" id="createdevicebtn">
+                                        <span hidden id="createdevicebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                        <span id="createdevicebtncont" role="status">Add Device</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 overflow-auto mt-3">
+                        <div id="liveAlertPlaceholder" class="text-break" style="max-height: 200px; border-color: black;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
   
 
 
