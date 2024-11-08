@@ -13,12 +13,22 @@ const ccdevicebtncont = document.getElementById("ccdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 const appendAlert = (message, type, ccDeviceToggle = 'on') => {
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = [
+    let alertHTML = [
         `<div class="alert alert-${type} alert-dismissible" role="alert">`,
         `   <div>${message}</div>`,
         '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-    ].join('');
+    ];
+    console.log(message);
+    if ((message.includes('xRefNum') || message.includes('xGatewayRefnum')) && (message.includes('"xResult":"A"') || message.includes('"xResult":"S"'))) {
+        alertHTML.push('   <button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>');
+    }
+    
+    
+
+    alertHTML.push('</div>');
+
+    wrapper.innerHTML = alertHTML.join('');
+    
 
     alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild);
     sbmtbtntoggle('on');
