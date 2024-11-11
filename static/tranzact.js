@@ -11,29 +11,49 @@ const ccdevicebtn = document.getElementById("ccdevicebtn");
 const ccdevicebtnspin = document.getElementById("ccdevicebtnspin");
 const ccdevicebtncont = document.getElementById("ccdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+
+// Append alert to alertPlaceholder
 const appendAlert = (message, type, ccDeviceToggle = 'on') => {
     const wrapper = document.createElement('div');
-    let alertHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-    ];
-    console.log(message);
-    if ((message.includes('xRefNum') || message.includes('xGatewayRefnum')) && (message.includes('"xResult":"A"') || message.includes('"xResult":"S"'))) {
-        alertHTML.push('   <button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>');
-    }
-    
-    
-
-    alertHTML.push('</div>');
-
-    wrapper.innerHTML = alertHTML.join('');
-    
-
-    alertPlaceholder.insertBefore(wrapper, alertPlaceholder.firstChild);
+    wrapper.className = `alert alert-${type} alert-dismissible`;
+    wrapper.role = 'alert';
+    wrapper.innerHTML = `
+        <div>${message}</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
+    `;
+    alertPlaceholder.prepend(wrapper);
     sbmtbtntoggle('on');
     ccdevicebtntoggle(ccDeviceToggle);
-}
+};
+
+// Helper function to determine if the void/refund button should be shown
+const shouldShowVoidButton = (message) => {
+    return /"xResult":"[AS]"/.test(message) && /xRefNum|xGatewayRefnum/.test(message);
+};
+
+// Event listener for void/refund button clicks
+alertPlaceholder.addEventListener('click', ({ target }) => {
+    if (target?.id === 'voidRefundBtn') {
+        const message = target.closest('.alert').querySelector('div').innerText;
+        try {
+            const { xRefNum, xGatewayRefnum } = JSON.parse(message);
+            const refNum = xRefNum || xGatewayRefnum;
+
+            const formData = {
+                tranzType: "void",
+                refnum: refNum
+            };
+            console.log(formData);
+            sendtoserver(JSON.stringify(formData));
+        } catch (error) {
+            console.error("Error parsing message:", error);
+        }
+    }
+});
+
+
 
 
 
@@ -91,7 +111,7 @@ window.onload = function () {
 
     (async () => {
         await loadSettings();
-        console.log(userEmail, userKey,userCommand, userPhone, user3ds, ccdevice);
+        console.log(userEmail, userKey, userCommand, userPhone, user3ds, ccdevice);
 
         if (user3ds === true) {
             console.log("threeds is true");
@@ -350,7 +370,7 @@ function processGP(paymentResponse) {
 }
 
 function pollDeviceSession(sessionid) {
-    
+
     const formData = {
         tranzType: "polldevicesession",
         sessionid: sessionid
@@ -364,38 +384,38 @@ function pollDeviceSession(sessionid) {
             },
             body: JSON.stringify(formData)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Response data:", data); // Log the entire response
-
-            // Check if data has the success flag and xSessionStatus
-            if (data && data.xResult == 'S' && data.xSessionStatus) {                
-                const status = data.xSessionStatus;
-                if (status === "INITIATING" || status === "PROCESSING") {
-                    
-                    console.log(`Status: ${status}. Polling again in 1 second...`);
-                    appendAlert(JSON.stringify(data), 'info','off');
-                    
-                    setTimeout(poll, 1000); // Poll every 1 second after the initial delay
-                } else if (status === "COMPLETED") {
-                    console.log(`Final Status: ${status}`);
-                    appendAlert(JSON.stringify(data), 'success');
-                } else if (status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
-                    console.log(`Final Status: ${status}`);
-                    appendAlert(JSON.stringify(data), 'danger');
-                } else {
-                    console.log(`Unknown Status: ${status}`);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-            } else {
-                console.error("Failed to get a valid response or success flag.");
-            }
-        })
-        .catch(error => console.error('Polling error:', error));
+                return response.json();
+            })
+            .then(data => {
+                console.log("Response data:", data); // Log the entire response
+
+                // Check if data has the success flag and xSessionStatus
+                if (data && data.xResult == 'S' && data.xSessionStatus) {
+                    const status = data.xSessionStatus;
+                    if (status === "INITIATING" || status === "PROCESSING") {
+
+                        console.log(`Status: ${status}. Polling again in 1 second...`);
+                        appendAlert(JSON.stringify(data), 'info', 'off');
+
+                        setTimeout(poll, 1000); // Poll every 1 second after the initial delay
+                    } else if (status === "COMPLETED") {
+                        console.log(`Final Status: ${status}`);
+                        appendAlert(JSON.stringify(data), 'success');
+                    } else if (status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
+                        console.log(`Final Status: ${status}`);
+                        appendAlert(JSON.stringify(data), 'danger');
+                    } else {
+                        console.log(`Unknown Status: ${status}`);
+                    }
+                } else {
+                    console.error("Failed to get a valid response or success flag.");
+                }
+            })
+            .catch(error => console.error('Polling error:', error));
     }
 
     // Start polling after an initial 6-second delay

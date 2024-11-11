@@ -290,6 +290,18 @@ def sendtocardknox():
             'xExp': datafromuser['exp'],
             'xCvv': datafromuser['cvv'],
         }
+    elif (datafromuser['tranzType'] == 'void'):
+        tockmethod ='post'
+        url = "https://x1.cardknox.com/gatewayjson"        
+        tockdata = {
+            'xkey': settings.get('key', config['xKey']),
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xCommand': 'cc:voidrefund',
+            'xRefNum': datafromuser.get('refnum', None),
+             }
+
     elif (datafromuser['tranzType'] == 'V'):
         tockmethod ='post'
         url = 'https://x1.cardknox.com/verifyjson'
