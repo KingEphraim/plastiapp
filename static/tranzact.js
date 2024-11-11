@@ -10,7 +10,7 @@ const sbmtbtncont = document.getElementById("sbmtbtncont");
 const ccdevicebtn = document.getElementById("ccdevicebtn");
 const ccdevicebtnspin = document.getElementById("ccdevicebtnspin");
 const ccdevicebtncont = document.getElementById("ccdevicebtncont");
-const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder')
 
 
 // Append alert to alertPlaceholder
@@ -23,10 +23,23 @@ const appendAlert = (message, type, ccDeviceToggle = 'on') => {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
     `;
-    alertPlaceholder.prepend(wrapper);
+
+    try {
+        const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder');
+        if (alertPlaceholder) {
+            alertPlaceholder.prepend(wrapper);
+        } else {
+            console.warn('alertPlaceholder element not found. Alert not added.');
+        }
+    } catch (error) {
+        console.error('Error while appending alert:', error);
+    }
+
     sbmtbtntoggle('on');
     ccdevicebtntoggle(ccDeviceToggle);
 };
+
+
 
 // Helper function to determine if the void/refund button should be shown
 const shouldShowVoidButton = (message) => {
@@ -34,24 +47,29 @@ const shouldShowVoidButton = (message) => {
 };
 
 // Event listener for void/refund button clicks
-alertPlaceholder.addEventListener('click', ({ target }) => {
-    if (target?.id === 'voidRefundBtn') {
-        const message = target.closest('.alert').querySelector('div').innerText;
-        try {
-            const { xRefNum, xGatewayRefnum } = JSON.parse(message);
-            const refNum = xRefNum || xGatewayRefnum;
+if (alertPlaceholder) {
+    alertPlaceholder.addEventListener('click', ({ target }) => {
+        if (target?.id === 'voidRefundBtn') {
+            const message = target.closest('.alert').querySelector('div').innerText;
+            try {
+                const { xRefNum, xGatewayRefnum } = JSON.parse(message);
+                const refNum = xRefNum || xGatewayRefnum;
 
-            const formData = {
-                tranzType: "void",
-                refnum: refNum
-            };
-            console.log(formData);
-            sendtoserver(JSON.stringify(formData));
-        } catch (error) {
-            console.error("Error parsing message:", error);
+                const formData = {
+                    tranzType: "void",
+                    refnum: refNum
+                };
+                console.log(formData);
+                sendtoserver(JSON.stringify(formData));
+            } catch (error) {
+                console.error("Error parsing message:", error);
+            }
         }
-    }
-});
+    });
+} else {
+    console.warn("alertPlaceholder element not found!");
+}
+
 
 
 
