@@ -11,7 +11,81 @@ const ccdevicebtn = document.getElementById("ccdevicebtn");
 const ccdevicebtnspin = document.getElementById("ccdevicebtnspin");
 const ccdevicebtncont = document.getElementById("ccdevicebtncont");
 const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder')
+const modalElement = new bootstrap.Modal(document.getElementById('userNotificationModal'));
+const notificationCardHeader = document.getElementById("userNotificationCardHeader");
+const notificationCardHeaderP = document.getElementById("userNotificationCardHeaderP");
+const notificationCardBodyH = document.getElementById("userNotificationCardBodyH");
+const notificationCardBodyP = document.getElementById("userNotificationCardBodyP");
 
+
+function updateUser(serverData) {
+    notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
+    notificationCardHeaderP.innerText = "";
+    notificationCardBodyH.innerText = "";
+    notificationCardBodyP.innerText = "";
+    document.getElementById("orderNumber").textContent = "0";
+    document.getElementById("amountPaid").textContent = "0";
+    document.getElementById("date").textContent  = "0";
+    switch (serverData.xResult) {
+        case 'A':
+            console.log("xResult is A");
+            notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
+            notificationCardHeaderP.innerText = "Transaction Approved";
+            notificationCardBodyH.innerText = "Thank you for your purchase!";
+            notificationCardBodyP.innerText = "Your payment has been processed successfully.";
+            modalElement.show();
+            break;
+        case 'E':
+            console.log("xResult is E");
+            notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
+            notificationCardHeaderP.innerText = "Transaction Declined";
+            notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
+            if (serverData.xError) {
+                notificationCardBodyP.innerText = serverData.xError;
+            }
+            modalElement.show();
+            break;
+        case 'S':
+            console.log("xResult is S");
+            notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
+            notificationCardHeaderP.innerText = "Transaction Approved";
+            notificationCardBodyH.innerText = "Thank you for your purchase!";
+            notificationCardBodyP.innerText = "Your payment has been processed successfully.";
+            modalElement.show();
+
+            break;
+        case 'V':
+            // Handle case where xResult is 'V'
+            console.log("xResult is V");
+            break;
+        default:
+            console.log("xResult is something else");
+            notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
+            notificationCardHeaderP.innerText = "Transaction Declined";
+    }
+
+    if (serverData.xRefNum || serverData.xGatewayRefnum) {
+        document.getElementById("orderNumber").textContent = serverData.xRefNum || serverData.xGatewayRefnum;
+    }
+    if (serverData.xAuthAmount || (serverData.xTransactionResult && serverData.xTransactionResult.xAuthAmount)) {
+        const amount = serverData.xAuthAmount || serverData.xTransactionResult.xAuthAmount;
+        document.getElementById("amountPaid").textContent = `$${amount}`;
+    }
+    if (serverData.xDate || (serverData.xTransactionResult && serverData.xTransactionResult.xDate)) {
+        const date = serverData.xDate || serverData.xTransactionResult.xDate;
+        const formattedDate = formatDate(date);
+        document.getElementById("date").textContent = formattedDate;
+    }
+
+
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
 
 // Append alert to alertPlaceholder
 const appendAlert = (message, type, ccDeviceToggle = 'on') => {
@@ -70,12 +144,6 @@ if (alertPlaceholder) {
     console.warn("alertPlaceholder element not found!");
 }
 
-
-
-
-
-
-
 // Function to load settings from the server
 async function loadSettings() {
     try {
@@ -106,6 +174,8 @@ async function loadSettings() {
         console.error(error);
     }
 }
+
+
 
 
 // Function to format the "exp" field
@@ -300,8 +370,10 @@ function sendtoserver(serverdata) {
     })
         .then(response => response.json())
         .then(data => {
+
             if (data.xResult == "A") {
                 appendAlert(JSON.stringify(data), 'success');
+                updateUser(data);
             }
             else if (data.xResult == "S") {
                 appendAlert(JSON.stringify(data), 'info', 'off');
@@ -313,6 +385,7 @@ function sendtoserver(serverdata) {
             }
             else {
                 appendAlert(JSON.stringify(data), 'danger');
+                updateUser(data);
             }
         })
         .catch(error => console.error(error));
@@ -423,9 +496,11 @@ function pollDeviceSession(sessionid) {
                     } else if (status === "COMPLETED") {
                         console.log(`Final Status: ${status}`);
                         appendAlert(JSON.stringify(data), 'success');
+                        updateUser(data);
                     } else if (status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
                         console.log(`Final Status: ${status}`);
                         appendAlert(JSON.stringify(data), 'danger');
+                        updateUser(data);
                     } else {
                         console.log(`Unknown Status: ${status}`);
                     }
