@@ -18,25 +18,54 @@ const notificationCardBodyH = document.getElementById("userNotificationCardBodyH
 const notificationCardBodyP = document.getElementById("userNotificationCardBodyP");
 
 
-function updateUser(serverData) {
+function updateUser(serverData, options = {}) {
+    const { transactionType = 'sale' } = options;
+    console.log(transactionType);
     notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
     notificationCardHeaderP.innerText = "";
     notificationCardBodyH.innerText = "";
     notificationCardBodyP.innerText = "";
-    document.getElementById("orderNumber").textContent = "0";
+    document.getElementById("referenceNumber").textContent = "0";
     document.getElementById("amountPaid").textContent = "0";
-    document.getElementById("date").textContent  = "0";
+    document.getElementById("date").textContent = "0";
+    document.getElementById("cardInfo").textContent = "0";
     switch (serverData.xResult) {
         case 'A':
             console.log("xResult is A");
-            notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
-            notificationCardHeaderP.innerText = "Transaction Approved";
-            notificationCardBodyH.innerText = "Thank you for your purchase!";
-            notificationCardBodyP.innerText = "Your payment has been processed successfully.";
+            if (transactionType === 'void') {
+                notificationCardHeader.className = "card-header bg-info text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Transaction Voided";
+                notificationCardBodyH.innerText = "We’re grateful for the opportunity to serve you.";
+                notificationCardBodyP.innerText = "Your payment has been successfully Voided.";
+            } else {
+                notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Transaction Approved";
+                notificationCardBodyH.innerText = "Thank you for your purchase!";
+                notificationCardBodyP.innerText = "Your payment has been processed successfully.";
+
+            }
+
             modalElement.show();
             break;
         case 'E':
             console.log("xResult is E");
+            if (transactionType === 'void') {        
+                
+                notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Void Failed";
+                notificationCardBodyH.innerText = "Something went wrong";
+            } else {
+                notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Transaction Declined";
+                notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
+            }
+            if (serverData.xError) {
+                notificationCardBodyP.innerText = serverData.xError;
+            }
+            modalElement.show();
+            break;
+        case 'D':
+            console.log("xResult is D");
             notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
             notificationCardHeaderP.innerText = "Transaction Declined";
             notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
@@ -47,10 +76,17 @@ function updateUser(serverData) {
             break;
         case 'S':
             console.log("xResult is S");
+            if(serverData.xGatewayStatus==='Error'){
+                notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Transaction Declined";
+                notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
+                notificationCardBodyP.innerText = serverData.xSessionError;
+            }else{
             notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
             notificationCardHeaderP.innerText = "Transaction Approved";
             notificationCardBodyH.innerText = "Thank you for your purchase!";
             notificationCardBodyP.innerText = "Your payment has been processed successfully.";
+            }
             modalElement.show();
 
             break;
@@ -65,7 +101,7 @@ function updateUser(serverData) {
     }
 
     if (serverData.xRefNum || serverData.xGatewayRefnum) {
-        document.getElementById("orderNumber").textContent = serverData.xRefNum || serverData.xGatewayRefnum;
+        document.getElementById("referenceNumber").textContent = serverData.xRefNum || serverData.xGatewayRefnum;
     }
     if (serverData.xAuthAmount || (serverData.xTransactionResult && serverData.xTransactionResult.xAuthAmount)) {
         const amount = serverData.xAuthAmount || serverData.xTransactionResult.xAuthAmount;
@@ -75,6 +111,11 @@ function updateUser(serverData) {
         const date = serverData.xDate || serverData.xTransactionResult.xDate;
         const formattedDate = formatDate(date);
         document.getElementById("date").textContent = formattedDate;
+    }
+    if (serverData.xMaskedCardNumber || (serverData.xTransactionResult && serverData.xTransactionResult.xMaskedCardNumber)) {
+        const cardNumber = serverData.xMaskedCardNumber || serverData.xTransactionResult.xMaskedCardNumber;
+        const cardType = serverData.xCardType || serverData.xTransactionResult.xCardType;
+        document.getElementById("cardInfo").textContent = `${cardType} (${cardNumber})`;
     }
 
 
@@ -373,7 +414,13 @@ function sendtoserver(serverdata) {
 
             if (data.xResult == "A") {
                 appendAlert(JSON.stringify(data), 'success');
-                updateUser(data);
+                if (JSON.parse(serverdata).tranzType === 'void') {
+                    updateUser(data, { transactionType: 'void' });
+                } else {
+
+                    updateUser(data);
+                }
+
             }
             else if (data.xResult == "S") {
                 appendAlert(JSON.stringify(data), 'info', 'off');
@@ -385,7 +432,11 @@ function sendtoserver(serverdata) {
             }
             else {
                 appendAlert(JSON.stringify(data), 'danger');
-                updateUser(data);
+                if (JSON.parse(serverdata).tranzType === 'void') {
+                    updateUser(data, { transactionType: 'void' });
+                } else {
+                    updateUser(data);
+                }
             }
         })
         .catch(error => console.error(error));
