@@ -76,7 +76,7 @@ function updateUser(serverData, options = {}) {
             break;
         case 'S':
             console.log("xResult is S");
-            if(serverData.xGatewayStatus==='Error'){
+            if(serverData.xSessionStatus==='ERROR' || serverData.xSessionStatus==='TIMEOUT'|| serverData.xSessionStatus==='USER_CANCELLED'| serverData.xSessionStatus==='API_CANCELLED'){
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Declined";
                 notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
