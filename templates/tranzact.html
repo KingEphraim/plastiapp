@@ -183,12 +183,12 @@
         aria-labelledby="userNotificationModalHeader" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="userNotificationModalHeader">Transaction Response</h1>
+                <div class="modal-header d-none">
+                    <h1 class="modal-title fs-5" id="userNotificationModalHeader"></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="userNotificationModalBody">
-                    <div class="container my-5">
+                <div class="modal-body p-0" id="userNotificationModalBody">
+                    <div class="container p-0">
                         <div class="card shadow-lg">
                             <div class="card-header bg-success text-white text-center py-4" id="userNotificationCardHeader">
                                 <h3 class="mb-0">Payment Receipt</h3>
@@ -219,12 +219,12 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center bg-light py-3">
-                                <button onclick="window.print()" class="btn btn-outline-success">Print Receipt</button>
+                                <button data-bs-dismiss="modal" class="btn btn-primary">Done</button>                                
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-none" >
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Understood</button>
                 </div>
