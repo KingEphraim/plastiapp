@@ -56,7 +56,7 @@ def dashboard():
     if "username" in session:
         return f"Welcome, {session['username']}! This is your dashboard."
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
 
 
 
