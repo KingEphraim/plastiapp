@@ -30,7 +30,7 @@ def register():
                 # Insert the user into the database
                 users_collection.insert_one({"username": username, "useremail": useremail, "password": hashed_password})
 
-                return jsonify({'status': 'success', 'redirect': url_for('login')})
+                return jsonify({'status': 'success', 'redirect': url_for('auth.login')})
 
             except OperationFailure as e:
                 # Handle MongoDB OperationFailure
