@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, session
 import requests
 import json
 import hashlib
@@ -10,6 +10,7 @@ import uuid
 import mylogs
 from models.user_settings import UserSettingsManager
 
+from routes.main import main_bp
 from routes.auth import auth_bp
 from routes.settings import settings_bp
 from routes.cardknox_transactions import cardknox_transactions_bp
@@ -18,48 +19,12 @@ with open('config.json') as f:
     config = json.load(f) 
 app = Flask(__name__)
 
+app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(cardknox_transactions_bp)
 
 app.secret_key = config['secret_key']  # Change this to a secure secret key
-
-
-
-
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    return jsonify(status="healthy"), 200
-
-@app.route('/')
-def index():
-    mylogs.add_to_log(f"Visit to / Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
-    if "username" in session:
-        username = session.get('username', 'Guest')    
-        message = f"You are logged in as {username}! This is your dashboard."    
-        user_is_logged_in = session.get('user_is_logged_in', True)
-        return render_template('index.html', message=message, user_is_logged_in=user_is_logged_in)
-    else:
-        return redirect(url_for("auth.login"))   
-
-
-
-
-
-
-
-
-
-@app.route("/dashboard")
-def dashboard():
-    if "username" in session:
-        return f"Welcome, {session['username']}! This is your dashboard."
-    else:
-        return redirect(url_for("auth.login"))
-
-
-
 
 
 

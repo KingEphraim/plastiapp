@@ -28,7 +28,7 @@ function sendDataToServer(formData) {
         } else if (data.status === 'success') {
             // Redirect to success page or perform other actions
             console.log(data.message);
-            window.location.href = '/'; // Redirect to success page
+            window.location.href = '/dashboard'; // Redirect to success page
         }
     })
     .catch(error => {
