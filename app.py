@@ -8,37 +8,21 @@ import boto3
 from botocore.exceptions import ClientError
 import uuid
 import mylogs
-from pymongo import MongoClient
-from pymongo.server_api import ServerApi
-from pymongo.errors import OperationFailure
-from werkzeug.security import generate_password_hash, check_password_hash
+from models.user_settings import UserSettingsManager
+
+from routes.auth import auth_bp
+from routes.settings import settings_bp
+from routes.cardknox_transactions import cardknox_transactions_bp
 #from databaseop import add_item_to_database, update_item_in_database
 with open('config.json') as f:
     config = json.load(f) 
 app = Flask(__name__)
 
+app.register_blueprint(auth_bp)
+app.register_blueprint(settings_bp)
+app.register_blueprint(cardknox_transactions_bp)
+
 app.secret_key = config['secret_key']  # Change this to a secure secret key
-client = MongoClient(config['client'],server_api=ServerApi('1'))
-db = client[config['db']]  # Change this to your actual database name
-users_collection = db["users"]
-
-class UserSettingsManager:
-    def __init__(self, session):
-        self.user_settings = None
-        self.load_user_settings(session)
-
-    def load_user_settings(self, session):
-        try:
-            username = session.get('username')
-            print(username)
-            if username is None:
-                raise ValueError("Username not found in session.")
-            
-            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1,"deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1})
-            
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            self.user_settings = None
 
 
 
@@ -57,150 +41,14 @@ def index():
         user_is_logged_in = session.get('user_is_logged_in', True)
         return render_template('index.html', message=message, user_is_logged_in=user_is_logged_in)
     else:
-        return redirect(url_for("login"))   
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    mylogs.add_to_log(f"Visit to /register Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}")
-
-    if request.method == "POST":
-        datafromuser = request.get_json()
-        if datafromuser:
-            try:
-                username = datafromuser.get('username')
-                useremail = datafromuser.get('email')
-                password = datafromuser.get('password')
-
-                if not username or not useremail or not password:
-                    return jsonify({'status': 'fail', 'message': 'Missing username, email, or password.'})
-
-                # Check if username already exists
-                if users_collection.find_one({"username": username}):
-                    return jsonify({'status': 'fail', 'message': 'Username already exists.'})
-
-                # Hash the password using the 'scrypt' method
-                hashed_password = generate_password_hash(password, method="scrypt")
-
-                # Insert the user into the database
-                users_collection.insert_one({"username": username, "useremail": useremail, "password": hashed_password})
-
-                return jsonify({'status': 'success', 'redirect': url_for('login')})
-
-            except OperationFailure as e:
-                # Handle MongoDB OperationFailure
-                error_message = str(e)
-                return jsonify({'status': 'error', 'message': error_message})
-
-        else:
-            return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
-
-    return render_template("register.html")
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        datafromuser = request.get_json()
-        if datafromuser:
-            try:
-                username = datafromuser.get('username')
-                password = datafromuser.get('password')
-
-                if not username or not password:
-                    return jsonify({'status': 'fail', 'message': 'Missing username or password.'})
-
-                user = users_collection.find_one({"username": username})
-
-                if not user:
-                    return jsonify({'status': 'fail', 'message': 'User not found.'})
-
-                if not check_password_hash(user['password'], password):
-                    return jsonify({'status': 'fail', 'message': 'Incorrect password.'})
-
-                session['username'] = username
-                session['user_is_logged_in'] = True
-
-                return jsonify({'status': 'success', 'message': 'Login successful.'})
-
-            except Exception as e:
-                error_message = str(e)
-                return jsonify({'status': 'error', 'message': error_message})
-
-        else:
-            return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
-
-    return render_template("login.html")
-
-@app.route('/save_settings', methods=['POST'])
-def save_settings():
-    mylogs.add_to_log(f"Visit to /save_settings Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}")
-
-    if "username" not in session:
-        return jsonify({'status': 'fail', 'message': 'User not logged in.'}), 403
-
-    username = session.get('username')
-
-    if request.method == "POST":
-        settings_data = request.get_json()
-        if settings_data:
-            try:
-                # Retrieve settings from the JSON data
-                new_email = settings_data.get('email')
-                new_key = settings_data.get('key')
-                new_command = settings_data.get('command')
-                new_phone = settings_data.get('phone')
-                new_deviceSerialNumber = settings_data.get('deviceSerialNumber')
-                new_deviceMake= settings_data.get('deviceMake')
-                new_deviceFriendlyName = settings_data.get('deviceFriendlyName')
-                new_deviceId = settings_data.get('deviceId')
-                new_threeds = settings_data.get('threeds')
-                new_ccdevice = settings_data.get('ccdevice')
-
-                
-
-                # Update the user's settings in the database
-                users_collection.update_one(
-                    {"username": username},
-                    {"$set": {"useremail": new_email, "key": new_key,"command": new_command,"phone": new_phone,"deviceSerialNumber": new_deviceSerialNumber,"deviceMake": new_deviceMake,"deviceFriendlyName": new_deviceFriendlyName,"deviceId": new_deviceId,"threeds": new_threeds,"ccdevice": new_ccdevice}}
-                )
-
-                return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
-
-            except OperationFailure as e:
-                # Handle MongoDB OperationFailure
-                error_message = str(e)
-                return jsonify({'status': 'error', 'message': error_message})
-        
-        else:
-            return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
-
-    return jsonify({'status': 'fail', 'message': 'Invalid request method.'})
+        return redirect(url_for("auth.login"))   
 
 
-@app.route('/load_settings', methods=['GET'])
-def load_settings():
-    mylogs.add_to_log(f"Visit to /load_settings Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}")
 
-    if "username" not in session:
-        return jsonify({'status': 'fail', 'message': 'User not logged in.'}), 403
 
-    username = session.get('username')
 
-    if request.method == "GET":
-        try:
-            # Retrieve user settings from the database
-            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1, "deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1, "threeds": 1, "ccdevice": 1})
-            
-            if user_settings:
-                return jsonify({'status': 'success', 'settings': user_settings})
-            else:
-                return jsonify({'status': 'fail', 'message': 'Settings not found.'})
 
-        except OperationFailure as e:
-            # Handle MongoDB OperationFailure
-            error_message = str(e)
-            return jsonify({'status': 'error', 'message': error_message})
 
-    return jsonify({'status': 'fail', 'message': 'Invalid request method.'})
 
 
 @app.route("/dashboard")
@@ -210,21 +58,10 @@ def dashboard():
     else:
         return redirect(url_for("login"))
 
-# Logout route
-@app.route("/logout")
-def logout():
-    session.pop("username", None)
-    return redirect(url_for("login"))
 
-@app.route('/settings')
-def settings():
-    if "username" in session:
-        username = session.get('username', 'Guest')    
-        message = f"You are logged in as {username}! This is your settings."    
-        user_is_logged_in = session.get('user_is_logged_in', True)
-        return render_template('settings.html', message=message, user_is_logged_in=user_is_logged_in)
-    else:
-        return redirect(url_for("login"))  
+
+
+
 
 @app.route('/ewiclist')
 def ewiclist():
@@ -245,181 +82,6 @@ def tranzact():
     
 
 
-@app.route('/sendtocardknox', methods=['POST'])
-def sendtocardknox(): 
-    mylogs.add_to_log(f'Incoming data: {request.data}')      
-    user_manager = UserSettingsManager(session)
-    settings = user_manager.user_settings or {
-        "useremail": "",
-        "key": config['xKey'],
-        "command": "cc:sale",
-        "phone": "",
-        "deviceSerialNumber": "",
-        "deviceMake": "",
-        "deviceFriendlyName": "",
-        "deviceId": "",
-        }
-    
-    
-    headers = {"Content-Type": "application/json"} 
-    datafromuser = request.get_json()     
-
-    if (datafromuser['tranzType'] == 'R'):
-        tockmethod ='post'
-        url = "https://x1.cardknox.com/gatewayjson"        
-        tockdata = {
-            'xkey': settings.get('key', config['xKey']),
-            'xVersion': '5.0.0',
-            'xSoftwareName': 'tranzact',
-            'xSoftwareVersion': '1.0',
-            'xCommand': settings.get('command',"cc:sale"),
-            'xVendorID': '128717',
-            #'xAllowNonAuthenticated': 'true',
-            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
-            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
-            'xEmail': datafromuser['email'],
-            'xBillPhone': datafromuser['phone'],
-            'xBillStreet': datafromuser['address'],
-            'xBillCity': datafromuser['city'],
-            'xBillState': datafromuser['state'],
-            'xBillZip': datafromuser['zip'],
-            'xInvoice': datafromuser['invoice'],
-            'xDescription': datafromuser['comments'],
-            'xAmount': datafromuser['amount'],
-            'xCardnum': datafromuser['card'],
-            'xExp': datafromuser['exp'],
-            'xCvv': datafromuser['cvv'],
-        }
-    elif (datafromuser['tranzType'] == 'void'):
-        tockmethod ='post'
-        url = "https://x1.cardknox.com/gatewayjson"        
-        tockdata = {
-            'xkey': settings.get('key', config['xKey']),
-            'xVersion': '5.0.0',
-            'xSoftwareName': 'tranzact',
-            'xSoftwareVersion': '1.0',
-            'xCommand': 'cc:voidrefund',
-            'xRefNum': datafromuser.get('refnum', None),
-             }
-
-    elif (datafromuser['tranzType'] == 'V'):
-        tockmethod ='post'
-        url = 'https://x1.cardknox.com/verifyjson'
-        tockdata = {
-            'xkey': settings.get('key', config['xKey']),
-            'xVersion': '5.0.0',
-            'xSoftwareName': 'tranzact',
-            'xSoftwareVersion': '1.0',
-            'x3dsActionCode': datafromuser['x3dsActionCode'],
-            'xCavv': datafromuser['xCavv'],
-            'xEci': datafromuser['xEci'],
-            'xRefNum': datafromuser['xRefNum'],
-            'x3dsAuthenticationStatus': datafromuser['x3dsAuthenticationStatus'],
-            'x3dsSignatureVerificationStatus': datafromuser['x3dsSignatureVerificationStatus'],            
-            #'x3dsError': datafromuser['x3dsError']
-        }     
-    elif (datafromuser['tranzType'] == 'createdevice'):
-        tockmethod ='post'
-        url = 'https://device.cardknox.com/v1/device'
-        tockdata = {
-            'xDeviceSerialNumber': settings['deviceSerialNumber'],
-            'xDeviceMake': settings['deviceMake'],
-            'xDeviceFriendlyName': settings['deviceFriendlyName'],
-            
-        }  
-        headers['Authorization'] = settings.get('key', config['xKey'])
-
-    elif (datafromuser['tranzType'] == 'polldevicesession'):
-        tockmethod ='get'   
-        url = f"https://device.cardknox.com/v1/Session/{datafromuser['sessionid']}"
-        tockdata = {
-            'xDeviceSerialNumber': settings['deviceSerialNumber'],
-            'xDeviceMake': settings['deviceMake'],
-            'xDeviceFriendlyName': settings['deviceFriendlyName'],
-            
-        }  
-        headers['Authorization'] = settings.get('key', config['xKey'])
-              
-
-    elif (datafromuser['tranzType'] == 'sessioninitiate'):
-        tockmethod ='post'
-        url = 'https://device.cardknox.com/v1/Session/initiate'
-        tockdata = {
-            "xPayload":{
-            'xSoftwareName': 'tranzact',
-            'xSoftwareVersion': '1.0',
-            'xAmount': datafromuser['amount'],
-            'xCommand': settings.get('command',"cc:sale"),
-            'xExternalRequestId': datafromuser['invoice'],
-            'xInvoice': datafromuser['invoice']
-            },
-            "xDeviceId":   settings['deviceId']
-        }  
-        headers['Authorization'] = settings.get('key', config['xKey'])
-
-    elif(datafromuser['tranzType'] == 'GP'):
-        tockmethod ='post'
-        url = "https://x1.cardknox.com/gatewayjson"
-        tockdata = {
-            'xkey': settings.get('key', config['xKey']),
-            'xVersion': '5.0.0',
-            'xSoftwareName': 'tranzact',
-            'xSoftwareVersion': '1.0',
-            'xCommand': settings.get('command',"cc:sale"),
-            'xVendorID': '128717',
-            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
-            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
-            'xEmail': datafromuser['email'],
-            'xBillPhone': datafromuser['phone'],
-            'xBillStreet': datafromuser['address'],
-            'xBillCity': datafromuser['city'],
-            'xBillState': datafromuser['state'],
-            'xBillZip': datafromuser['zip'],
-            'xInvoice': datafromuser['invoice'],
-            'xDescription': datafromuser['comments'],
-            'xAmount': datafromuser['amount'],
-            'xCardnum': datafromuser['gptoken'],
-            'xDigitalWalletType': 'GooglePay',
-        }
-    else:
-        return {'message': 'missing tranzType'}
-    
-    
-   
-
-
-    
-    try:
-        json_data = json.dumps(tockdata)
-        
-    except Exception as e:
-        print("Error:", e)
-
-    
-    mylogs.add_to_log(f'Data sent to ck: {json_data}')  
-    if (tockmethod == 'get'):
-        response = requests.get(url, headers=headers)
-    else:        
-        response = requests.post(url, data=json_data, headers=headers)
-    
-        
-
-
-    
-    if response.status_code == 200:
-        ck_response = response.json()
-        mylogs.add_to_log(f'Ck 200 response: {ck_response}')  
-           
-        
-    else:
-        mylogs.add_to_log(f'Ck fail response: statuscode - {response.status_code} - error{response.text}')
-        
-
-    # item_id = inserted_id
-    # result = update_item_in_database(item_id, response.json())
-
-    
-    return response.json()
 
 
 @app.route('/webhookpin', methods=['GET', 'POST'])
