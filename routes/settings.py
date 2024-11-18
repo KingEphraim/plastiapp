@@ -85,4 +85,4 @@ def settings():
         user_is_logged_in = session.get('user_is_logged_in', True)
         return render_template('settings.html', message=message, user_is_logged_in=user_is_logged_in)
     else:
-        return redirect(url_for("login"))  
+        return redirect(url_for("auth.login"))  
