@@ -37,7 +37,13 @@ function updateUser(serverData, options = {}) {
                 notificationCardHeaderP.innerText = "Transaction Voided";
                 notificationCardBodyH.innerText = "We’re grateful for the opportunity to serve you.";
                 notificationCardBodyP.innerText = "Your payment has been successfully Voided.";
-            } else {
+            } else if (transactionType === 'capture'){
+                notificationCardHeader.className = "card-header bg-info text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Transaction Captured";
+                notificationCardBodyH.innerText = "We’re grateful for the opportunity to serve you.";
+                notificationCardBodyP.innerText = "Your payment has been successfully Captured.";
+            }
+             else {
                 notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Approved";
                 notificationCardBodyH.innerText = "Thank you for your purchase!";
@@ -54,7 +60,13 @@ function updateUser(serverData, options = {}) {
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Void Failed";
                 notificationCardBodyH.innerText = "Something went wrong";
-            } else {
+            } else if(transactionType === 'capture'){
+                notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Capture Failed";
+                notificationCardBodyH.innerText = "Something went wrong";
+            }
+            
+            else {
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Declined";
                 notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
@@ -137,6 +149,7 @@ const appendAlert = (message, type, ccDeviceToggle = 'on') => {
         <div>${message}</div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
+        ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="captureBtn">Capture</button>' : ''}
     `;
 
     try {
@@ -156,24 +169,30 @@ const appendAlert = (message, type, ccDeviceToggle = 'on') => {
 
 
 
-// Helper function to determine if the void/refund button should be shown
+
 const shouldShowVoidButton = (message) => {
+    return /"xResult":"[AS]"/.test(message) && /xRefNum|xGatewayRefnum/.test(message);
+};
+const shouldShowCaptureButton = (message) => {
     return /"xResult":"[AS]"/.test(message) && /xRefNum|xGatewayRefnum/.test(message);
 };
 
 // Event listener for void/refund button clicks
 if (alertPlaceholder) {
     alertPlaceholder.addEventListener('click', ({ target }) => {
-        if (target?.id === 'voidRefundBtn') {
+        if (target?.id === 'voidRefundBtn' || target?.id === 'captureBtn') {
             const message = target.closest('.alert').querySelector('div').innerText;
             try {
                 const { xRefNum, xGatewayRefnum } = JSON.parse(message);
                 const refNum = xRefNum || xGatewayRefnum;
 
+                const tranzType = target.id === 'voidRefundBtn' ? 'void' : 'capture';
+                
                 const formData = {
-                    tranzType: "void",
+                    tranzType: tranzType,
                     refnum: refNum
                 };
+
                 console.log(formData);
                 sendtoserver(JSON.stringify(formData));
             } catch (error) {
@@ -184,6 +203,7 @@ if (alertPlaceholder) {
 } else {
     console.warn("alertPlaceholder element not found!");
 }
+
 
 // Function to load settings from the server
 async function loadSettings() {
@@ -416,6 +436,8 @@ function sendtoserver(serverdata) {
                 appendAlert(JSON.stringify(data), 'success');
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(data, { transactionType: 'void' });
+                } else if(JSON.parse(serverdata).tranzType === 'capture'){
+                    updateUser(data, { transactionType: 'capture' });
                 } else {
 
                     updateUser(data);
@@ -434,7 +456,10 @@ function sendtoserver(serverdata) {
                 appendAlert(JSON.stringify(data), 'danger');
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(data, { transactionType: 'void' });
-                } else {
+                }else if(JSON.parse(serverdata).tranzType === 'capture'){
+                    updateUser(data, { transactionType: 'capture' });
+                }
+                 else {
                     updateUser(data);
                 }
             }
