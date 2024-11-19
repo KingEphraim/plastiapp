@@ -14,6 +14,7 @@ from routes.main import main_bp
 from routes.auth import auth_bp
 from routes.settings import settings_bp
 from routes.cardknox_transactions import cardknox_transactions_bp
+from routes.contact import contact__bp
 #from databaseop import add_item_to_database, update_item_in_database
 with open('config.json') as f:
     config = json.load(f) 
@@ -23,6 +24,7 @@ app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(cardknox_transactions_bp)
+app.register_blueprint(contact__bp)
 
 app.secret_key = config['secret_key']  # Change this to a secure secret key
 

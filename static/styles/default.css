@@ -190,3 +190,4 @@ label[for="ccdevice"]:hover {
 #ccdevice:checked + label[for="ccdevice"]:hover {
     background-color: #4B6DF3;
 }
+
