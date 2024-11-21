@@ -431,36 +431,36 @@ function sendtoserver(serverdata) {
     })
         .then(response => response.json())
         .then(data => {            
-            data=data.ckResponse            
-            if (data.xResult == "A") {
-                appendAlert(JSON.stringify(data), 'success');
+            ckResponse=data.ckResponse            
+            if (ckResponse.xResult == "A") {
+                appendAlert(JSON.stringify(ckResponse), 'success');
                 if (JSON.parse(serverdata).tranzType === 'void') {
-                    updateUser(data, { transactionType: 'void' });
+                    updateUser(ckResponse, { transactionType: 'void' });
                 } else if(JSON.parse(serverdata).tranzType === 'capture'){
-                    updateUser(data, { transactionType: 'capture' });
+                    updateUser(ckResponse, { transactionType: 'capture' });
                 } else {
 
-                    updateUser(data);
+                    updateUser(ckResponse);
                 }
 
             }
-            else if (data.xResult == "S") {
-                appendAlert(JSON.stringify(data), 'info', 'off');
-                pollDeviceSession(data.xSessionId)
+            else if (ckResponse.xResult == "S") {
+                appendAlert(JSON.stringify(ckResponse), 'info', 'off');
+                pollDeviceSession(ckResponse.xSessionId)
             }
-            else if (data.xResult == "V") {
-                verify3DS(data)
-                appendAlert(JSON.stringify(data), 'info');
+            else if (ckResponse.xResult == "V") {
+                verify3DS(ckResponse)
+                appendAlert(JSON.stringify(ckResponse), 'info');
             }
             else {
-                appendAlert(JSON.stringify(data), 'danger');
+                appendAlert(JSON.stringify(ckResponse), 'danger');
                 if (JSON.parse(serverdata).tranzType === 'void') {
-                    updateUser(data, { transactionType: 'void' });
+                    updateUser(ckResponse, { transactionType: 'void' });
                 }else if(JSON.parse(serverdata).tranzType === 'capture'){
-                    updateUser(data, { transactionType: 'capture' });
+                    updateUser(ckResponse, { transactionType: 'capture' });
                 }
                  else {
-                    updateUser(data);
+                    updateUser(ckResponse);
                 }
             }
         })
@@ -558,25 +558,26 @@ function pollDeviceSession(sessionid) {
                 return response.json();
             })
             .then(data => {
-                console.log("Response data:", data); // Log the entire response
+                ckResponse=data.ckResponse 
+                console.log("Response data:", ckResponse); // Log the entire response
 
                 // Check if data has the success flag and xSessionStatus
-                if (data && data.xResult == 'S' && data.xSessionStatus) {
-                    const status = data.xSessionStatus;
+                if (ckResponse && ckResponse.xResult == 'S' && ckResponse.xSessionStatus) {
+                    const status = ckResponse.xSessionStatus;
                     if (status === "INITIATING" || status === "PROCESSING") {
 
                         console.log(`Status: ${status}. Polling again in 1 second...`);
-                        appendAlert(JSON.stringify(data), 'info', 'off');
+                        appendAlert(JSON.stringify(ckResponse), 'info', 'off');
 
                         setTimeout(poll, 1000); // Poll every 1 second after the initial delay
                     } else if (status === "COMPLETED") {
                         console.log(`Final Status: ${status}`);
-                        appendAlert(JSON.stringify(data), 'success');
-                        updateUser(data);
+                        appendAlert(JSON.stringify(ckResponse), 'success');
+                        updateUser(ckResponse);
                     } else if (status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
                         console.log(`Final Status: ${status}`);
-                        appendAlert(JSON.stringify(data), 'danger');
-                        updateUser(data);
+                        appendAlert(JSON.stringify(ckResponse), 'danger');
+                        updateUser(ckResponse);
                     } else {
                         console.log(`Unknown Status: ${status}`);
                     }
