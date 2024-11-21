@@ -22,7 +22,6 @@ def sendtocardknox():
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
-
     if (datafromuser['tranzType'] == 'R'):
         tockmethod = 'post'
         url = "https://x1.cardknox.com/gatewayjson"
@@ -160,5 +159,5 @@ def sendtocardknox():
         jsonBody=tockdata
     )
 
-    return jsonify(response)
+    return jsonify({'ckRequest':tockdata,'ckResponse':response})
     

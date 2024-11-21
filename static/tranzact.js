@@ -430,8 +430,8 @@ function sendtoserver(serverdata) {
         body: serverdata
     })
         .then(response => response.json())
-        .then(data => {
-
+        .then(data => {            
+            data=data.ckResponse            
             if (data.xResult == "A") {
                 appendAlert(JSON.stringify(data), 'success');
                 if (JSON.parse(serverdata).tranzType === 'void') {
