@@ -149,7 +149,7 @@ const appendAlert = (message, type, ccDeviceToggle = 'on',ckRequest) => {
     wrapper.innerHTML = `
     <div>${message}</div>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
+    ${(shouldShowVoidButton(message) && ckRequest.xCommand !== 'cc:voidrefund') ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
     ${ckRequest.xCommand === 'cc:authonly' && shouldShowCaptureButton(message) ? '<button type="button" class="btn btn-warning" id="captureBtn">Capture</button>' : ''}
 `;
 
@@ -569,16 +569,16 @@ function pollDeviceSession(sessionid) {
                     if (status === "INITIATING" || status === "PROCESSING") {
 
                         console.log(`Status: ${status}. Polling again in 1 second...`);
-                        appendAlert(JSON.stringify(ckResponse), 'info', 'off');
+                        appendAlert(JSON.stringify(ckResponse), 'info', 'off',ckRequest);
 
                         setTimeout(poll, 1000); // Poll every 1 second after the initial delay
                     } else if (status === "COMPLETED") {
                         console.log(`Final Status: ${status}`);
-                        appendAlert(JSON.stringify(ckResponse), 'success');
+                        appendAlert(JSON.stringify(ckResponse), 'success','on',ckRequest);
                         updateUser(ckResponse);
                     } else if (status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
                         console.log(`Final Status: ${status}`);
-                        appendAlert(JSON.stringify(ckResponse), 'danger');
+                        appendAlert(JSON.stringify(ckResponse), 'danger','on',ckRequest);
                         updateUser(ckResponse);
                     } else {
                         console.log(`Unknown Status: ${status}`);
