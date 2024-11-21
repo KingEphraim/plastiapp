@@ -1,7 +1,5 @@
 from flask import Blueprint, json, request, session,jsonify
-import requests
 from models.user_settings import UserSettingsManager
-import mylogs
 from models.apiconnector import send_api_request
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
 
@@ -10,8 +8,7 @@ with open('config.json') as f:
 
 
 @cardknox_transactions_bp.route('/sendtocardknox', methods=['POST'])
-def sendtocardknox():
-    mylogs.add_to_log(f'Incoming data: {request.data}')
+def sendtocardknox():    
     user_manager = UserSettingsManager(session)
     settings = user_manager.user_settings or {
         "useremail": "",
@@ -23,7 +20,6 @@ def sendtocardknox():
         "deviceFriendlyName": "",
         "deviceId": "",
     }
-
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
 
