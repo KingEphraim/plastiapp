@@ -141,16 +141,17 @@ function formatDate(dateString) {
 }
 
 // Append alert to alertPlaceholder
-const appendAlert = (message, type, ccDeviceToggle = 'on') => {
+const appendAlert = (message, type, ccDeviceToggle = 'on',ckRequest) => {
+    console.log(ckRequest.xCommand)
     const wrapper = document.createElement('div');
     wrapper.className = `alert alert-${type} alert-dismissible`;
     wrapper.role = 'alert';
     wrapper.innerHTML = `
-        <div>${message}</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
-        ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="captureBtn">Capture</button>' : ''}
-    `;
+    <div>${message}</div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    ${shouldShowVoidButton(message) ? '<button type="button" class="btn btn-warning" id="voidRefundBtn">Void/Refund</button>' : ''}
+    ${ckRequest.xCommand === 'cc:authonly' && shouldShowCaptureButton(message) ? '<button type="button" class="btn btn-warning" id="captureBtn">Capture</button>' : ''}
+`;
 
     try {
         const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder');
@@ -431,9 +432,10 @@ function sendtoserver(serverdata) {
     })
         .then(response => response.json())
         .then(data => {            
+            ckRequest=data.ckRequest  
             ckResponse=data.ckResponse            
             if (ckResponse.xResult == "A") {
-                appendAlert(JSON.stringify(ckResponse), 'success');
+                appendAlert(JSON.stringify(ckResponse), 'success','on',ckRequest);
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(ckResponse, { transactionType: 'void' });
                 } else if(JSON.parse(serverdata).tranzType === 'capture'){
@@ -445,15 +447,15 @@ function sendtoserver(serverdata) {
 
             }
             else if (ckResponse.xResult == "S") {
-                appendAlert(JSON.stringify(ckResponse), 'info', 'off');
+                appendAlert(JSON.stringify(ckResponse), 'info', 'off',ckRequest);
                 pollDeviceSession(ckResponse.xSessionId)
             }
             else if (ckResponse.xResult == "V") {
                 verify3DS(ckResponse)
-                appendAlert(JSON.stringify(ckResponse), 'info');
+                appendAlert(JSON.stringify(ckResponse), 'info','off',ckRequest);
             }
             else {
-                appendAlert(JSON.stringify(ckResponse), 'danger');
+                appendAlert(JSON.stringify(ckResponse), 'danger','on',ckRequest);
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(ckResponse, { transactionType: 'void' });
                 }else if(JSON.parse(serverdata).tranzType === 'capture'){
