@@ -18,7 +18,10 @@ def send_api_request(method="POST", url=None, headers=None, jsonBody=None, param
             raise ValueError(f"Unsupported method: {method}")
 
         # Check for successful response (status code 200-299)
-        response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+        try:
+            response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+        except requests.exceptions.RequestException:
+            pass  # Catch the exception but continue to attempt to return the response
 
         # Return the response JSON if available, else the text
         try:
@@ -34,4 +37,3 @@ def send_api_request(method="POST", url=None, headers=None, jsonBody=None, param
         return {"error": f"An error occurred: {str(e)}"}
     except ValueError as e:
         return {"error": str(e)}
-

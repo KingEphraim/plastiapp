@@ -1,4 +1,4 @@
-from flask import Blueprint, json, request, session,jsonify
+from flask import Blueprint, json, request, session, jsonify
 from models.user_settings import UserSettingsManager
 from models.apiconnector import send_api_request
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
@@ -8,7 +8,7 @@ with open('config.json') as f:
 
 
 @cardknox_transactions_bp.route('/sendtocardknox', methods=['POST'])
-def sendtocardknox():    
+def sendtocardknox():
     user_manager = UserSettingsManager(session)
     settings = user_manager.user_settings or {
         "useremail": "",
@@ -95,21 +95,8 @@ def sendtocardknox():
             'xDeviceFriendlyName': settings['deviceFriendlyName'],
 
         }
-        headers['Authorization'] = settings.get('key', config['xKey'])
-
-    elif (datafromuser['tranzType'] == 'polldevicesession'):
-        tockmethod = 'get'
-        url = f"https://device.cardknox.com/v1/Session/{
-            datafromuser['sessionid']}"
-        tockdata = {
-            'xDeviceSerialNumber': settings['deviceSerialNumber'],
-            'xDeviceMake': settings['deviceMake'],
-            'xDeviceFriendlyName': settings['deviceFriendlyName'],
-
-        }
-        headers['Authorization'] = settings.get('key', config['xKey'])
-
-    elif (datafromuser['tranzType'] == 'sessioninitiate'):
+        headers['Authorization'] = settings.get('key', config['xKey'])    
+    elif (datafromuser['tranzType'] == 'cloudIM'):
         tockmethod = 'post'
         url = 'https://device.cardknox.com/v1/Session/initiate'
         tockdata = {
@@ -151,13 +138,37 @@ def sendtocardknox():
         }
     else:
         return {'message': 'missing tranzType'}
-        
+
     response = send_api_request(
         method=tockmethod,
         url=url,
         headers=headers,
         jsonBody=tockdata
     )
+    print(response)
+    if (datafromuser['tranzType'] == 'cloudIM' and response['xResult'] == 'S'):
+        tockmethod = 'get'
+        url = f"https://device.cardknox.com/v1/Session/{
+            response['xSessionId']}"
+        headers['Authorization'] = settings.get('key', config['xKey'])
+        tockdatapoll = {
+            'xDeviceSerialNumber': settings['deviceSerialNumber'],
+            'xDeviceMake': settings['deviceMake'],
+            'xDeviceFriendlyName': settings['deviceFriendlyName'],
+        }
+        status_check_list = ['COMPLETED', 'ERROR','TIMEOUT', 'USER_CANCELLED', 'API_CANCELLED']
+        pollResponse = {}
+        
 
-    return jsonify({'ckRequest':tockdata,'ckResponse':response})
+        while pollResponse.get('xSessionStatus') not in status_check_list:            
+            pollResponse = send_api_request(
+                method=tockmethod,
+                url=url,
+                headers=headers,
+                jsonBody=tockdatapoll
+            )
+        tockdata=tockdata['xPayload']
+        response=pollResponse
+        
     
+    return jsonify({'ckRequest': tockdata, 'ckResponse': response})

@@ -37,13 +37,13 @@ function updateUser(serverData, options = {}) {
                 notificationCardHeaderP.innerText = "Transaction Voided";
                 notificationCardBodyH.innerText = "We’re grateful for the opportunity to serve you.";
                 notificationCardBodyP.innerText = "Your payment has been successfully Voided.";
-            } else if (transactionType === 'capture'){
+            } else if (transactionType === 'capture') {
                 notificationCardHeader.className = "card-header bg-info text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Captured";
                 notificationCardBodyH.innerText = "We’re grateful for the opportunity to serve you.";
                 notificationCardBodyP.innerText = "Your payment has been successfully Captured.";
             }
-             else {
+            else {
                 notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Approved";
                 notificationCardBodyH.innerText = "Thank you for your purchase!";
@@ -55,17 +55,17 @@ function updateUser(serverData, options = {}) {
             break;
         case 'E':
             console.log("xResult is E");
-            if (transactionType === 'void') {        
-                
+            if (transactionType === 'void') {
+
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Void Failed";
                 notificationCardBodyH.innerText = "Something went wrong";
-            } else if(transactionType === 'capture'){
+            } else if (transactionType === 'capture') {
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Capture Failed";
                 notificationCardBodyH.innerText = "Something went wrong";
             }
-            
+
             else {
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Declined";
@@ -88,16 +88,16 @@ function updateUser(serverData, options = {}) {
             break;
         case 'S':
             console.log("xResult is S");
-            if(serverData.xSessionStatus==='ERROR' || serverData.xSessionStatus==='TIMEOUT'|| serverData.xSessionStatus==='USER_CANCELLED'| serverData.xSessionStatus==='API_CANCELLED'){
+            if (serverData.xSessionStatus === 'ERROR' || serverData.xSessionStatus === 'TIMEOUT' || serverData.xSessionStatus === 'USER_CANCELLED' | serverData.xSessionStatus === 'API_CANCELLED') {
                 notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
                 notificationCardHeaderP.innerText = "Transaction Declined";
                 notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
                 notificationCardBodyP.innerText = serverData.xSessionError;
-            }else{
-            notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
-            notificationCardHeaderP.innerText = "Transaction Approved";
-            notificationCardBodyH.innerText = "Thank you for your purchase!";
-            notificationCardBodyP.innerText = "Your payment has been processed successfully.";
+            } else {
+                notificationCardHeader.className = "card-header bg-success text-white text-center py-4";
+                notificationCardHeaderP.innerText = "Transaction Approved";
+                notificationCardBodyH.innerText = "Thank you for your purchase!";
+                notificationCardBodyP.innerText = "Your payment has been processed successfully.";
             }
             modalElement.show();
 
@@ -141,7 +141,7 @@ function formatDate(dateString) {
 }
 
 // Append alert to alertPlaceholder
-const appendAlert = (message, type, ccDeviceToggle = 'on',ckRequest) => {
+const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest) => {
     console.log(ckRequest.xCommand)
     const wrapper = document.createElement('div');
     wrapper.className = `alert alert-${type} alert-dismissible`;
@@ -188,7 +188,7 @@ if (alertPlaceholder) {
                 const refNum = xRefNum || xGatewayRefnum;
 
                 const tranzType = target.id === 'voidRefundBtn' ? 'void' : 'capture';
-                
+
                 const formData = {
                     tranzType: tranzType,
                     refnum: refNum
@@ -411,7 +411,7 @@ ccdevicebtn.addEventListener("click", () => {
 
 
 
-    formData['tranzType'] = "sessioninitiate";
+    formData['tranzType'] = "cloudIM";
     // Convert JSON to string for display or further processing
     var formDataJSON = JSON.stringify(formData);
 
@@ -431,37 +431,35 @@ function sendtoserver(serverdata) {
         body: serverdata
     })
         .then(response => response.json())
-        .then(data => {            
-            ckRequest=data.ckRequest  
-            ckResponse=data.ckResponse            
-            if (ckResponse.xResult == "A") {
-                appendAlert(JSON.stringify(ckResponse), 'success','on',ckRequest);
+        .then(data => {
+            ckRequest = data.ckRequest
+            ckResponse = data.ckResponse
+            
+            if (ckResponse.xResult == "A" ||ckResponse.xResult ==  "S") {
+                
+                appendAlert(JSON.stringify(ckResponse), 'success', 'on', ckRequest);
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(ckResponse, { transactionType: 'void' });
-                } else if(JSON.parse(serverdata).tranzType === 'capture'){
+                } else if (JSON.parse(serverdata).tranzType === 'capture') {
                     updateUser(ckResponse, { transactionType: 'capture' });
                 } else {
 
                     updateUser(ckResponse);
                 }
-
-            }
-            else if (ckResponse.xResult == "S") {
-                appendAlert(JSON.stringify(ckResponse), 'info', 'off',ckRequest);
-                pollDeviceSession(ckResponse.xSessionId)
             }
             else if (ckResponse.xResult == "V") {
                 verify3DS(ckResponse)
-                appendAlert(JSON.stringify(ckResponse), 'info','off',ckRequest);
+                appendAlert(JSON.stringify(ckResponse), 'info', 'off', ckRequest);
             }
             else {
-                appendAlert(JSON.stringify(ckResponse), 'danger','on',ckRequest);
+                appendAlert(JSON.stringify(ckResponse), 'danger', 'on', ckRequest);
+
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(ckResponse, { transactionType: 'void' });
-                }else if(JSON.parse(serverdata).tranzType === 'capture'){
+                } else if (JSON.parse(serverdata).tranzType === 'capture') {
                     updateUser(ckResponse, { transactionType: 'capture' });
                 }
-                 else {
+                else {
                     updateUser(ckResponse);
                 }
             }
@@ -538,61 +536,7 @@ function processGP(paymentResponse) {
     });
 }
 
-function pollDeviceSession(sessionid) {
 
-    const formData = {
-        tranzType: "polldevicesession",
-        sessionid: sessionid
-    };
-
-    function poll() {
-        fetch('/sendtocardknox', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                ckResponse=data.ckResponse 
-                console.log("Response data:", ckResponse); // Log the entire response
-
-                // Check if data has the success flag and xSessionStatus
-                if (ckResponse && ckResponse.xResult == 'S' && ckResponse.xSessionStatus) {
-                    const status = ckResponse.xSessionStatus;
-                    if (status === "INITIATING" || status === "PROCESSING") {
-
-                        console.log(`Status: ${status}. Polling again in 1 second...`);
-                        appendAlert(JSON.stringify(ckResponse), 'info', 'off',ckRequest);
-
-                        setTimeout(poll, 1000); // Poll every 1 second after the initial delay
-                    } else if (status === "COMPLETED") {
-                        console.log(`Final Status: ${status}`);
-                        appendAlert(JSON.stringify(ckResponse), 'success','on',ckRequest);
-                        updateUser(ckResponse);
-                    } else if (status === "ERROR" || status === "TIMEOUT" || status === "USER_CANCELLED" || status === "API_CANCELLED") {
-                        console.log(`Final Status: ${status}`);
-                        appendAlert(JSON.stringify(ckResponse), 'danger','on',ckRequest);
-                        updateUser(ckResponse);
-                    } else {
-                        console.log(`Unknown Status: ${status}`);
-                    }
-                } else {
-                    console.error("Failed to get a valid response or success flag.");
-                }
-            })
-            .catch(error => console.error('Polling error:', error));
-    }
-
-    // Start polling after an initial 6-second delay
-    setTimeout(poll, 5000);
-}
 
 
 
