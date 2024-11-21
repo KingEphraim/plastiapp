@@ -151,7 +151,7 @@ def sendtocardknox():
         }
     else:
         return {'message': 'missing tranzType'}
-         
+        
     response = send_api_request(
         method=tockmethod,
         url=url,
