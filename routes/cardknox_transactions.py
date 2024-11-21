@@ -1,7 +1,8 @@
-from flask import Blueprint, json, request, session
+from flask import Blueprint, json, request, session,jsonify
 import requests
 from models.user_settings import UserSettingsManager
 import mylogs
+from models.apiconnector import send_api_request
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
 
 with open('config.json') as f:
@@ -155,19 +156,13 @@ def sendtocardknox():
         }
     else:
         return {'message': 'missing tranzType'}
-    try:
-        json_data = json.dumps(tockdata)
-    except Exception as e:
-        print("Error:", e)
-    mylogs.add_to_log(f'Data sent to ck: {json_data}')
-    if (tockmethod == 'get'):
-        response = requests.get(url, headers=headers)
-    else:
-        response = requests.post(url, data=json_data, headers=headers)
-    if response.status_code == 200:
-        ck_response = response.json()
-        mylogs.add_to_log(f'Ck 200 response: {ck_response}')
-    else:
-        mylogs.add_to_log(
-            f'Ck fail response: statuscode - {response.status_code} - error{response.text}')
-    return response.json()
+         
+    response = send_api_request(
+        method=tockmethod,
+        url=url,
+        headers=headers,
+        jsonBody=tockdata
+    )
+
+    return jsonify(response)
+    

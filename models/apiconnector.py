@@ -1,36 +1,37 @@
 import requests
 
-def submit_request(url, method="POST", headers=None, data=None, json_data=None, params=None):
+def send_api_request(method="POST", url=None, headers=None, jsonBody=None, params=None):
     try:
-        response = requests.request(
-            method=method,
-            url=url,
-            headers=headers,
-            data=data,
-            json=json_data,
-            params=params
-        )
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        return response.json()  # Return parsed JSON response
-    except requests.exceptions.HTTPError as http_err:
-        return {
-            "error": "HTTP error occurred",
-            "details": str(http_err),
-            "status_code": response.status_code,
-            "response_text": response.text
-        }
-    except requests.exceptions.ConnectionError as conn_err:
-        return {
-            "error": "Connection error occurred",
-            "details": str(conn_err)
-        }
-    except requests.exceptions.Timeout as timeout_err:
-        return {
-            "error": "Request timed out",
-            "details": str(timeout_err)
-        }
-    except requests.exceptions.RequestException as req_err:
-        return {
-            "error": "An error occurred with the request",
-            "details": str(req_err)
-        }
+        # Ensure the method is uppercase (in case it's provided in lowercase)
+        method = method.upper()
+
+        # Perform the API call based on the HTTP method
+        if method == "POST":
+            response = requests.post(url, headers=headers, json=jsonBody, params=params)
+        elif method == "GET":
+            response = requests.get(url, headers=headers, params=params)
+        elif method == "PUT":
+            response = requests.put(url, headers=headers, json=jsonBody, params=params)
+        elif method == "DELETE":
+            response = requests.delete(url, headers=headers, params=params)
+        else:
+            raise ValueError(f"Unsupported method: {method}")
+
+        # Check for successful response (status code 200-299)
+        response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+
+        # Return the response JSON if available, else the text
+        try:
+            return response.json()
+        except ValueError:
+            return response.text  # Return raw text if JSON is not available
+
+    except requests.exceptions.Timeout:
+        return {"error": "Request timed out"}
+    except requests.exceptions.TooManyRedirects:
+        return {"error": "Too many redirects"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"An error occurred: {str(e)}"}
+    except ValueError as e:
+        return {"error": str(e)}
+
