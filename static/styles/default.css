@@ -168,6 +168,25 @@ label[for="threeds"]:hover {
     color: white;
 }
 
+/* Style for unchecked */
+label[for="googlePay"] {
+    background-color: #AEB6F7;
+    /* Unchecked background color */
+    cursor: pointer;
+}
+
+/* Hover style for unchecked */
+label[for="googlePay"]:hover {
+    background-color: #3C5AF0;
+    /* Hover background color */
+}
+
+/* Style for checked */
+#googlePay:checked+label[for="googlePay"] {
+    background-color: #2E4AD8;
+    /* Checked background color */
+    color: white;
+}
 
 /* Default style for the label (unselected state) */
 label[for="ccdevice"] {

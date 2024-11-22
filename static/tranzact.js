@@ -224,6 +224,7 @@ async function loadSettings() {
             userCommand = data.settings.userCommand || '';
             userPhone = data.settings.phone || '';
             user3ds = data.settings.threeds;
+            userGooglePay = data.settings.googlePay;
             ccdevice = data.settings.ccdevice;
 
 
@@ -257,11 +258,11 @@ function formatExp(exp) {
 
 
 window.onload = function () {
-    ckGooglePay.enableGooglePay({ amountField: "amount" });
+    
 
     (async () => {
         await loadSettings();
-        console.log(userEmail, userKey, userCommand, userPhone, user3ds, ccdevice);
+        console.log(userEmail, userKey, userCommand, userPhone, user3ds, userGooglePay, ccdevice);
 
         if (user3ds === true) {
             console.log("threeds is true");
@@ -270,6 +271,15 @@ window.onload = function () {
             console.log("threeds is false");
         } else {
             console.log("threeds is neither true nor false");
+        }
+
+        if (userGooglePay === true) {
+            console.log("googlePay is true");
+            ckGooglePay.enableGooglePay({ amountField: "amount" });
+        } else if (userGooglePay === false) {
+            console.log("googlePay is false");
+        } else {
+            console.log("googlePay is neither true nor false");
         }
 
         if (ccdevice === true) {

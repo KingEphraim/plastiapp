@@ -38,7 +38,9 @@ document.getElementById("ccdevice").addEventListener("change", function() {
 document.getElementById("threeds").addEventListener("change", function() {
     updateLabel("threeds", "threedsLabel");
 });
-
+document.getElementById("googlePay").addEventListener("change", function() {
+    updateLabel("googlePay", "googlePayLabel");
+});
 
 
 
@@ -95,10 +97,10 @@ savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
     var formData = {};
-    var fields = ["key","command", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds", "ccdevice"]; 
+    var fields = ["key","command", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds","googlePay", "ccdevice"]; 
 
     fields.forEach(function (field) {
-        if (field === "threeds" || field === "ccdevice") { // Check for both "threeds" and "ccdevice"
+        if (field === "threeds" || field === "ccdevice"|| field === "googlePay") { // Check for both "threeds" and "ccdevice"
             formData[field] = document.getElementById(field).checked; // Get checkbox status (true/false)
         } else {
             formData[field] = document.getElementById(field).value;
@@ -134,19 +136,21 @@ createdevicebtn.addEventListener("click", () => {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.xResult === "S") {
-                document.getElementById('deviceId').value = data.xDeviceId;
+            ckRequest = data.ckRequest
+            ckResponse = data.ckResponse
+            if (ckResponse.xResult === "S") {
+                document.getElementById('deviceId').value = ckResponse.xDeviceId;
                 savebtn.click();                
                 // Successful case
-                appendAlert(`Device created successfully! ID: ${data.xDeviceId}`, 'success');
+                appendAlert(`Device created successfully! ID: ${ckResponse.xDeviceId}`, 'success');
                 
-            } else if (data.xResult === "E") {
+            } else if (ckResponse.xResult === "E") {
                 // Error case
-                appendAlert(`Error: ${data.xError} (Ref: ${data.xRefnum})`, 'danger');
+                appendAlert(`Error: ${ckResponse.xError} (Ref: ${ckResponse.xRefnum})`, 'danger');
                 // Additional logic for error handling can go here
             } else {
                 // Handle unexpected cases
-                appendAlert(`Unexpected response: ${JSON.stringify(data)}`, 'warning');
+                appendAlert(`Unexpected response: ${JSON.stringify(ckResponse)}`, 'warning');
             }
         })
         .catch(error => {
@@ -197,9 +201,11 @@ function loadSettings() {
             document.getElementById('deviceFriendlyName').value = data.settings.deviceFriendlyName || '';
             document.getElementById('deviceId').value = data.settings.deviceId || '';
             document.getElementById('threeds').checked = data.settings.threeds || false; 
+            document.getElementById('googlePay').checked = data.settings.googlePay || false; 
             document.getElementById('ccdevice').checked = data.settings.ccdevice || false; 
             updateLabel("ccdevice", "ccdeviceLabel");
             updateLabel("threeds", "threedsLabel");
+            updateLabel("googlePay", "googlePayLabel");
             console.log('Settings loaded successfully!', 'success');
         } else {
             console.log(data.message);
