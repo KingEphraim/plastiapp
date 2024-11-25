@@ -141,8 +141,7 @@ function formatDate(dateString) {
 }
 
 // Append alert to alertPlaceholder
-const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest) => {
-    console.log(ckRequest.xCommand)
+const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest='') => {
     const wrapper = document.createElement('div');
     wrapper.className = `alert alert-${type} alert-dismissible`;
     wrapper.role = 'alert';
