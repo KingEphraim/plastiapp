@@ -95,7 +95,7 @@ def sendtocardknox():
             'xDeviceFriendlyName': settings['deviceFriendlyName'],
 
         }
-        headers['Authorization'] = settings.get('key', config['xKey'])    
+        headers['Authorization'] = settings.get('key', config['xKey'])
     elif (datafromuser['tranzType'] == 'cloudIM'):
         tockmethod = 'post'
         url = 'https://device.cardknox.com/v1/Session/initiate'
@@ -148,27 +148,25 @@ def sendtocardknox():
     print(response)
     if (datafromuser['tranzType'] == 'cloudIM' and response['xResult'] == 'S'):
         tockmethod = 'get'
-        url = f"https://device.cardknox.com/v1/Session/{
-            response['xSessionId']}"
+        url = f"https://device.cardknox.com/v1/Session/{response['xSessionId']}"
         headers['Authorization'] = settings.get('key', config['xKey'])
         tockdatapoll = {
             'xDeviceSerialNumber': settings['deviceSerialNumber'],
             'xDeviceMake': settings['deviceMake'],
             'xDeviceFriendlyName': settings['deviceFriendlyName'],
         }
-        status_check_list = ['COMPLETED', 'ERROR','TIMEOUT', 'USER_CANCELLED', 'API_CANCELLED']
+        status_check_list = ['COMPLETED', 'ERROR',
+                             'TIMEOUT', 'USER_CANCELLED', 'API_CANCELLED']
         pollResponse = {}
-        
 
-        while pollResponse.get('xSessionStatus') not in status_check_list:            
+        while pollResponse.get('xSessionStatus') not in status_check_list:
             pollResponse = send_api_request(
                 method=tockmethod,
                 url=url,
                 headers=headers,
                 jsonBody=tockdatapoll
             )
-        tockdata=tockdata['xPayload']
-        response=pollResponse
-        
-    
+        tockdata = tockdata['xPayload']
+        response = pollResponse
+
     return jsonify({'ckRequest': tockdata, 'ckResponse': response})
