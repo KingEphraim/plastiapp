@@ -141,7 +141,7 @@ function formatDate(dateString) {
 }
 
 // Append alert to alertPlaceholder
-const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest='') => {
+const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest = '') => {
     const wrapper = document.createElement('div');
     wrapper.className = `alert alert-${type} alert-dismissible`;
     wrapper.role = 'alert';
@@ -257,7 +257,7 @@ function formatExp(exp) {
 
 
 window.onload = function () {
-    
+
 
     (async () => {
         await loadSettings();
@@ -443,9 +443,9 @@ function sendtoserver(serverdata) {
         .then(data => {
             ckRequest = data.ckRequest
             ckResponse = data.ckResponse
-            
-            if (ckResponse.xResult == "A" ||ckResponse.xResult ==  "S") {
-                
+
+            if (ckResponse.xResult == "A" || ckResponse.xResult == "S") {
+
                 appendAlert(JSON.stringify(ckResponse), 'success', 'on', ckRequest);
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(ckResponse, { transactionType: 'void' });
@@ -490,9 +490,14 @@ const gpRequest = {
         //allowedAuthMethods:["PAN_ONLY"],
         //allowedCardNetworks:["AMEX", "DISCOVER", "MASTERCARD", "VISA"],
         phoneNumberRequired: false,
-        billingAddressRequired: true,
+        billingAddressRequired: false,
         billingAddressFormat: GPBillingAddressFormat.full,
     },
+    shippingParameters: {
+        shippingAddressRequired: false,
+        shippingOptionRequired: false
+    },
+
     onGetTransactionInfo: function () {
         return {
             totalPriceStatus: "FINAL",
@@ -517,6 +522,7 @@ function initGP() {
         onGetTransactionInfo: "gpRequest.onGetTransactionInfo",
         environment: "PRODUCTION",
         billingParameters: gpRequest.billingParams,
+        shippingParameters: gpRequest.shippingParameters,
         onProcessPayment: "gpRequest.onProcessPayment",
         onPaymentCanceled: "gpRequest.onPaymentCanceled",
     };
