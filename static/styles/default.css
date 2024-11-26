@@ -210,3 +210,22 @@ label[for="ccdevice"]:hover {
     background-color: #4B6DF3;
 }
 
+/* Style for unchecked */
+label[for="ebtOnline"] {
+    background-color: #AEB6F7;
+    /* Unchecked background color */
+    cursor: pointer;
+}
+
+/* Hover style for unchecked */
+label[for="ebtOnline"]:hover {
+    background-color: #3C5AF0;
+    /* Hover background color */
+}
+
+/* Style for checked */
+#ebtOnline:checked+label[for="ebtOnline"] {
+    background-color: #2E4AD8;
+    /* Checked background color */
+    color: white;
+}

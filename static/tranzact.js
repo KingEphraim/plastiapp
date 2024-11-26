@@ -224,6 +224,7 @@ async function loadSettings() {
             userPhone = data.settings.phone || '';
             user3ds = data.settings.threeds;
             userGooglePay = data.settings.googlePay;
+            userebtOnline = data.settings.ebtOnline;
             ccdevice = data.settings.ccdevice;
 
 
@@ -279,6 +280,17 @@ window.onload = function () {
             console.log("googlePay is false");
         } else {
             console.log("googlePay is neither true nor false");
+        }
+
+        if (userebtOnline === true) {
+            console.log("ebtOnline is true");
+            
+            document.getElementById("ebtOnlinebtndiv").style.display = "block";
+
+        } else if (userebtOnline === false) {
+            console.log("ebtOnline is false");
+        } else {
+            console.log("ebtOnline is neither true nor false");
         }
 
         if (ccdevice === true) {

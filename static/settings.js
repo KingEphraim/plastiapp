@@ -41,6 +41,9 @@ document.getElementById("threeds").addEventListener("change", function() {
 document.getElementById("googlePay").addEventListener("change", function() {
     updateLabel("googlePay", "googlePayLabel");
 });
+document.getElementById("ebtOnline").addEventListener("change", function() {
+    updateLabel("ebtOnline", "ebtOnlineLabel");
+});
 
 
 
@@ -97,10 +100,10 @@ savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
     var formData = {};
-    var fields = ["key","command", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds","googlePay", "ccdevice"]; 
+    var fields = ["key","command", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds","googlePay","ebtOnline", "ccdevice"]; 
 
     fields.forEach(function (field) {
-        if (field === "threeds" || field === "ccdevice"|| field === "googlePay") { // Check for both "threeds" and "ccdevice"
+        if (field === "threeds" || field === "ccdevice"|| field === "googlePay"|| field === "ebtOnline") { // Check for both "threeds" and "ccdevice"
             formData[field] = document.getElementById(field).checked; // Get checkbox status (true/false)
         } else {
             formData[field] = document.getElementById(field).value;
@@ -202,10 +205,12 @@ function loadSettings() {
             document.getElementById('deviceId').value = data.settings.deviceId || '';
             document.getElementById('threeds').checked = data.settings.threeds || false; 
             document.getElementById('googlePay').checked = data.settings.googlePay || false; 
+            document.getElementById('ebtOnline').checked = data.settings.ebtOnline || false; 
             document.getElementById('ccdevice').checked = data.settings.ccdevice || false; 
             updateLabel("ccdevice", "ccdeviceLabel");
             updateLabel("threeds", "threedsLabel");
             updateLabel("googlePay", "googlePayLabel");
+            updateLabel("ebtOnline", "ebtOnlineLabel");
             console.log('Settings loaded successfully!', 'success');
         } else {
             console.log(data.message);

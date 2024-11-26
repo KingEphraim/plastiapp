@@ -16,7 +16,7 @@ def load_settings():
     if request.method == "GET":
         try:
             # Retrieve user settings from the database
-            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1, "deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1, "googlePay": 1,"threeds": 1, "ccdevice": 1})
+            user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1, "deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1, "googlePay": 1, "ebtOnline": 1,"threeds": 1, "ccdevice": 1})
             
             if user_settings:
                 return jsonify({'status': 'success', 'settings': user_settings})
@@ -55,6 +55,7 @@ def save_settings():
                 new_deviceId = settings_data.get('deviceId')
                 new_threeds = settings_data.get('threeds')
                 new_googlePay = settings_data.get('googlePay')
+                new_ebtOnline = settings_data.get('ebtOnline')
                 new_ccdevice = settings_data.get('ccdevice')
 
                 
@@ -62,7 +63,7 @@ def save_settings():
                 # Update the user's settings in the database
                 users_collection.update_one(
                     {"username": username},
-                    {"$set": {"useremail": new_email, "key": new_key,"command": new_command,"phone": new_phone,"deviceSerialNumber": new_deviceSerialNumber,"deviceMake": new_deviceMake,"deviceFriendlyName": new_deviceFriendlyName,"deviceId": new_deviceId,"googlePay": new_googlePay,"threeds": new_threeds,"ccdevice": new_ccdevice}}
+                    {"$set": {"useremail": new_email, "key": new_key,"command": new_command,"phone": new_phone,"deviceSerialNumber": new_deviceSerialNumber,"deviceMake": new_deviceMake,"deviceFriendlyName": new_deviceFriendlyName,"deviceId": new_deviceId,"googlePay": new_googlePay,"ebtOnline": new_ebtOnline,"threeds": new_threeds,"ccdevice": new_ccdevice}}
                 )
 
                 return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
