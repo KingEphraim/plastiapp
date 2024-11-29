@@ -524,12 +524,12 @@ function showAcuPinPad(data, action) {
         try {
             // Check the current URL of the iframe
             const currentURL = iframe.contentWindow.location.href;
-    
+
             // Compare the current URL with the original URL
             if (currentURL !== originalURL) {
                 console.log('The iframe has been redirected.');
-                        console.log("closing modal")
-        modal.hide(); // Close the modal
+                console.log("closing modal")
+                modal.hide(); // Close the modal
             }
         } catch (error) {
             // Handle cross-origin errors (if the iframe redirects to a domain with different origin)
@@ -538,36 +538,39 @@ function showAcuPinPad(data, action) {
     });
 }
 
-                    // Listen for messages from your Flask app
-                    window.addEventListener("message", function (event) {
-                        console.log("Message received");
+// Listen for messages from your Flask app
+window.addEventListener("message", function (event) {
+    console.log("Message received");
 
-                        // Validate the origin of the message
-                        if (event.origin !== "http://127.0.0.1:5000") return; // Make sure the origin matches your Flask app URL
-                        //console.log("Response data:", event.data.acuResponse);
-                        acuPinPadResponse = event.data.acuResponse
-                        if (acuPinPadResponse.AccuResponseCode == "ACCU000") {
-                            console.log("Good: ", acuPinPadResponse.AccuResponseCode)
-                            console.log(ckResponse.xRefNum)
+    // Validate the origin of the message
+    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+    const allowedOrigin = isLocal ? 'http://127.0.0.1:5000' : 'https://app.cardknox.link';
 
-                            var formData = {};
-                            var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
-                            fields.forEach(function (field) {
-                                formData[field] = document.getElementById(field).value;
-                            });                            
-                            formData['tranzType'] = "ebtOnlineComplete";
-                            formData['refnum'] = ckResponse.xRefNum;
-                            var formDataJSON = JSON.stringify(formData);
+    if (event.origin !== allowedOrigin) return;
+    //console.log("Response data:", event.data.acuResponse);
+    acuPinPadResponse = event.data.acuResponse
+    if (acuPinPadResponse.AccuResponseCode == "ACCU000") {
+        console.log("Good: ", acuPinPadResponse.AccuResponseCode)
+        console.log(ckResponse.xRefNum)
 
-                            sendtoserver(formDataJSON)
-                        } else {
-                            console.log("Bad: ", acuPinPadResponse.AccuResponseCode)
-                            appendAlert(JSON.stringify(acuPinPadResponse), 'danger', 'on', 'on', ckRequest);
-                            updateUser(acuPinPadResponse);
-                        }
+        var formData = {};
+        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
+        fields.forEach(function (field) {
+            formData[field] = document.getElementById(field).value;
+        });
+        formData['tranzType'] = "ebtOnlineComplete";
+        formData['refnum'] = ckResponse.xRefNum;
+        var formDataJSON = JSON.stringify(formData);
+
+        sendtoserver(formDataJSON)
+    } else {
+        console.log("Bad: ", acuPinPadResponse.AccuResponseCode)
+        appendAlert(JSON.stringify(acuPinPadResponse), 'danger', 'on', 'on', ckRequest);
+        updateUser(acuPinPadResponse);
+    }
 
 
-                    }, false);
+}, false);
 
 
 function sendtoserver(serverdata) {
@@ -586,20 +589,20 @@ function sendtoserver(serverdata) {
 
             if (ckResponse.xResult == "A" || ckResponse.xResult == "S") {
                 if (ckResponse.xResult == "A" && ckRequest.xCommand == "ebtonline:initiate") {
-                    console.log(ckResponse)
+                    console.log(ckResponse);
+
+                    // Check if the environment is local (localhost or 127.0.0.1)
+                    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+
                     const pinPadData = {
                         AccuId: ckResponse.xAccuID,
-                        AccuReturnURL: 'http://127.0.0.1:5000/ebtresponse',
+                        AccuReturnURL: isLocal ? 'http://127.0.0.1:5000/ebtresponse' : 'https://app.cardknox.link/ebtresponse',
                         AccuLanguage: 'en-US',
                     };
 
-
                     showAcuPinPad(pinPadData, ckResponse.xPinPadURL);
-
-
-
-
-                } else {
+                }
+                else {
                     appendAlert(JSON.stringify(ckResponse), 'success', 'on', 'on', ckRequest);
                     if (JSON.parse(serverdata).tranzType === 'void') {
                         updateUser(ckResponse, { transactionType: 'void' });
