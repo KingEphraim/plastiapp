@@ -141,12 +141,7 @@ function updateUser(serverData, options = {}) {
 
 }
 
-function formatDate(dateString) {
-    const date = new Date(dateString);
 
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-}
 
 // Append alert to alertPlaceholder
 const appendAlert = (message, type, ccDeviceToggle = 'on', ebtOnlineToggle = 'on', ckRequest = '') => {
@@ -211,6 +206,13 @@ if (alertPlaceholder) {
     });
 } else {
     console.warn("alertPlaceholder element not found!");
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
 }
 
 
