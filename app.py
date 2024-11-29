@@ -17,6 +17,7 @@ from routes.cardknox_transactions import cardknox_transactions_bp
 from routes.contact import contact__bp
 from routes.invoice import invoice__bp
 from routes.customer import customer__bp
+from routes.ebtresponse import ebtresponse__bp
 #from databaseop import add_item_to_database, update_item_in_database
 with open('config.json') as f:
     config = json.load(f) 
@@ -29,6 +30,7 @@ app.register_blueprint(cardknox_transactions_bp)
 app.register_blueprint(contact__bp)
 app.register_blueprint(invoice__bp)
 app.register_blueprint(customer__bp)
+app.register_blueprint(ebtresponse__bp)
 
 
 app.secret_key = config['secret_key']  # Change this to a secure secret key

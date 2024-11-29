@@ -21,7 +21,7 @@ class UserSettingsManager:
             if username is None:
                 raise ValueError("Username not found in session.")
             
-            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1, "command": 1, "phone": 1,"deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1})
+            self.user_settings = users_collection.find_one({"username": username}, {"_id": 0, "useremail": 1, "key": 1,"command": 1, "ebtcommand": 1, "phone": 1,"deviceSerialNumber": 1,"deviceMake": 1,"deviceFriendlyName": 1,"deviceId": 1})
             
         except Exception as e:
             print(f"An error occurred: {e}")

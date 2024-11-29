@@ -99,7 +99,7 @@
                                     <input type="text" class="form-control input-style" id="key" placeholder="xKey" required>
                                 </div>
                                 <div class="col-md-6 col-lg-4">
-                                    <label class="control-label" for="command">Transaction Type</label>
+                                    <label class="control-label" for="command">Credit Card Transaction Type</label>
                                     <select id="command" class="form-select input-style" required>
                                         <option value="" disabled selected>Select Transaction Type</option>
                                         <option value="cc:sale">Sale</option>
@@ -122,6 +122,15 @@
                                     <label class="control-label">EBT Online</label>
                                     <input type="checkbox" class="btn-check" id="ebtOnline" autocomplete="off">
                                     <label class="btn btn-primary" for="ebtOnline" id="ebtOnlineLabel">EBT Online</label>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="control-label" for="ebtcommand">EBT Transaction Type</label>
+                                    <select id="ebtcommand" class="form-select input-style" required>
+                                        <option value="" disabled selected>Select Transaction Type</option>
+                                        <option value="ebtonline:fssale">FS Sale</option>
+                                        <option value="ebtonline:cbsale">CB Sale</option>
+                                        <option value="ebtonline:balance">Balance</option>                                        
+                                    </select>
                                 </div>
                             </div>
                         </div>

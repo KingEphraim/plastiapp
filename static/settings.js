@@ -100,7 +100,7 @@ savebtn.addEventListener("click", () => {
     savebtntoggle('off');
 
     var formData = {};
-    var fields = ["key","command", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds","googlePay","ebtOnline", "ccdevice"]; 
+    var fields = ["key","command","ebtcommand", "email", "phone","deviceSerialNumber","deviceMake","deviceFriendlyName","deviceId", "threeds","googlePay","ebtOnline", "ccdevice"]; 
 
     fields.forEach(function (field) {
         if (field === "threeds" || field === "ccdevice"|| field === "googlePay"|| field === "ebtOnline") { // Check for both "threeds" and "ccdevice"
@@ -198,6 +198,7 @@ function loadSettings() {
             document.getElementById('email').value = data.settings.useremail || '';
             document.getElementById('key').value = data.settings.key || '';
             document.getElementById('command').value = data.settings.command || '';
+            document.getElementById('ebtcommand').value = data.settings.ebtcommand || '';
             document.getElementById('phone').value = data.settings.phone || '';
             document.getElementById('deviceSerialNumber').value = data.settings.deviceSerialNumber || '';
             document.getElementById('deviceMake').value = data.settings.deviceMake || '';

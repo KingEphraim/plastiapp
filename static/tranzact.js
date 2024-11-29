@@ -4,12 +4,16 @@ let userCommand = '';
 let userPhone = '';
 let user3ds = false;
 let ccdevice = false;
+let ebtOnline = false;
 const sbmtbtn = document.getElementById("sbmtbtn");
 const sbmtbtnspin = document.getElementById("sbmtbtnspin");
 const sbmtbtncont = document.getElementById("sbmtbtncont");
 const ccdevicebtn = document.getElementById("ccdevicebtn");
 const ccdevicebtnspin = document.getElementById("ccdevicebtnspin");
 const ccdevicebtncont = document.getElementById("ccdevicebtncont");
+const ebtOnlinebtn = document.getElementById("ebtOnlinebtn");
+const ebtOnlinebtnspin = document.getElementById("ebtOnlinebtnspin");
+const ebtOnlinebtncont = document.getElementById("ebtOnlinebtncont");
 const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder')
 const modalElement = new bootstrap.Modal(document.getElementById('userNotificationModal'));
 const notificationCardHeader = document.getElementById("userNotificationCardHeader");
@@ -110,6 +114,10 @@ function updateUser(serverData, options = {}) {
             console.log("xResult is something else");
             notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
             notificationCardHeaderP.innerText = "Transaction Declined";
+            notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
+            notificationCardBodyP.innerText = serverData.AccuResponseMsg;
+            console.log(serverData)
+            modalElement.show();
     }
 
     if (serverData.xRefNum || serverData.xGatewayRefnum) {
@@ -141,7 +149,7 @@ function formatDate(dateString) {
 }
 
 // Append alert to alertPlaceholder
-const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest = '') => {
+const appendAlert = (message, type, ccDeviceToggle = 'on', ebtOnlineToggle = 'on', ckRequest = '') => {
     const wrapper = document.createElement('div');
     wrapper.className = `alert alert-${type} alert-dismissible`;
     wrapper.role = 'alert';
@@ -165,6 +173,7 @@ const appendAlert = (message, type, ccDeviceToggle = 'on', ckRequest = '') => {
 
     sbmtbtntoggle('on');
     ccdevicebtntoggle(ccDeviceToggle);
+    ebtOnlinebtntoggle(ebtOnlineToggle);
 };
 
 
@@ -284,7 +293,7 @@ window.onload = function () {
 
         if (userebtOnline === true) {
             console.log("ebtOnline is true");
-            
+
             document.getElementById("ebtOnlinebtndiv").style.display = "block";
 
         } else if (userebtOnline === false) {
@@ -442,6 +451,125 @@ ccdevicebtn.addEventListener("click", () => {
 
 });
 
+ebtOnlinebtn.addEventListener("click", () => {
+    ebtOnlinebtntoggle('off');
+    setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
+    getTokens(function () {
+        var formData = {};
+        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
+
+        fields.forEach(function (field) {
+            formData[field] = document.getElementById(field).value;
+        });
+
+
+
+        // Format the "exp" field
+        formData['exp'] = formatExp(formData['exp']);
+
+        formData['tranzType'] = "ebtOnlineInitiate";
+        // Convert JSON to string for display or further processing
+        var formDataJSON = JSON.stringify(formData);
+
+        data = sendtoserver(formDataJSON)
+    }, 10000,);
+});
+
+
+function showAcuPinPad(data, action) {
+    // Generate the modal content
+    const modalHtml = `
+        <div class="modal fade" id="dynamicModal" tabindex="-1" aria-labelledby="dynamicModalLabel" aria-hidden="true" >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="dynamicModalLabel">Form Submission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="dynamicForm" method="POST" action="${action}" target="dynamicIframe">
+                  ${Object.keys(data)
+            .map(
+                (key) =>
+                    `<input type="hidden" name="${key}" value="${data[key]}" />`
+            )
+            .join('')}
+                </form>
+                <iframe name="dynamicIframe" id="dynamicIframe" style="width: 100%; height: 400px; border: none;"></iframe>
+              </div>
+              <div class="modal-footer">
+              </div>
+            </div>
+          </div>
+        </div>
+    `;
+
+    // Add the modal to the DOM
+    const modalContainer = document.getElementById('dynamicModalContainer');
+    modalContainer.innerHTML = modalHtml;
+
+    // Automatically submit the form once the modal is added
+    const form = document.getElementById('dynamicForm');
+    form.submit();
+
+    // Show the modal
+    const modalElement = document.getElementById('dynamicModal');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+
+    // Close the modal when the iframe is redirected
+    const iframe = document.getElementById('dynamicIframe');
+    const originalURL = iframe.src;
+    iframe.addEventListener('load', () => {
+        try {
+            // Check the current URL of the iframe
+            const currentURL = iframe.contentWindow.location.href;
+    
+            // Compare the current URL with the original URL
+            if (currentURL !== originalURL) {
+                console.log('The iframe has been redirected.');
+                        console.log("closing modal")
+        modal.hide(); // Close the modal
+            }
+        } catch (error) {
+            // Handle cross-origin errors (if the iframe redirects to a domain with different origin)
+            console.warn('Unable to access iframe content due to cross-origin restrictions.', error);
+        }
+    });
+}
+
+                    // Listen for messages from your Flask app
+                    window.addEventListener("message", function (event) {
+                        console.log("Message received");
+
+                        // Validate the origin of the message
+                        if (event.origin !== "http://127.0.0.1:5000") return; // Make sure the origin matches your Flask app URL
+                        //console.log("Response data:", event.data.acuResponse);
+                        acuPinPadResponse = event.data.acuResponse
+                        if (acuPinPadResponse.AccuResponseCode == "ACCU000") {
+                            console.log("Good: ", acuPinPadResponse.AccuResponseCode)
+                            console.log(ckResponse.xRefNum)
+
+                            var formData = {};
+                            var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
+                            fields.forEach(function (field) {
+                                formData[field] = document.getElementById(field).value;
+                            });                            
+                            formData['tranzType'] = "ebtOnlineComplete";
+                            formData['refnum'] = ckResponse.xRefNum;
+                            var formDataJSON = JSON.stringify(formData);
+
+                            sendtoserver(formDataJSON)
+                        } else {
+                            console.log("Bad: ", acuPinPadResponse.AccuResponseCode)
+                            appendAlert(JSON.stringify(acuPinPadResponse), 'danger', 'on', 'on', ckRequest);
+                            updateUser(acuPinPadResponse);
+                        }
+
+
+                    }, false);
+
+
 function sendtoserver(serverdata) {
 
     fetch('/sendtocardknox', {
@@ -457,23 +585,39 @@ function sendtoserver(serverdata) {
             ckResponse = data.ckResponse
 
             if (ckResponse.xResult == "A" || ckResponse.xResult == "S") {
+                if (ckResponse.xResult == "A" && ckRequest.xCommand == "ebtonline:initiate") {
+                    console.log(ckResponse)
+                    const pinPadData = {
+                        AccuId: ckResponse.xAccuID,
+                        AccuReturnURL: 'http://127.0.0.1:5000/ebtresponse',
+                        AccuLanguage: 'en-US',
+                    };
 
-                appendAlert(JSON.stringify(ckResponse), 'success', 'on', ckRequest);
-                if (JSON.parse(serverdata).tranzType === 'void') {
-                    updateUser(ckResponse, { transactionType: 'void' });
-                } else if (JSON.parse(serverdata).tranzType === 'capture') {
-                    updateUser(ckResponse, { transactionType: 'capture' });
+
+                    showAcuPinPad(pinPadData, ckResponse.xPinPadURL);
+
+
+
+
                 } else {
+                    appendAlert(JSON.stringify(ckResponse), 'success', 'on', 'on', ckRequest);
+                    if (JSON.parse(serverdata).tranzType === 'void') {
+                        updateUser(ckResponse, { transactionType: 'void' });
+                    } else if (JSON.parse(serverdata).tranzType === 'capture') {
+                        updateUser(ckResponse, { transactionType: 'capture' });
+                    } else {
 
-                    updateUser(ckResponse);
+                        updateUser(ckResponse);
+                    }
                 }
+
             }
             else if (ckResponse.xResult == "V") {
                 verify3DS(ckResponse)
-                appendAlert(JSON.stringify(ckResponse), 'info', 'off', ckRequest);
+                appendAlert(JSON.stringify(ckResponse), 'info', 'off', 'on', ckRequest);
             }
             else {
-                appendAlert(JSON.stringify(ckResponse), 'danger', 'on', ckRequest);
+                appendAlert(JSON.stringify(ckResponse), 'danger', 'on', 'on', ckRequest);
 
                 if (JSON.parse(serverdata).tranzType === 'void') {
                     updateUser(ckResponse, { transactionType: 'void' });
@@ -569,6 +713,9 @@ function processGP(paymentResponse) {
 
 
 
+
+
+
 //PayButtonToggle
 function sbmtbtntoggle(state) {
 
@@ -610,6 +757,31 @@ function ccdevicebtntoggle(state) {
         ccdevicebtn.disabled = true;
         ccdevicebtnspin.hidden = false;
         ccdevicebtncont.textContent = "Please Wait";
+
+        // Perform actions when the switch is turned off
+        console.log('Switch is OFF');
+        // Add more code as needed
+    } else {
+        // Handle invalid state
+        console.error('Invalid state. Please provide "on" or "off".');
+    }
+}
+
+function ebtOnlinebtntoggle(state) {
+
+
+
+    if (state === 'on') {
+        ebtOnlinebtn.disabled = false;
+        ebtOnlinebtnspin.hidden = true;
+        ebtOnlinebtncont.textContent = "Pay with EBT online";
+        // Perform actions when the switch is turned on
+        console.log('Switch is ON');
+        // Add more code as needed
+    } else if (state === 'off') {
+        ebtOnlinebtn.disabled = true;
+        ebtOnlinebtnspin.hidden = false;
+        ebtOnlinebtncont.textContent = "Please Wait";
 
         // Perform actions when the switch is turned off
         console.log('Switch is OFF');

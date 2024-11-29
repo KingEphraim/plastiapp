@@ -190,7 +190,7 @@
         </div>
     </div>
     <div class="modal fade" id="userNotificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="userNotificationModalHeader" aria-hidden="true">
+        aria-labelledby="userNotificationModalHeader" >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header d-none">
@@ -245,6 +245,7 @@
             </div>
         </div>
     </div>
+    <div id="dynamicModalContainer"></div>
     {% if user_is_logged_in %}
     <button class="btn btn-outline-secondary position-fixed bottom-0 start-50 translate-middle-x mb-3" type="button"
         data-bs-toggle="offcanvas" data-bs-target="#offcanvasTransactionLogs"

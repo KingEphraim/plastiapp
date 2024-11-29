@@ -14,6 +14,7 @@ def sendtocardknox():
         "useremail": "",
         "key": config['xKey'],
         "command": "cc:sale",
+        "ebtcommand": "ebtonline:fssale",
         "phone": "",
         "deviceSerialNumber": "",
         "deviceMake": "",
@@ -136,6 +137,57 @@ def sendtocardknox():
             'xCardnum': datafromuser['gptoken'],
             'xDigitalWalletType': 'GooglePay',
         }
+    elif (datafromuser['tranzType'] == 'ebtOnlineInitiate'):
+        tockmethod = 'post'
+        url = "https://x1.cardknox.com/gatewayjson"
+        tockdata = {
+            'xkey': settings.get('key', config['xKey']),
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xCommand': 'ebtonline:initiate',
+            'xVendorID': '128717',
+            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
+            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
+            'xEmail': datafromuser['email'],
+            'xBillPhone': datafromuser['phone'],
+            'xBillStreet': datafromuser['address'],
+            'xBillCity': datafromuser['city'],
+            'xBillState': datafromuser['state'],
+            'xBillZip': datafromuser['zip'],
+            'xInvoice': datafromuser['invoice'],
+            'xDescription': datafromuser['comments'],
+            'xAmount': datafromuser['amount'],
+            'xCardnum': datafromuser['card'],
+            'xExp': datafromuser['exp'],
+            'xCvv': datafromuser['cvv'],
+            'xShipMethod': 'CustomerPickup',
+        }
+    elif (datafromuser['tranzType'] == 'ebtOnlineComplete'):
+        tockmethod = 'post'
+        url = "https://x1.cardknox.com/gatewayjson"
+        tockdata = {
+            'xkey': settings.get('key', config['xKey']),
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xCommand': settings.get('ebtcommand', "ebtonline:fssale"),
+            'xVendorID': '128717',
+            # 'xAllowNonAuthenticated': 'true',
+            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
+            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
+            'xEmail': datafromuser['email'],
+            'xBillPhone': datafromuser['phone'],
+            'xBillStreet': datafromuser['address'],
+            'xBillCity': datafromuser['city'],
+            'xBillState': datafromuser['state'],
+            'xBillZip': datafromuser['zip'],
+            'xInvoice': datafromuser['invoice'],
+            'xDescription': datafromuser['comments'],
+            'xAmount': datafromuser['amount'],            
+            'xShipMethod': 'CustomerPickup',
+            'xRefNum': datafromuser.get('refnum', None),
+        }
     else:
         return {'message': 'missing tranzType'}
 
@@ -145,7 +197,7 @@ def sendtocardknox():
         headers=headers,
         jsonBody=tockdata
     )
-    print(response)
+    print("Response: ",response)
     if (datafromuser['tranzType'] == 'cloudIM' and response['xResult'] == 'S'):
         tockmethod = 'get'
         url = f"https://device.cardknox.com/v1/Session/{response['xSessionId']}"
