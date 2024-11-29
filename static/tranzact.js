@@ -479,30 +479,31 @@ ebtOnlinebtn.addEventListener("click", () => {
 function showAcuPinPad(data, action) {
     // Generate the modal content
     const modalHtml = `
-        <div class="modal fade" id="dynamicModal" tabindex="-1" aria-labelledby="dynamicModalLabel" aria-hidden="true" >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="dynamicModalLabel">Form Submission</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="dynamicForm" method="POST" action="${action}" target="dynamicIframe">
-                  ${Object.keys(data)
-            .map(
-                (key) =>
+    <div class="modal fade" id="dynamicModal" tabindex="-1" aria-labelledby="dynamicModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="dynamicModalLabel">Form Submission</h5>
+            
+          </div>
+          <div class="modal-body">
+            <form id="dynamicForm" method="POST" action="${action}" target="dynamicIframe">
+              ${Object.keys(data)
+                .map(
+                  (key) =>
                     `<input type="hidden" name="${key}" value="${data[key]}" />`
-            )
-            .join('')}
-                </form>
-                <iframe name="dynamicIframe" id="dynamicIframe" style="width: 100%; height: 400px; border: none;"></iframe>
-              </div>
-              <div class="modal-footer">
-              </div>
-            </div>
+                )
+                .join('')}
+            </form>
+            <iframe name="dynamicIframe" id="dynamicIframe" style="width: 100%; height: 400px; border: none;"></iframe>
+          </div>
+          <div class="modal-footer">
           </div>
         </div>
-    `;
+      </div>
+    </div>
+`;
+
 
     // Add the modal to the DOM
     const modalContainer = document.getElementById('dynamicModalContainer');
