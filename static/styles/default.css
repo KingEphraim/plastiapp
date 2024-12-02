@@ -148,45 +148,6 @@ body {
 }
 
 
-/* Style for unchecked */
-label[for="threeds"] {
-    background-color: #AEB6F7;
-    /* Unchecked background color */
-    cursor: pointer;
-}
-
-/* Hover style for unchecked */
-label[for="threeds"]:hover {
-    background-color: #3C5AF0;
-    /* Hover background color */
-}
-
-/* Style for checked */
-#threeds:checked+label[for="threeds"] {
-    background-color: #2E4AD8;
-    /* Checked background color */
-    color: white;
-}
-
-/* Style for unchecked */
-label[for="googlePay"] {
-    background-color: #AEB6F7;
-    /* Unchecked background color */
-    cursor: pointer;
-}
-
-/* Hover style for unchecked */
-label[for="googlePay"]:hover {
-    background-color: #3C5AF0;
-    /* Hover background color */
-}
-
-/* Style for checked */
-#googlePay:checked+label[for="googlePay"] {
-    background-color: #2E4AD8;
-    /* Checked background color */
-    color: white;
-}
 
 /* Default style for the label (unselected state) */
 label[for="ccdevice"] {
@@ -210,22 +171,47 @@ label[for="ccdevice"]:hover {
     background-color: #4B6DF3;
 }
 
-/* Style for unchecked */
-label[for="ebtOnline"] {
-    background-color: #AEB6F7;
-    /* Unchecked background color */
-    cursor: pointer;
-}
-
-/* Hover style for unchecked */
-label[for="ebtOnline"]:hover {
-    background-color: #3C5AF0;
-    /* Hover background color */
-}
-
-/* Style for checked */
-#ebtOnline:checked+label[for="ebtOnline"] {
-    background-color: #2E4AD8;
-    /* Checked background color */
+/* Checked state */
+.btn-check:checked + .btn-outline-light {
+    background-color: #308b30;
     color: white;
-}
+    border-color: #007bff;
+    font-weight: 600;
+  }
+  
+  .btn-check:checked + .btn-outline-light:hover {
+    background-color: #149714;
+    border-color: #149714;
+  }
+  
+  /* Unchecked state */
+  .btn-outline-light {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+    font-weight: 600;
+  }
+  
+  .btn-outline-light:hover {
+    background-color: #f8f9fa;
+    border-color: #d61313;
+  }
+  
+  /* Hide checkbox */
+  .btn-check {
+    display: none;
+  }
+  
+  /* Hover state for unchecked */
+  .btn-check:not(:checked) + .btn-outline-light:hover {
+    background-color: #8ab98a;
+    color: #343a40;
+    border-color: #dee2e6;
+  }
+  
+  .btn-check:not(:checked) + .btn-light:hover {
+    background-color: #f1f1f1;
+    color: #212529;
+    border-color: #ced4da;
+  }
+  
