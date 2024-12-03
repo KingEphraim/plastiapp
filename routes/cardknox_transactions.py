@@ -20,6 +20,7 @@ def sendtocardknox():
         "deviceMake": "",
         "deviceFriendlyName": "",
         "deviceId": "",
+        "allowDuplicate": False,
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
@@ -34,6 +35,7 @@ def sendtocardknox():
             'xCommand': settings.get('command', "cc:sale"),
             'xVendorID': '128717',
             # 'xAllowNonAuthenticated': 'true',
+            'xAllowDuplicate': settings.get('allowDuplicate', False),
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
             'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
             'xEmail': datafromuser['email'],
