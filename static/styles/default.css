@@ -149,28 +149,6 @@ body {
 
 
 
-/* Default style for the label (unselected state) */
-label[for="ccdevice"] {
-    background-color: #AEB6F7;
-    cursor: pointer;
-}
-
-/* Label hover effect (unselected state) */
-label[for="ccdevice"]:hover {
-    background-color: #3C5AF0;
-}
-
-/* Style when checkbox is checked */
-#ccdevice:checked + label[for="ccdevice"] {
-    background-color: #2E4AD8;
-    color: white;
-}
-
-/* Hover effect for label when checkbox is checked */
-#ccdevice:checked + label[for="ccdevice"]:hover {
-    background-color: #4B6DF3;
-}
-
 /* Checked state */
 .btn-check:checked + .btn-outline-light {
     background-color: #308b30;
