@@ -18,7 +18,6 @@ from routes.contact import contact__bp
 from routes.invoice import invoice__bp
 from routes.customer import customer__bp
 from routes.ebtresponse import ebtresponse__bp
-#from databaseop import add_item_to_database, update_item_in_database
 with open('config.json') as f:
     config = json.load(f) 
 app = Flask(__name__)
