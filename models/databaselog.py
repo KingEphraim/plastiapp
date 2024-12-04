@@ -34,7 +34,7 @@ def add_item_to_database(item):
         result = collection.insert_one(item)
         
         # Log the operation
-        log_message = f"Item added to database with ID: {result.inserted_id}"
+        log_message = f"Item added to database with ID: {result.inserted_id} {item}"
         add_to_log(log_message)  # Log the insertion
         
         # Return the ID of the inserted document as a string
@@ -76,7 +76,7 @@ def update_item_in_database(document_id, additional_data):
         )
         
         # Log the update operation
-        log_message = f"Item with ID {document_id} updated. Matched count: {result.matched_count}, Modified count: {result.modified_count}"
+        log_message = f"Item with ID {document_id} updated. Matched count: {result.matched_count}, Modified count: {result.modified_count} {additional_data}"
         add_to_log(log_message)  # Log the update
         
         # Return the result of the update operation
