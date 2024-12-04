@@ -1,6 +1,8 @@
 from flask import Blueprint, json, request, session, jsonify
 from models.user_settings import UserSettingsManager
 from models.apiconnector import send_api_request
+from models.databaselog import add_item_to_database,update_item_in_database
+
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
 
 with open('config.json') as f:
@@ -24,6 +26,7 @@ def sendtocardknox():
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
+    
     if (datafromuser['tranzType'] == 'R'):
         tockmethod = 'post'
         url = "https://x1.cardknox.com/gatewayjson"
@@ -186,12 +189,22 @@ def sendtocardknox():
             'xBillZip': datafromuser['zip'],
             'xInvoice': datafromuser['invoice'],
             'xDescription': datafromuser['comments'],
-            'xAmount': datafromuser['amount'],            
+            'xAmount': datafromuser['amount'],
             'xShipMethod': 'CustomerPickup',
             'xRefNum': datafromuser.get('refnum', None),
         }
     else:
         return {'message': 'missing tranzType'}
+
+    logdata = {
+        "method": tockmethod,
+        "url": url,
+        "headers": headers,
+        "jsonBody": tockdata,
+        "dataFromUser":datafromuser
+    }
+    document_id = add_item_to_database(logdata)
+    
 
     response = send_api_request(
         method=tockmethod,
@@ -199,10 +212,11 @@ def sendtocardknox():
         headers=headers,
         jsonBody=tockdata
     )
-    print("Response: ",response)
+    update_item_in_database(document_id, {'apiResponse':response})
     if (datafromuser['tranzType'] == 'cloudIM' and response['xResult'] == 'S'):
         tockmethod = 'get'
-        url = f"https://device.cardknox.com/v1/Session/{response['xSessionId']}"
+        url = f"https://device.cardknox.com/v1/Session/{
+            response['xSessionId']}"
         headers['Authorization'] = settings.get('key', config['xKey'])
         tockdatapoll = {
             'xDeviceSerialNumber': settings['deviceSerialNumber'],
