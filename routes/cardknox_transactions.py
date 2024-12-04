@@ -215,8 +215,7 @@ def sendtocardknox():
     update_item_in_database(document_id, {'apiResponse':response})
     if (datafromuser['tranzType'] == 'cloudIM' and response['xResult'] == 'S'):
         tockmethod = 'get'
-        url = f"https://device.cardknox.com/v1/Session/{
-            response['xSessionId']}"
+        url = f"https://device.cardknox.com/v1/Session/{response['xSessionId']}"
         headers['Authorization'] = settings.get('key', config['xKey'])
         tockdatapoll = {
             'xDeviceSerialNumber': settings['deviceSerialNumber'],
@@ -236,5 +235,6 @@ def sendtocardknox():
             )
         tockdata = tockdata['xPayload']
         response = pollResponse
+        update_item_in_database(document_id, {'pollResponse':response})
 
     return jsonify({'ckRequest': tockdata, 'ckResponse': response})
