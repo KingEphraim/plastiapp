@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import json
+from mylogs import add_to_log  # Assuming 'mylogs.py' contains your logging function
 
 # Load configuration
 with open('config.json') as f:
@@ -32,17 +33,19 @@ def add_item_to_database(item):
         # Insert the item into the collection
         result = collection.insert_one(item)
         
+        # Log the operation
+        log_message = f"Item added to database with ID: {result.inserted_id}"
+        add_to_log(log_message)  # Log the insertion
+        
         # Return the ID of the inserted document as a string
         return str(result.inserted_id)
     except Exception as e:
-        # Log or debug the exception (can also use logging frameworks)
+        # Log or debug the exception
         raise RuntimeError(f"Failed to add item to database: {e}") from e
     finally:
         # Ensure the client is closed to release resources
         if client:
             client.close()
-
-
 
 # Update item in database
 def update_item_in_database(document_id, additional_data):
@@ -64,7 +67,6 @@ def update_item_in_database(document_id, additional_data):
         collection = db['transactions']
         
         # Convert the document_id back to ObjectId
-        from bson import ObjectId
         object_id = ObjectId(document_id)
         
         # Update the document with new data
@@ -72,6 +74,10 @@ def update_item_in_database(document_id, additional_data):
             {"_id": object_id},  # Match document by ID
             {"$set": additional_data}  # Add or update fields
         )
+        
+        # Log the update operation
+        log_message = f"Item with ID {document_id} updated. Matched count: {result.matched_count}, Modified count: {result.modified_count}"
+        add_to_log(log_message)  # Log the update
         
         # Return the result of the update operation
         return {
@@ -85,4 +91,3 @@ def update_item_in_database(document_id, additional_data):
         # Ensure the client is closed to release resources
         if client:
             client.close()
-
