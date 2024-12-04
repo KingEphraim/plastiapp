@@ -20,7 +20,7 @@ class UserSettingsManager:
         try:
             username = session.get('username')
             if not username:
-                raise ValueError("Username not found in session.")
+                raise ValueError("Username not found in session (user not logged in).")
 
             # Use a projection to limit the fields retrieved
             self.user_settings = users_collection.find_one(

@@ -303,7 +303,7 @@ def bulk_csv():
 
     if csv_file:
         csvData = csv.reader(io.StringIO(csv_file.read().decode('utf-8-sig')))
-        # Process CSV data as needed
+        
 
         # Get the headers (keys) from the first row of the CSV
         keys = next(csvData)
