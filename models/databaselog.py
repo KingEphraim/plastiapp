@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import json
-from mylogs import add_to_log  # Assuming 'mylogs.py' contains your logging function
+from models.mylogs import add_to_log  # Assuming 'mylogs.py' contains your logging function
 
 # Load configuration
 with open('config.json') as f:

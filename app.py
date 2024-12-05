@@ -7,7 +7,7 @@ import io
 import boto3
 from botocore.exceptions import ClientError
 import uuid
-import mylogs
+from models.mylogs import add_to_log
 from models.user_settings import UserSettingsManager
 
 from routes.main import main_bp
@@ -189,14 +189,14 @@ def receipt():
 def handle_webhook():
     try:
         content_type = request.headers['Content-Type']
-        mylogs.add_to_log(f'content_type: {content_type}')
+        add_to_log(f'content_type: {content_type}')
     except KeyError:
         return "Content-Type header is missing", 400
     try:
         cksig = request.headers['ck-signature']
-        mylogs.add_to_log(f'ck-sig: {cksig}')
+        add_to_log(f'ck-sig: {cksig}')
     except KeyError:
-        mylogs.add_to_log(f'missing ck signature')
+        add_to_log(f'missing ck signature')
 
     ck_signature = request.headers.get('ck-signature')
     if content_type == 'application/json':
@@ -333,17 +333,17 @@ def bulk_csv():
             queue = sqs.get_queue_by_name(QueueName=queue_name)
             queue.set_attributes(Attributes={'ContentBasedDeduplication': 'true'})
             message_group_id = str(uuid.uuid4())
-            mylogs.add_to_log(f'MGI: {message_group_id}')
+            add_to_log(f'MGI: {message_group_id}')
             for key, value in data_dict.items():
                 message_body = str(value)
                 message_deduplication_id = str(uuid.uuid4())
-                mylogs.add_to_log(f'Transaction # {key} Data: {value} Message_deduplication_id: {message_deduplication_id}')
+                add_to_log(f'Transaction # {key} Data: {value} Message_deduplication_id: {message_deduplication_id}')
                 result = queue.send_message(MessageBody=message_body, MessageGroupId=message_group_id, MessageDeduplicationId=message_deduplication_id)  
-                mylogs.add_to_log(f'Send_message result: {result}')
+                add_to_log(f'Send_message result: {result}')
             responsedata = {'message': 'Form data and CSV file uploaded successfully', 'groupid': message_group_id}
             return json.dumps(responsedata)
         except ClientError as e:
-            mylogs.add_to_log(e)
+            add_to_log(e)
             if e.response['Error']['Code'] == 'InvalidClientTokenId':
                 print("Error: Invalid AWS credentials or permissions.")
             else:

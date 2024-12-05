@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template,request,session,redirect,url_for,jsonify
-import mylogs
+from models.mylogs import add_to_log
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
@@ -14,7 +14,7 @@ def health_check():
 
 @main_bp.route("/dashboard")
 def dashboard():
-    mylogs.add_to_log(f"Visit to / Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
+    add_to_log(f"Visit to / Method: {request.method} Remote_addr: {request.headers.get('X-Forwarded-For', request.remote_addr)} User-Agent: {request.headers.get('User-Agent')}") 
     if "username" in session:
         username = session.get('username', 'Guest')    
         message = f"You are logged in as {username}! This is your dashboard."    
