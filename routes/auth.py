@@ -35,6 +35,12 @@ def register():
                     add_to_log(f"Registration failed: Username '{username}' already exists. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Username already exists.'})
 
+                # Check if email already exists
+                if users_collection.find_one({"useremail": useremail}):
+                    log_details = get_request_details()
+                    add_to_log(f"Registration failed: Email '{useremail}' already exists. {log_details}")
+                    return jsonify({'status': 'fail', 'message': 'Email already exists.'})
+
                 # Hash the password using the 'scrypt' method
                 hashed_password = generate_password_hash(password, method="scrypt")
 
