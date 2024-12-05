@@ -132,8 +132,13 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("auth.login"))
 
-@auth_bp.route("/reset_password_request", methods=["POST"])
+@auth_bp.route("/reset_password_request", methods=["GET", "POST"])
 def reset_password_request():
+    if request.method == "GET":
+        # Render the reset password request form for GET requests
+        return render_template("reset_password_request.html")
+    
+    # Handle the POST request for password reset
     data = request.get_json()
     email = data.get('email')
     
@@ -165,6 +170,7 @@ def reset_password_request():
     add_to_log(f"Password reset request sent to email '{email}'. {log_details}")
     
     return jsonify({'status': 'success', 'message': 'Password reset link sent to your email.'})
+
 
 
 
