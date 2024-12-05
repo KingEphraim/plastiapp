@@ -25,6 +25,9 @@ function sendDataToServer(formData) {
         console.log(data.status);
         if (data.status === 'fail') {
             message.innerText = data.message;
+            // Optionally, show a "Forgot your password?" link if login fails
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            forgotPasswordLink.style.display = 'block';
         } else if (data.status === 'success') {
             // Redirect to success page or perform other actions
             console.log(data.message);

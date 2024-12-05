@@ -1,11 +1,15 @@
-from flask import Blueprint,request,jsonify,url_for,render_template,session,redirect
+from flask import Blueprint,request,jsonify,url_for,render_template,session,redirect,json
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.user_settings import users_collection
 from pymongo.errors import OperationFailure
 from models.mylogs import add_to_log
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from models.sendEmail import send_email
 
 auth_bp = Blueprint('auth', __name__)
 
+with open('config.json') as f:
+    config = json.load(f) 
 
 def get_request_details():
     """Helper function to get relevant request details for logging."""
@@ -127,3 +131,74 @@ def logout():
     
     session.pop("username", None)
     return redirect(url_for("auth.login"))
+
+@auth_bp.route("/reset_password_request", methods=["POST"])
+def reset_password_request():
+    data = request.get_json()
+    email = data.get('email')
+    
+    if not email:
+        log_details = get_request_details()
+        add_to_log(f"Reset password request failed: No email provided. {log_details}")
+        return jsonify({'status': 'fail', 'message': 'No email provided.'})
+
+    user = users_collection.find_one({"useremail": email})
+    if not user:
+        log_details = get_request_details()
+        add_to_log(f"Reset password request failed: No account with email '{email}' found. {log_details}")
+        return jsonify({'status': 'fail', 'message': 'No account found with that email.'})   
+    
+    username = user.get('username', 'User')  # Retrieve the username (default to 'User' if not found)
+    
+    # Generate a reset token with expiration
+    s = URLSafeTimedSerializer(config['reset_email_secret_key'])
+    token = s.dumps(email, salt='password-reset')
+    
+    reset_link = url_for('auth.reset_password', token=token, _external=True)
+    
+    # Send the password reset link to the user's email
+    send_email("Plastiqz Password Reset Request", 
+               f"Hello {username},\n\nClick here to reset your password: {reset_link}", 
+               email)
+    
+    log_details = get_request_details()
+    add_to_log(f"Password reset request sent to email '{email}'. {log_details}")
+    
+    return jsonify({'status': 'success', 'message': 'Password reset link sent to your email.'})
+
+
+
+@auth_bp.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    try:
+        s = URLSafeTimedSerializer(config['reset_email_secret_key'])
+        email = s.loads(token, salt='password-reset', max_age=3600)  # Token expires in 1 hour
+    except (BadSignature, SignatureExpired):
+        return jsonify({'status': 'fail', 'message': 'Invalid or expired reset token.'})
+
+    user = users_collection.find_one({"useremail": email})
+    if not user:
+        return jsonify({'status': 'fail', 'message': 'No account found with that email.'})
+    
+    if request.method == "POST":
+        data = request.get_json()
+        new_password = data.get('password')
+        
+        if not new_password:
+            return jsonify({'status': 'fail', 'message': 'Password is required.'})
+        
+        # Hash the new password
+        hashed_password = generate_password_hash(new_password, method="scrypt")
+        
+        # Update the user's password in the database
+        users_collection.update_one({"useremail": email}, {"$set": {"password": hashed_password, "reset_token_used": True}})
+        
+        log_details = get_request_details()
+        add_to_log(f"Password for email '{email}' has been reset. {log_details}")
+        
+        # Redirect to login page with a query parameter
+        return redirect(url_for('auth.login', message='password-reset-success'))
+
+    return render_template("reset_password.html", token=token)
+
+
