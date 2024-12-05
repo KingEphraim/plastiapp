@@ -18,7 +18,7 @@ EXPOSE 8080
 
 # Set the environment variables for Gunicorn and Flask
 ENV FLASK_APP=app.py
-ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0:8080 --workers=4 --threads=4"
+ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0:8080 --workers=4 --threads=4 --access-logfile=- --error-logfile=-"
 
 # Run the command to start Gunicorn and the Flask app
 CMD ["gunicorn", "app:app"]
