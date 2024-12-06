@@ -161,6 +161,12 @@ def reset_password_request():
     
     reset_link = url_for('auth.reset_password', token=token, _external=True)
     
+    # Save the token in the database (invalidate old ones)
+    users_collection.update_one(
+        {"useremail": email},
+        {"$set": {"reset_token": token}}
+    )
+    
     # Send the password reset link to the user's email
     send_email("Plastiqz Password Reset Request", 
                f"Hello {username},\n\nClick here to reset your password: {reset_link}", 
@@ -170,8 +176,6 @@ def reset_password_request():
     add_to_log(f"Password reset request sent to email '{email}'. {log_details}")
     
     return jsonify({'status': 'success', 'message': 'Password reset link sent to your email.'})
-
-
 
 
 @auth_bp.route("/reset_password/<token>", methods=["GET", "POST"])
@@ -186,6 +190,10 @@ def reset_password(token):
     if not user:
         return jsonify({'status': 'fail', 'message': 'No account found with that email.'})
     
+    # Validate the token
+    if user.get("reset_token") != token:
+        return jsonify({'status': 'fail', 'message': 'Invalid or expired reset token.'})
+    
     if request.method == "POST":
         data = request.get_json()
         new_password = data.get('password')
@@ -196,8 +204,11 @@ def reset_password(token):
         # Hash the new password
         hashed_password = generate_password_hash(new_password, method="scrypt")
         
-        # Update the user's password in the database
-        users_collection.update_one({"useremail": email}, {"$set": {"password": hashed_password, "reset_token_used": True}})
+        # Update the user's password in the database and invalidate the token
+        users_collection.update_one(
+            {"useremail": email},
+            {"$set": {"password": hashed_password}, "$unset": {"reset_token": ""}}
+        )
         
         log_details = get_request_details()
         add_to_log(f"Password for email '{email}' has been reset. {log_details}")
@@ -206,5 +217,6 @@ def reset_password(token):
         return redirect(url_for('auth.login', message='password-reset-success'))
 
     return render_template("reset_password.html", token=token)
+
 
 

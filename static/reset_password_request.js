@@ -1,14 +1,22 @@
-document.getElementById("requestPasswordResetBtn").addEventListener("click", function() {
-    // Get the password value
-    const email = document.getElementById("email").value;
+document.getElementById("requestPasswordResetBtn").addEventListener("click", function () {
+    // Get the email value
+    const emailInput = document.getElementById("email");
+    const email = emailInput.value;
+
+    // Get the button element
+    const requestPasswordResetBtn = document.getElementById("requestPasswordResetBtn");
+
+    // Disable the button
+    requestPasswordResetBtn.disabled = true;
 
     if (!email) {
-        alert("Please enter a email.");
+        alert("Please enter an email.");
+        // Re-enable the button and return early
+        requestPasswordResetBtn.disabled = false;
         return;
     }
 
-
-    
+    // Send the request to the server
     fetch(`/reset_password_request`, {
         method: "POST",
         headers: {
@@ -17,21 +25,28 @@ document.getElementById("requestPasswordResetBtn").addEventListener("click", fun
         body: JSON.stringify({ email: email })
     })
     .then(response => {
-        // If the server responds with a redirect (3xx status), handle it here
-        if (response.redirected) {
-            window.location.href = response.url;  // Redirect to the URL sent by Flask
-        } else {
-            return response.json();
+        if (!response.ok) {
+            throw new Error(`Server responded with status: ${response.status}`);
         }
+        return response.json(); // Parse JSON from the response
     })
     .then(data => {
-        // Handle success/failure if the server doesn't perform a redirect
-        if (data && data.status === "fail") {
-            alert("Error: " + data.message);
+        // Handle the response data
+        if (data.status === 'success') {
+            alert(data.message || "Password reset link has been sent to your email.");
+            // Clear the input field
+            emailInput.value = "";
+        } else {
+            alert(`Error: ${data.message || "Unable to process your request."}`);
         }
     })
     .catch(error => {
-        console.error("Error resetting password:", error);
-        alert("An error occurred. Please try again.");
+        // Handle errors
+        console.error("Error during password reset request:", error);
+        alert("An error occurred while processing your request. Please try again later.");
+    })
+    .finally(() => {
+        // Re-enable the button after processing
+        requestPasswordResetBtn.disabled = false;
     });
 });
