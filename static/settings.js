@@ -6,7 +6,7 @@ const createdevicebtnspin = document.getElementById("createdevicebtnspin");
 const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
-const fields = ["key", "command", "ebtcommand", "email", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice","allowDuplicate"];
+const fields = ["key", "command", "ebtcommand", "username","useremail","fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice","allowDuplicate"];
 
 const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
