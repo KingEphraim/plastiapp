@@ -24,7 +24,7 @@ document.getElementById("resetPasswordBtn").addEventListener("click", function()
         },
         body: JSON.stringify({ password: password })
     })
-    .then(response => {
+    .then(response => {        
         // If the server responds with a redirect (3xx status), handle it here
         if (response.redirected) {
             window.location.href = response.url;  // Redirect to the URL sent by Flask

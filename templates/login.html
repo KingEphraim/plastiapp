@@ -24,7 +24,11 @@
       <div class="col-md-12">
         <div class="login-form">
           <h2 class="text-center mb-4">Login</h2>
-          <p id="message"></p>
+          <p id="message">
+            {% if request.args.get('message') == 'password-reset-success' %}
+            Password reset successful. Login with your Username and new password.
+        {% endif %}
+          </p>
           <div>
             <div class="mb-3">
               <label for="username" class="form-label">Username</label>
