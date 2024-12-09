@@ -35,11 +35,16 @@ def save_settings():
     if not settings_data:
         return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
 
+    # Check if "key" is in settings_data and is empty, and remove it
+    if 'key' in settings_data and not settings_data['key']:
+        del settings_data['key']
+
     try:
         users_collection.update_one({"username": username}, {"$set": settings_data})
         return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
     except OperationFailure as e:
         return jsonify({'status': 'error', 'message': str(e)})
+
 
 @settings_bp.route('/settings')
 def settings():
