@@ -18,6 +18,11 @@ def load_settings():
                 # Mask all characters except the last 4
                 masked_key = '*' * (len(key) - 4) + key[-4:]
                 user_settings['key'] = masked_key  # Replace the original key with the masked key
+
+            # Remove the password from the user settings before returning
+            if 'password' in user_settings:
+                del user_settings['password']
+
             return jsonify({'status': 'success', 'settings': user_settings})
         return jsonify({'status': 'fail', 'message': 'Settings not found.'})
     except OperationFailure as e:
