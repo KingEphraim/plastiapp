@@ -37,11 +37,18 @@ def register():
                     add_to_log(f"Registration failed: Missing fields. Data received: {datafromuser}. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Missing username, email, password, or reCAPTCHA token.'})
 
-                # Verify reCAPTCHA response
-                if not verify_recaptcha(recaptcha_response):
+                # Verify reCAPTCHA response and get the score
+                success, score = verify_recaptcha(recaptcha_response)
+                if not success:
                     log_details = get_request_details()
                     add_to_log(f"Registration failed: reCAPTCHA verification failed. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'reCAPTCHA verification failed.'})
+
+                # Optionally, handle the score: if it's below a threshold, deny registration
+                if score is not None and score < 0.5:
+                    log_details = get_request_details()
+                    add_to_log(f"Registration failed: Low reCAPTCHA score of {score}. {log_details}")
+                    return jsonify({'status': 'fail', 'message': 'Low reCAPTCHA score. Registration not allowed.'})
 
                 # Check if username already exists
                 if users_collection.find_one({"username": username}):

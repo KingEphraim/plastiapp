@@ -1,5 +1,6 @@
 import requests,json
 from models.mylogs import add_to_log
+
 with open('config.json') as f:
     config = json.load(f)
 
@@ -17,5 +18,10 @@ def verify_recaptcha(recaptcha_response):
     response = requests.post(url, data=payload)
     result = response.json()
     add_to_log(f"reCAPTCHA result: {result}")
-    # Check if the verification was successful
-    return result.get('success', False)
+    
+    # Extract the success status and score
+    success = result.get('success', False)
+    score = result.get('score', None)
+    
+    # Return both success and score
+    return success, score
