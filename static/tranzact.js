@@ -216,14 +216,28 @@ function formatDate(dateString) {
 }
 
 
-// Function to load settings from the server
 async function loadSettings() {
     try {
+        // Check if the user is logged in
+        const authCheckResponse = await fetch('/auth_check', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const authData = await authCheckResponse.json();
+
+        if (authData.status !== 'success') {
+            console.log('User is logged out.');
+            return;
+        }
+
+        // Fetch user settings
         const response = await fetch('/load_settings', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+            },
         });
         const data = await response.json();
 
@@ -238,16 +252,15 @@ async function loadSettings() {
             userebtOnline = data.settings.ebtOnline;
             ccdevice = data.settings.ccdevice;
 
-
-
             console.log('Settings loaded successfully!', data);
         } else {
             console.log(data.message);
         }
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching settings:', error);
     }
 }
+
 
 
 

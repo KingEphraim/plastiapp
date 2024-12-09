@@ -119,6 +119,12 @@ def login():
     add_to_log(f"Login page accessed. {log_details}")
     return render_template("login.html")
 
+@auth_bp.route('/auth_check', methods=['GET'])
+def auth_check():
+    if "username" in session:
+        return jsonify({'status': 'success', 'message': 'User is logged in.'})
+    return jsonify({'status': 'fail', 'message': 'User is not logged in.'}), 401
+
 
 @auth_bp.route("/logout")
 def logout():
