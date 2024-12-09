@@ -285,45 +285,44 @@ window.onload = function () {
 
 
     (async () => {
-        await loadSettings();
-        console.log(userEmail, userKey, userCommand, userPhone, user3ds, userGooglePay, ccdevice);
+        await loadSettings();       
 
         if (user3ds === true) {
             console.log("threeds is true");
             enable3DS('staging', handle3DSResults);
         } else if (user3ds === false) {
-            console.log("threeds is false");
+            
         } else {
-            console.log("threeds is neither true nor false");
+            
         }
 
         if (userGooglePay === true) {
-            console.log("googlePay is true");
+            
             ckGooglePay.enableGooglePay({ amountField: "amount" });
         } else if (userGooglePay === false) {
-            console.log("googlePay is false");
+            
         } else {
-            console.log("googlePay is neither true nor false");
+            
         }
 
         if (userebtOnline === true) {
-            console.log("ebtOnline is true");
+            
 
             document.getElementById("ebtOnlinebtndiv").style.display = "block";
 
         } else if (userebtOnline === false) {
-            console.log("ebtOnline is false");
+            
         } else {
-            console.log("ebtOnline is neither true nor false");
+            
         }
 
         if (ccdevice === true) {
-            console.log("ccdevice is true");
+            
             document.getElementById("ccdevicebtndiv").style.display = "block";
         } else if (ccdevice === false) {
-            console.log("ccdevice is false");
+            
         } else {
-            console.log("ccdevice is neither true nor false");
+            
         }
     })();
 
@@ -555,8 +554,7 @@ function showAcuPinPad(data, action) {
 }
 
 // Listen for messages from your Flask app
-window.addEventListener("message", function (event) {
-    console.log("Message received");
+window.addEventListener("message", function (event) {    
 
     // Validate the origin of the message
     const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
@@ -693,8 +691,7 @@ const gpRequest = {
 };
 
 //initiates googlepay
-function initGP() {
-    console.log("googlepay init");
+function initGP() {    
     return {
         merchantInfo: gpRequest.merchantInfo,
         buttonOptions: gpRequest.buttonOptions,
