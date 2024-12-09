@@ -18,6 +18,7 @@ from routes.contact import contact__bp
 from routes.invoice import invoice__bp
 from routes.customer import customer__bp
 from routes.ebtresponse import ebtresponse__bp
+from routes.tranzact.main import tranzact_bp
 with open('config.json') as f:
     config = json.load(f) 
 app = Flask(__name__)
@@ -30,6 +31,7 @@ app.register_blueprint(contact__bp)
 app.register_blueprint(invoice__bp)
 app.register_blueprint(customer__bp)
 app.register_blueprint(ebtresponse__bp)
+app.register_blueprint(tranzact_bp)
 
 
 app.secret_key = config['secret_key']  # Change this to a secure secret key
@@ -45,14 +47,7 @@ def ewiclist():
         return render_template('ewiclist.html')  
 
 
-@app.route('/tranzact')
-def tranzact():
-    if "username" in session: 
-        user_is_logged_in = session.get('user_is_logged_in', True)        
-        return render_template('tranzact.html', user_is_logged_in=user_is_logged_in)
-    else:
-        return render_template('tranzact.html')     
-    
+
 
 
 
