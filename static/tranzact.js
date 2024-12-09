@@ -300,6 +300,10 @@ window.onload = function () {
         if (userGooglePay === true) {
 
             ckGooglePay.enableGooglePay({ amountField: "amount" });
+            ckApplePay.enableApplePay({
+                initFunction: 'apRequest.initAP',
+                amountField: 'amount'
+            });
         } else if (userGooglePay === false) {
 
         } else {
@@ -426,23 +430,23 @@ sbmtbtn.addEventListener("click", () => {
         fields.forEach(function (field) {
             formData[field] = document.getElementById(field).value;
         });
-       
-            grecaptcha.ready(function () {
-                grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'checkout' }).then(function (token) {
-                    formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data           
-                    
-                    // Format the "exp" field
-                    formData['exp'] = formatExp(formData['exp']);
 
-                    formData['tranzType'] = "R";
-                    // Convert JSON to string for display or further processing
-                    var formDataJSON = JSON.stringify(formData);
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'checkout' }).then(function (token) {
+                formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data           
 
-                    sendtoserver(formDataJSON)
+                // Format the "exp" field
+                formData['exp'] = formatExp(formData['exp']);
 
-                });
+                formData['tranzType'] = "R";
+                // Convert JSON to string for display or further processing
+                var formDataJSON = JSON.stringify(formData);
+
+                sendtoserver(formDataJSON)
+
             });
-        
+        });
+
     }, 10000,);
 });
 
@@ -608,63 +612,63 @@ function sendtoserver(serverdata) {
     })
         .then(response => response.json())
         .then(data => {
-            responseStatus=data.status
-            responseMessage=data.message
+            responseStatus = data.status
+            responseMessage = data.message
             console.log(responseStatus)
             if (responseStatus === "success") {
-            ckRequest = data.ckRequest
-            ckResponse = data.ckResponse
+                ckRequest = data.ckRequest
+                ckResponse = data.ckResponse
 
-            if (ckResponse.xResult == "A" || ckResponse.xResult == "S") {
-                if (ckResponse.xResult == "A" && ckRequest.xCommand == "ebtonline:initiate") {
-                    console.log(ckResponse);
+                if (ckResponse.xResult == "A" || ckResponse.xResult == "S") {
+                    if (ckResponse.xResult == "A" && ckRequest.xCommand == "ebtonline:initiate") {
+                        console.log(ckResponse);
 
-                    // Check if the environment is local (localhost or 127.0.0.1)
-                    const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+                        // Check if the environment is local (localhost or 127.0.0.1)
+                        const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
 
-                    const pinPadData = {
-                        AccuId: ckResponse.xAccuID,
-                        AccuReturnURL: isLocal ? 'http://127.0.0.1:5000/ebtresponse' : 'https://app.cardknox.link/ebtresponse',
-                        AccuLanguage: 'en-US',
-                    };
+                        const pinPadData = {
+                            AccuId: ckResponse.xAccuID,
+                            AccuReturnURL: isLocal ? 'http://127.0.0.1:5000/ebtresponse' : 'https://app.cardknox.link/ebtresponse',
+                            AccuLanguage: 'en-US',
+                        };
 
-                    showAcuPinPad(pinPadData, ckResponse.xPinPadURL);
+                        showAcuPinPad(pinPadData, ckResponse.xPinPadURL);
+                    }
+                    else {
+                        appendAlert(JSON.stringify(ckResponse), 'success', 'on', 'on', ckRequest);
+                        if (JSON.parse(serverdata).tranzType === 'void') {
+                            updateUser(ckResponse, { transactionType: 'void' });
+                        } else if (JSON.parse(serverdata).tranzType === 'capture') {
+                            updateUser(ckResponse, { transactionType: 'capture' });
+                        } else {
+
+                            updateUser(ckResponse);
+                        }
+                    }
+
+                }
+                else if (ckResponse.xResult == "V") {
+                    verify3DS(ckResponse)
+                    appendAlert(JSON.stringify(ckResponse), 'info', 'off', 'on', ckRequest);
                 }
                 else {
-                    appendAlert(JSON.stringify(ckResponse), 'success', 'on', 'on', ckRequest);
+                    appendAlert(JSON.stringify(ckResponse), 'danger', 'on', 'on', ckRequest);
+
                     if (JSON.parse(serverdata).tranzType === 'void') {
                         updateUser(ckResponse, { transactionType: 'void' });
                     } else if (JSON.parse(serverdata).tranzType === 'capture') {
                         updateUser(ckResponse, { transactionType: 'capture' });
-                    } else {
-
+                    }
+                    else {
                         updateUser(ckResponse);
                     }
                 }
-
+            } else if (responseStatus === "fail") {
+                appendAlert(responseMessage, 'danger', 'on', 'on', '');
+                updateUser(responseMessage);
+            } else {
+                console.log("Unknown response status.");
             }
-            else if (ckResponse.xResult == "V") {
-                verify3DS(ckResponse)
-                appendAlert(JSON.stringify(ckResponse), 'info', 'off', 'on', ckRequest);
-            }
-            else {
-                appendAlert(JSON.stringify(ckResponse), 'danger', 'on', 'on', ckRequest);
-
-                if (JSON.parse(serverdata).tranzType === 'void') {
-                    updateUser(ckResponse, { transactionType: 'void' });
-                } else if (JSON.parse(serverdata).tranzType === 'capture') {
-                    updateUser(ckResponse, { transactionType: 'capture' });
-                }
-                else {
-                    updateUser(ckResponse);
-                }
-            }
-        } else if (responseStatus === "fail") {            
-            appendAlert(responseMessage, 'danger', 'on', 'on', '');
-            updateUser(responseMessage);
-        } else {
-            console.log("Unknown response status.");
-        }
         })
         .catch(error => console.error(error));
 }
