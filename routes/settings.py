@@ -13,13 +13,16 @@ def load_settings():
     try:
         user_settings = users_collection.find_one({"username": username}, {"_id": 0})
         if user_settings:
-            # Modify the key setting to show only the last 4 characters
-            if 'key' in user_settings and len(user_settings['key']) > 4:
-                user_settings['key'] = 'xxxxx' + user_settings['key'][-4:]
+            if 'key' in user_settings:
+                key = user_settings['key']
+                # Mask all characters except the last 4
+                masked_key = '*' * (len(key) - 4) + key[-4:]
+                user_settings['key'] = masked_key  # Replace the original key with the masked key
             return jsonify({'status': 'success', 'settings': user_settings})
         return jsonify({'status': 'fail', 'message': 'Settings not found.'})
     except OperationFailure as e:
         return jsonify({'status': 'error', 'message': str(e)})
+
 
 
 @settings_bp.route('/save_settings', methods=['POST'])
