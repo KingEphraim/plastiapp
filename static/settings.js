@@ -128,28 +128,37 @@ const loadSettings = () => {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                fields.forEach(field => {
-                    const value = data.settings[field];
-                    const element = document.getElementById(field);
-                    if (element) {
-                        if (element.type === "checkbox") {
-                            element.checked = value || false;
-                        } else {
-                            element.value = value || '';
+                if (Array.isArray(fields)) {
+                    fields.forEach(field => {
+                        const value = data.settings[field];
+                        const element = document.getElementById(field);
+                        if (element) {
+                            if (element.type === "checkbox") {
+                                element.checked = value || false;
+                            } else {
+                                element.value = value || '';
+                            }
                         }
-                    }
-                });
-                ["ccdevice", "threeds", "googlePay", "ebtOnline","allowDuplicate"].forEach(id => updateLabel(id, `${id}Label`));
+                    });
+                } else {
+                    console.warn('Fields array is not defined or is not an array.');
+                }
+
+                // Update labels
+                ["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate"].forEach(id => updateLabel(id, `${id}Label`));
+
                 console.log('Settings loaded successfully!');
             } else {
-                console.log(data.message);
+                console.log('Error loading settings: ' + data.message);
+                appendAlert('Failed to load settings. Please try again.', 'danger');
             }
         })
         .catch(error => {
-            console.error(error);
+            console.error('Error fetching settings: ', error);
             appendAlert('Failed to load settings. Please try again.', 'danger');
         });
 };
+
 
 window.onload = function () {
     loadSettings();
