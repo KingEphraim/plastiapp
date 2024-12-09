@@ -5,6 +5,7 @@ from pymongo.errors import OperationFailure
 from models.mylogs import add_to_log
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from models.sendEmail import send_email
+from models.handleRecaptcha import verify_recaptcha
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -24,14 +25,23 @@ def register():
         datafromuser = request.get_json()
         if datafromuser:
             try:
+                # Extract form fields
                 username = datafromuser.get('username')
                 useremail = datafromuser.get('email')
                 password = datafromuser.get('password')
+                recaptcha_response = datafromuser.get('g-recaptcha-response')  # Get the reCAPTCHA token
 
-                if not username or not useremail or not password:
+                # Check if all required fields are present
+                if not username or not useremail or not password or not recaptcha_response:
                     log_details = get_request_details()
                     add_to_log(f"Registration failed: Missing fields. Data received: {datafromuser}. {log_details}")
-                    return jsonify({'status': 'fail', 'message': 'Missing username, email, or password.'})
+                    return jsonify({'status': 'fail', 'message': 'Missing username, email, password, or reCAPTCHA token.'})
+
+                # Verify reCAPTCHA response
+                if not verify_recaptcha(recaptcha_response):
+                    log_details = get_request_details()
+                    add_to_log(f"Registration failed: reCAPTCHA verification failed. {log_details}")
+                    return jsonify({'status': 'fail', 'message': 'reCAPTCHA verification failed.'})
 
                 # Check if username already exists
                 if users_collection.find_one({"username": username}):
