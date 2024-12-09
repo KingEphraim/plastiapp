@@ -22,6 +22,7 @@ const notificationCardBodyH = document.getElementById("userNotificationCardBodyH
 const notificationCardBodyP = document.getElementById("userNotificationCardBodyP");
 
 
+
 function updateUser(serverData, options = {}) {
     const { transactionType = 'sale' } = options;
     console.log(transactionType);
@@ -115,7 +116,7 @@ function updateUser(serverData, options = {}) {
             notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
             notificationCardHeaderP.innerText = "Transaction Declined";
             notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
-            notificationCardBodyP.innerText = serverData.AccuResponseMsg;
+            notificationCardBodyP.innerText = serverData.AccuResponseMsg || serverData;
             console.log(serverData)
             modalElement.show();
     }
@@ -285,44 +286,44 @@ window.onload = function () {
 
 
     (async () => {
-        await loadSettings();       
+        await loadSettings();
 
         if (user3ds === true) {
             console.log("threeds is true");
             enable3DS('staging', handle3DSResults);
         } else if (user3ds === false) {
-            
+
         } else {
-            
+
         }
 
         if (userGooglePay === true) {
-            
+
             ckGooglePay.enableGooglePay({ amountField: "amount" });
         } else if (userGooglePay === false) {
-            
+
         } else {
-            
+
         }
 
         if (userebtOnline === true) {
-            
+
 
             document.getElementById("ebtOnlinebtndiv").style.display = "block";
 
         } else if (userebtOnline === false) {
-            
+
         } else {
-            
+
         }
 
         if (ccdevice === true) {
-            
+
             document.getElementById("ccdevicebtndiv").style.display = "block";
         } else if (ccdevice === false) {
-            
+
         } else {
-            
+
         }
     })();
 
@@ -418,25 +419,30 @@ sbmtbtn.addEventListener("click", () => {
     sbmtbtntoggle('off');
     setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
     getTokens(function () {
+
         var formData = {};
         var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
 
         fields.forEach(function (field) {
             formData[field] = document.getElementById(field).value;
         });
+       
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'register' }).then(function (token) {
+                    formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data           
+                    
+                    // Format the "exp" field
+                    formData['exp'] = formatExp(formData['exp']);
 
+                    formData['tranzType'] = "R";
+                    // Convert JSON to string for display or further processing
+                    var formDataJSON = JSON.stringify(formData);
 
+                    sendtoserver(formDataJSON)
 
-        // Format the "exp" field
-        formData['exp'] = formatExp(formData['exp']);
-
-        formData['tranzType'] = "R";
-        // Convert JSON to string for display or further processing
-        var formDataJSON = JSON.stringify(formData);
-
-        sendtoserver(formDataJSON)
-
-
+                });
+            });
+        
     }, 10000,);
 });
 
@@ -503,11 +509,11 @@ function showAcuPinPad(data, action) {
           <div class="modal-body">
             <form id="dynamicForm" method="POST" action="${action}" target="dynamicIframe">
               ${Object.keys(data)
-                .map(
-                  (key) =>
+            .map(
+                (key) =>
                     `<input type="hidden" name="${key}" value="${data[key]}" />`
-                )
-                .join('')}
+            )
+            .join('')}
             </form>
             <iframe name="dynamicIframe" id="dynamicIframe" style="width: 100%; height: 400px; border: none;"></iframe>
           </div>
@@ -554,7 +560,7 @@ function showAcuPinPad(data, action) {
 }
 
 // Listen for messages from your Flask app
-window.addEventListener("message", function (event) {    
+window.addEventListener("message", function (event) {
 
     // Validate the origin of the message
     const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
@@ -566,7 +572,7 @@ window.addEventListener("message", function (event) {
         if (acuPinPadResponse.AccuResponseCode === "ACCU000") {
             console.log("Good: ", acuPinPadResponse.AccuResponseCode);
             console.log(ckResponse.xRefNum);
-    
+
             var formData = {};
             var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
             fields.forEach(function (field) {
@@ -575,7 +581,7 @@ window.addEventListener("message", function (event) {
             formData['tranzType'] = "ebtOnlineComplete";
             formData['refnum'] = ckResponse.xRefNum;
             var formDataJSON = JSON.stringify(formData);
-    
+
             sendtoserver(formDataJSON);
         } else {
             console.log("Bad: ", acuPinPadResponse.AccuResponseCode);
@@ -585,7 +591,7 @@ window.addEventListener("message", function (event) {
     } else {
         console.log("acuResponse is not defined.");
     }
-    
+
 
 
 }, false);
@@ -602,6 +608,10 @@ function sendtoserver(serverdata) {
     })
         .then(response => response.json())
         .then(data => {
+            responseStatus=data.status
+            responseMessage=data.message
+            console.log(responseStatus)
+            if (responseStatus === "success") {
             ckRequest = data.ckRequest
             ckResponse = data.ckResponse
 
@@ -649,6 +659,12 @@ function sendtoserver(serverdata) {
                     updateUser(ckResponse);
                 }
             }
+        } else if (responseStatus === "fail") {            
+            appendAlert(responseMessage, 'danger', 'on', 'on', '');
+            updateUser(responseMessage);
+        } else {
+            console.log("Unknown response status.");
+        }
         })
         .catch(error => console.error(error));
 }
@@ -691,7 +707,7 @@ const gpRequest = {
 };
 
 //initiates googlepay
-function initGP() {    
+function initGP() {
     return {
         merchantInfo: gpRequest.merchantInfo,
         buttonOptions: gpRequest.buttonOptions,

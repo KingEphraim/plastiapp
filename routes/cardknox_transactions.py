@@ -2,6 +2,7 @@ from flask import Blueprint, json, request, session, jsonify
 from models.user_settings import UserSettingsManager
 from models.apiconnector import send_api_request
 from models.databaselog import add_item_to_database,update_item_in_database
+from models.handleRecaptcha import verify_recaptcha
 
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
 
@@ -26,8 +27,14 @@ def sendtocardknox():
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
+
+
     
     if (datafromuser['tranzType'] == 'R'):
+        recaptcha_response = datafromuser.get('g-recaptcha-response')  # Get the reCAPTCHA token
+        # Verify reCAPTCHA response
+        if not verify_recaptcha(recaptcha_response):        
+            return jsonify({'status': 'fail', 'message': 'reCAPTCHA verification failed.'})
         tockmethod = 'post'
         url = "https://x1.cardknox.com/gatewayjson"
         tockdata = {
@@ -194,7 +201,7 @@ def sendtocardknox():
             'xRefNum': datafromuser.get('refnum', None),
         }
     else:
-        return {'message': 'missing tranzType'}
+        return {'status': 'fail','message': 'missing tranzType'}
 
     logdata = {
         "method": tockmethod,
@@ -237,4 +244,4 @@ def sendtocardknox():
         response = pollResponse
         update_item_in_database(document_id, {'pollResponse':response})
 
-    return jsonify({'ckRequest': tockdata, 'ckResponse': response})
+    return jsonify({'ckRequest': tockdata, 'ckResponse': response,'status': 'success','message':'success'})
