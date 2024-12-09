@@ -6,7 +6,7 @@ const createdevicebtnspin = document.getElementById("createdevicebtnspin");
 const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
-const fields = ["key", "command", "ebtcommand", "username","useremail","fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice","allowDuplicate"];
+const fields = ["key", "command", "ebtcommand", "username", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate"];
 
 const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
@@ -27,7 +27,7 @@ const updateLabel = (checkboxId, labelId) => {
 };
 
 // Event listener for checkbox state updates
-["ccdevice", "threeds", "googlePay", "ebtOnline","allowDuplicate"].forEach(id => {
+["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate"].forEach(id => {
     document.getElementById(id).addEventListener("change", () => {
         updateLabel(id, `${id}Label`);
     });
@@ -61,7 +61,7 @@ const toggleButtonState = (state) => {
 const saveSettings = () => {
     toggleButtonState('off');
     const formData = fields.reduce((data, field) => {
-        if (["threeds", "ccdevice", "googlePay", "ebtOnline","allowDuplicate"].includes(field)) {
+        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate"].includes(field)) {
             data[field] = document.getElementById(field).checked;
         } else {
             data[field] = document.getElementById(field).value;
@@ -132,14 +132,21 @@ const loadSettings = () => {
                     fields.forEach(field => {
                         const value = data.settings[field];
                         const element = document.getElementById(field);
+
                         if (element) {
-                            if (element.type === "checkbox") {
-                                element.checked = value || false;
+                            if (field === "key") {
+                                const currentKeyElement = document.getElementById("key");                                
+                                currentKeyElement.placeholder = value || '';
                             } else {
-                                element.value = value || '';
+                                if (element.type === "checkbox") {
+                                    element.checked = value || false;
+                                } else {
+                                    element.value = value || '';
+                                }
                             }
                         }
                     });
+
                 } else {
                     console.warn('Fields array is not defined or is not an array.');
                 }
@@ -172,7 +179,7 @@ createdevicebtn.addEventListener("click", createDevice);
 function hideSections() {
     const sections = document.querySelectorAll('.section');
     sections.forEach(section => {
-      section.style.display = 'none';
+        section.style.display = 'none';
     });
 }
 
@@ -181,8 +188,8 @@ function showSection(sectionId) {
     hideSections();
     const section = document.getElementById(sectionId);
     if (section) {
-      section.style.display = 'block';
-      updateSectionName(sectionId); // Update the section name when a section is shown
+        section.style.display = 'block';
+        updateSectionName(sectionId); // Update the section name when a section is shown
     }
 }
 
@@ -190,20 +197,20 @@ function showSection(sectionId) {
 function updateActiveLink(activeLinkId) {
     const links = document.querySelectorAll('.nav-link');
     links.forEach(link => {
-      link.classList.remove('active'); // Remove 'active' class from all links
+        link.classList.remove('active'); // Remove 'active' class from all links
     });
     const activeLink = document.getElementById(activeLinkId);
     if (activeLink) {
-      activeLink.classList.add('active'); // Add 'active' class to the clicked link
+        activeLink.classList.add('active'); // Add 'active' class to the clicked link
     }
 }
 
 // Function to update the section name
 function updateSectionName(sectionId) {
     const sectionNames = {
-      'profile-section': 'Profile',
-      'transaction-section': 'Transactions',
-      'cloudim-section': 'CloudIM'
+        'profile-section': 'Profile',
+        'transaction-section': 'Transactions',
+        'cloudim-section': 'CloudIM'
     };
 
     let sectionName = sectionNames[sectionId] || 'Unknown Section';
@@ -211,24 +218,24 @@ function updateSectionName(sectionId) {
 
     // Update the text of the <h4> element
     if (sectionNameElement) {
-      sectionNameElement.textContent = `${sectionName}`;
+        sectionNameElement.textContent = `${sectionName}`;
     }
 }
 
 // Add click event listeners to sidebar links
-document.getElementById('profile-link').addEventListener('click', function(e) {
+document.getElementById('profile-link').addEventListener('click', function (e) {
     e.preventDefault();
     showSection('profile-section');
     updateActiveLink('profile-link'); // Highlight the clicked link
 });
 
-document.getElementById('transaction-link').addEventListener('click', function(e) {
+document.getElementById('transaction-link').addEventListener('click', function (e) {
     e.preventDefault();
     showSection('transaction-section');
     updateActiveLink('transaction-link'); // Highlight the clicked link
 });
 
-document.getElementById('cloudim-link').addEventListener('click', function(e) {
+document.getElementById('cloudim-link').addEventListener('click', function (e) {
     e.preventDefault();
     showSection('cloudim-section');
     updateActiveLink('cloudim-link'); // Highlight the clicked link
