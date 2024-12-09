@@ -428,7 +428,7 @@ sbmtbtn.addEventListener("click", () => {
         });
        
             grecaptcha.ready(function () {
-                grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'tranzact' }).then(function (token) {
+                grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'checkout' }).then(function (token) {
                     formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data           
                     
                     // Format the "exp" field

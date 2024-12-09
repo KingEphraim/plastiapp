@@ -40,7 +40,7 @@ registerbtn.addEventListener("click", function () {
     // If form is valid, proceed to get reCAPTCHA token
     if (isValid) {
         grecaptcha.ready(function () {
-            grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'register' }).then(function (token) {
+            grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'signup' }).then(function (token) {
                 formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data
                 formData['tranzType'] = "N";
                 var formDataJSON = JSON.stringify(formData);
