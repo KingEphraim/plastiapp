@@ -550,27 +550,31 @@ window.addEventListener("message", function (event) {
     const allowedOrigin = isLocal ? 'http://127.0.0.1:5000' : 'https://app.cardknox.link';
 
     if (event.origin !== allowedOrigin) return;
-    //console.log("Response data:", event.data.acuResponse);
-    acuPinPadResponse = event.data.acuResponse
-    if (acuPinPadResponse.AccuResponseCode == "ACCU000") {
-        console.log("Good: ", acuPinPadResponse.AccuResponseCode)
-        console.log(ckResponse.xRefNum)
-
-        var formData = {};
-        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
-        fields.forEach(function (field) {
-            formData[field] = document.getElementById(field).value;
-        });
-        formData['tranzType'] = "ebtOnlineComplete";
-        formData['refnum'] = ckResponse.xRefNum;
-        var formDataJSON = JSON.stringify(formData);
-
-        sendtoserver(formDataJSON)
+    if (event.data.acuResponse) {
+        var acuPinPadResponse = event.data.acuResponse;
+        if (acuPinPadResponse.AccuResponseCode === "ACCU000") {
+            console.log("Good: ", acuPinPadResponse.AccuResponseCode);
+            console.log(ckResponse.xRefNum);
+    
+            var formData = {};
+            var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
+            fields.forEach(function (field) {
+                formData[field] = document.getElementById(field).value;
+            });
+            formData['tranzType'] = "ebtOnlineComplete";
+            formData['refnum'] = ckResponse.xRefNum;
+            var formDataJSON = JSON.stringify(formData);
+    
+            sendtoserver(formDataJSON);
+        } else {
+            console.log("Bad: ", acuPinPadResponse.AccuResponseCode);
+            appendAlert(JSON.stringify(acuPinPadResponse), 'danger', 'on', 'on', ckRequest);
+            updateUser(acuPinPadResponse);
+        }
     } else {
-        console.log("Bad: ", acuPinPadResponse.AccuResponseCode)
-        appendAlert(JSON.stringify(acuPinPadResponse), 'danger', 'on', 'on', ckRequest);
-        updateUser(acuPinPadResponse);
+        console.log("acuResponse is not defined.");
     }
+    
 
 
 }, false);
