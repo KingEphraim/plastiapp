@@ -32,10 +32,17 @@ def sendtocardknox():
     
     if (datafromuser['tranzType'] == 'R'):
         recaptcha_response = datafromuser.get('g-recaptcha-response')  # Get the reCAPTCHA token
+
+        # Check if the reCAPTCHA response is missing
+        if not recaptcha_response:
+            return jsonify({'status': 'fail', 'message': 'reCAPTCHA response is missing.'})
+
         success, score = verify_recaptcha(recaptcha_response)
+
         # Check if reCAPTCHA verification was successful and score meets the threshold
         if not success or score < 0.5:  # Assuming you want a minimum score of 0.5
-            return jsonify({'status': 'fail', 'message': 'reCAPTCHA verification failed.'})
+            return jsonify({'status': 'fail', 'message': 'reCAPTCHA verification failed.', 'score': score})
+
 
         tockmethod = 'post'
         url = "https://x1.cardknox.com/gatewayjson"
