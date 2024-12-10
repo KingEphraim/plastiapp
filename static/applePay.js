@@ -1,4 +1,3 @@
-
 const apRequest = {
     buttonOptions: {
         buttonContainer: "ap-container",
@@ -224,30 +223,24 @@ const apRequest = {
     },
     authorize: function (applePayload, totalAmount) {
         return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://<your domain>/<path to handle authorization>");
-            xhr.onload = function () {
-                if (this.status >= 200 && this.status < 300) {
-                    resolve(xhr.response);
-                } else {
-                    reject({
-                        status: this.status,
-                        statusText: xhr.statusText
-                    });
-                }
-            };
-            xhr.onerror = function () {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
+            try {
+                paymentToken = applePayload
+                encodedToken = window.btoa(paymentToken);
+                console.log(JSON.stringify({ paymentResponse, encodedToken }));
+                var formData = {};
+                var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
+                fields.forEach(function (field) {
+                    formData[field] = document.getElementById(field).value;
                 });
-            };
-            const data = {
-                amount: totalAmount,
-                payload: applePayload
-            };
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(data));
+                formData['tranzType'] = "AP";
+                formData['totalAmount'] = totalAmount;
+                formData['aptoken'] = encodedToken;
+                var formDataJSON = JSON.stringify(formData);
+                sendtoserver(formDataJSON)
+                resolve()
+            } catch (err) {
+                reject(err);
+            }     
         });
     },
     onPaymentAuthorize: function (applePayload) {
@@ -304,7 +297,7 @@ const apRequest = {
     initAP: function () {
         return {
             buttonOptions: this.buttonOptions,
-            merchantIdentifier: "<Your Apple Merchant ID>",
+            merchantIdentifier: "merchant.cardknox.com",
             requiredBillingContactFields: ['postalAddress', 'name', 'phone', 'email'],
             requiredShippingContactFields: ['postalAddress', 'name', 'phone', 'email'],
             onGetTransactionInfo: "apRequest.onGetTransactionInfo",

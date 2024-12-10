@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session,send_from_directory,current_app
 import requests
 import json
 import hashlib
@@ -37,6 +37,11 @@ app.register_blueprint(tranzact_bp)
 app.secret_key = config['secret_key']  # Change this to a secure secret key
 
 
+
+@app.route('/.well-known/<filename>')
+def serve_well_known(filename):
+    # Serve the file from the static/.well-known folder directly
+    return send_from_directory(current_app.static_folder + '/.well-known', filename)
 
 @app.route('/ewiclist')
 def ewiclist():

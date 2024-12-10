@@ -158,6 +158,30 @@ def sendtocardknox():
             'xCardnum': datafromuser['gptoken'],
             'xDigitalWalletType': 'GooglePay',
         }
+    elif (datafromuser['tranzType'] == 'AP'):
+        tockmethod = 'post'
+        url = "https://x1.cardknox.com/gatewayjson"
+        tockdata = {
+            'xkey': settings.get('key', config['xKey']),
+            'xVersion': '5.0.0',
+            'xSoftwareName': 'tranzact',
+            'xSoftwareVersion': '1.0',
+            'xCommand': settings.get('command', "cc:sale"),
+            'xVendorID': '128717',
+            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
+            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
+            'xEmail': datafromuser['email'],
+            'xBillPhone': datafromuser['phone'],
+            'xBillStreet': datafromuser['address'],
+            'xBillCity': datafromuser['city'],
+            'xBillState': datafromuser['state'],
+            'xBillZip': datafromuser['zip'],
+            'xInvoice': datafromuser['invoice'],
+            'xDescription': datafromuser['comments'],
+            'xAmount': datafromuser['amount'],
+            'xCardnum': datafromuser['aptoken'],
+            'xDigitalWalletType': 'ApplePay',
+        }    
     elif (datafromuser['tranzType'] == 'ebtOnlineInitiate'):
         tockmethod = 'post'
         url = "https://x1.cardknox.com/gatewayjson"
