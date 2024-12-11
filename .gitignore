@@ -7,3 +7,4 @@ myenv/
 __pycache__/
 *.pyc
 systemlogs.log
+*.bat
