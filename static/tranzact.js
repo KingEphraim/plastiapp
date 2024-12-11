@@ -4,7 +4,6 @@ let userCommand = '';
 let userPhone = '';
 let user3ds = false;
 let ccdevice = false;
-let ebtOnline = false;
 const sbmtbtn = document.getElementById("sbmtbtn");
 const sbmtbtnspin = document.getElementById("sbmtbtnspin");
 const sbmtbtncont = document.getElementById("sbmtbtncont");
@@ -20,6 +19,8 @@ const notificationCardHeader = document.getElementById("userNotificationCardHead
 const notificationCardHeaderP = document.getElementById("userNotificationCardHeaderP");
 const notificationCardBodyH = document.getElementById("userNotificationCardBodyH");
 const notificationCardBodyP = document.getElementById("userNotificationCardBodyP");
+let userGooglePay = false;
+let userebtOnline = false;
 
 
 
@@ -300,10 +301,20 @@ window.onload = function () {
         if (userGooglePay === true) {
 
             ckGooglePay.enableGooglePay({ amountField: "amount" });
-            ckApplePay.enableApplePay({
-                initFunction: 'apRequest.initAP',
-                amountField: 'amount'
-            });
+            if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+                if (ckApplePay && typeof ckApplePay.enableApplePay === 'function') {
+                    ckApplePay.enableApplePay({
+                        initFunction: 'apRequest.initAP',
+                        amountField: 'amount'
+                    });
+                } else {
+                    console.error("Apple Pay initialization function is missing or undefined.");
+                }
+            } else {
+                console.error("Apple Pay not supported on this device or browser.");
+                
+            }
+            
         } else if (userGooglePay === false) {
 
         } else {
