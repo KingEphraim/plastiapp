@@ -15,8 +15,15 @@ client = boto3.client(
     aws_secret_access_key=config['aws_secret_access_key']
 )
 
-# Define the CloudWatch Logs group name
+# Define the CloudWatch Logs group name and stream name
 LOG_GROUP_NAME = '/aws/plastiqz/logs'
+LOG_STREAM_NAME = 'plastiqz-log-stream'  # You can modify this based on your use case
+
+# Ensure log group exists
+try:
+    client.describe_log_groups(logGroupNamePrefix=LOG_GROUP_NAME)
+except client.exceptions.ResourceNotFoundException:
+    client.create_log_group(logGroupName=LOG_GROUP_NAME)
 
 # Configure logging
 log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -24,7 +31,7 @@ logging.basicConfig(
     level=logging.INFO,
     format=log_format,
     handlers=[
-        watchtower.CloudWatchLogHandler(log_group=LOG_GROUP_NAME, boto3_client=client),
+        watchtower.CloudWatchLogHandler(log_group=LOG_GROUP_NAME, stream_name=LOG_STREAM_NAME, boto3_client=client),
         logging.StreamHandler()
     ]
 )
