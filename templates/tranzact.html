@@ -17,44 +17,39 @@
     {% include 'navbar.html' %}
 
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="tranzact-form">
-                    <h1>Tranzact</h1>
-                    {% if not user_is_logged_in %}
-                    <p><small>Log in to access all features, including settings, transaction logs, and the ability to
-                            void transactions. 🔒</small></p>
-                    {% endif %}
-                    <form class="row g-3 p-4" id="custinfo">
-                        <div class="col-md-4">
-                            <label class="control-label" for="name">Full name</label>
-                            <input type="text" class="form-control input-style" id="name" placeholder="Full name"
-                                required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="control-label" for="email">Email</label>
-                            <input type="email" class="form-control input-style" id="email" placeholder="Email"
-                                required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="control-label" for="phone">Phone number</label>
-                            <input type="tel" class="form-control input-style" id="phone" placeholder="Phone number"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label" for="address">Address</label>
-                            <input type="text" class="form-control input-style" id="address" placeholder="Address"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label" for="city">City</label>
-                            <input type="text" class="form-control input-style" id="city" placeholder="City" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label" for="state">State</label>
-                            <select id="state" class="form-select input-style" required>
-                                <option value="" disabled selected>Select your state</option>
-                                <option value="AL">Alabama</option>
+        <div class="row justify-content-center">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-10">
+            <div class="tranzact-form card p-4">
+              <h1 class="text-center mb-4">Tranzact</h1>
+              {% if not user_is_logged_in %}
+              <p class="text-center"><small>Log in to access all features, including settings, transaction logs, and the ability to void transactions. 🔒</small></p>
+              {% endif %}
+              <form class="row g-3" id="custinfo">
+                <div class="col-md-4">
+                  <label class="form-label" for="name">Full name</label>
+                  <input type="text" class="form-control input-style " id="name" placeholder="Full name" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="email">Email</label>
+                  <input type="email" class="form-control input-style input-style" id="email" placeholder="Email" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="phone">Phone number</label>
+                  <input type="tel" class="form-control input-style" id="phone" placeholder="Phone number" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label" for="address">Address</label>
+                  <input type="text" class="form-control input-style" id="address" placeholder="Address" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label" for="city">City</label>
+                  <input type="text" class="form-control input-style" id="city" placeholder="City" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label" for="state">State</label>
+                  <select id="state" class="form-select input-style" required>
+                    <option value="" disabled selected>Select your state</option>
+                    <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AZ">Arizona</option>
                                 <option value="AR">Arkansas</option>
@@ -104,100 +99,90 @@
                                 <option value="WV">West Virginia</option>
                                 <option value="WI">Wisconsin</option>
                                 <option value="WY">Wyoming</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label" for="zip">Zip</label>
-                            <input type="text" class="form-control input-style" id="zip" placeholder="Zip" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="control-label" for="invoice">Invoice</label>
-                            <input type="text" class="form-control input-style" id="invoice"
-                                placeholder="Invoice Number" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="control-label" for="comments">Comments</label>
-                            <input type="text" class="form-control input-style" id="comments" placeholder="Comments">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="control-label" for="amount">Amount</label>
-                            <input type="text" class="form-control input-style" id="amount" placeholder="Amount"
-                                required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="control-label" for="card">Card Number</label>
-                            <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number"
-                                src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm"
-                                id="cardiframe"></iframe>
-                            <input type="hidden" class="form-control" id="card" placeholder="Card Number"
-                                data-ifields-id="card-number-token">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="control-label" for="exp">Expiration Date</label>
-                            <input type="text" class="form-control input-style" id="exp" placeholder="MM/YY" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="control-label" for="cvv">Cvv</label>
-                            <iframe data-ifields-id="cvv" data-ifields-placeholder="Cvv"
-                                src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm"
-                                id="cvviframe"></iframe>
-                            <input type="hidden" class="form-control" id="cvv" placeholder="Cvv"
-                                data-ifields-id="cvv-token">
-                        </div>
-                        <div class="col-12">
-                            <div class="d-grid gap-2 col-8 mx-auto">
-                                <button class="btn btn-primary" type="button" id="sbmtbtn">
-                                    <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm"
-                                        aria-hidden="true"></span>
-                                    <span id="sbmtbtncont" role="status">Pay with card</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="ebtOnlinebtndiv" class="col-12" style="display: none;">
-                            <div class="d-grid gap-2 col-8 mx-auto">
-                                <button class="btn btn-primary" type="button" id="ebtOnlinebtn">
-                                    <span hidden id="ebtOnlinebtnspin" class="spinner-border spinner-border-sm"
-                                        aria-hidden="true"></span>
-                                    <span id="ebtOnlinebtncont" role="status">Pay with EBT card</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="ccdevicebtndiv" class="col-12" style="display: none;">
-                            <div class="d-grid gap-2 col-8 mx-auto">
-                                <button class="btn btn-primary" type="button" id="ccdevicebtn">
-                                    <span hidden id="ccdevicebtnspin" class="spinner-border spinner-border-sm"
-                                        aria-hidden="true"></span>
-                                    <span id="ccdevicebtncont" role="status">Pay with cloudim</span>
-                                </button>
-                            </div>
-                        </div>
-                       
-                        <div class="col-12">
-                            <iframe id="igp" class="gp hidden d-grid gap-2 col-8 mx-auto" data-ifields-id="igp"
-                                data-ifields-oninit="initGP"
-                                src="https://cdn.cardknox.com/ifields/2.15.2409.2601/igp.htm" allowpaymentrequest
-                                sandbox="allow-popups allow-modals allow-scripts allow-same-origin allow-forms allow-popups-to-escape-sandbox allow-top-navigation">
-                            </iframe>
-                        </div>
-
-                        <div class="col-12">
-                            <div id="ap-container"  >
-                                
-                            </div>
-
-                        </div>
-
-                        <div class="col-12">
-                            <label id="card-data-error" style="color: red;"></label>
-                        </div>
-
-                    </form>
+                  </select>
                 </div>
+                <div class="col-md-3">
+                  <label class="form-label" for="zip">Zip</label>
+                  <input type="text" class="form-control input-style" id="zip" placeholder="Zip" required>
+                </div>
+      
+                <div class="col-md-4">
+                  <label class="form-label" for="invoice">Invoice</label>
+                  <input type="text" class="form-control input-style" id="invoice" placeholder="Invoice Number" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="comments">Comments</label>
+                  <input type="text" class="form-control input-style" id="comments" placeholder="Comments">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="amount">Amount</label>
+                  <input type="text" class="form-control input-style" id="amount" placeholder="Amount" required>
+                </div>
+      
+                <div class="col-md-4">
+                  <label class="form-label" for="card">Card Number</label>
+                  <iframe data-ifields-id="card-number" data-ifields-placeholder="Card Number"
+                    src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm" id="cardiframe"></iframe>
+                  <input type="hidden" class="form-control" id="card" data-ifields-id="card-number-token">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="exp">Expiration Date</label>
+                  <input type="text" class="form-control input-style" id="exp" placeholder="MM/YY" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="cvv">Cvv</label>
+                  <iframe data-ifields-id="cvv" data-ifields-placeholder="Cvv"
+                    src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm" id="cvviframe"></iframe>
+                  <input type="hidden" class="form-control" id="cvv" data-ifields-id="cvv-token">
+                </div>
+      
+                <div class="col-12 d-grid gap-2">
+                  <button class="btn btn-primary" type="button" id="sbmtbtn">
+                    <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    <span id="sbmtbtncont" role="status">Pay with card</span>
+                  </button>
+                </div>
+      
+                <div id="ebtOnlinebtndiv" class="col-12" style="display: none;">
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-primary" type="button" id="ebtOnlinebtn">
+                      <span hidden id="ebtOnlinebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                      <span id="ebtOnlinebtncont" role="status">Pay with EBT card</span>
+                    </button>
+                  </div>
+                </div>
+      
+                <div id="ccdevicebtndiv" class="col-12" style="display: none;">
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-primary" type="button" id="ccdevicebtn">
+                        <span hidden id="ccdevicebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span id="ccdevicebtncont" role="status">Pay with cloudim</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div id="iframe-container" class="col-12 d-grid gap-2" style="display: none;">
+                    <iframe id="igp" class="gp mx-auto" data-ifields-id="igp" data-ifields-oninit="initGP"
+                      src="https://cdn.cardknox.com/ifields/2.15.2409.2601/igp.htm" allowpaymentrequest
+                      sandbox="allow-popups allow-modals allow-scripts allow-same-origin allow-forms allow-popups-to-escape-sandbox allow-top-navigation">
+                    </iframe>
+                  </div>
+                  
+                  
+                  
+      
+                <div class="col-12">
+                  <div id="ap-container"></div>
+                </div>
+      
+                
+              </form>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
+
+      
     <div class="modal fade" id="userNotificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="userNotificationModalHeader" aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
