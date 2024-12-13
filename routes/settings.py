@@ -15,9 +15,19 @@ def load_settings():
         if user_settings:
             if 'key' in user_settings:
                 key = user_settings['key']
-                # Mask all characters except the last 4
-                masked_key = '*' * (len(key) - 4) + key[-4:]
+                # Determine the length of the key
+                key_length = len(key)
+                
+                if key_length > 10:
+                    # Unmask the first 5 and last 5 characters
+                    masked_key = key[:5] + '*' * min(6, key_length - 10) + key[-5:]
+                else:
+                    # If the key is too short to apply masking, leave it as is
+                    masked_key = key
+                
                 user_settings['key'] = masked_key  # Replace the original key with the masked key
+
+
 
             # Remove the password from the user settings before returning
             if 'password' in user_settings:
