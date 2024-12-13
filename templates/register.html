@@ -22,33 +22,36 @@
   {% include 'navbar.html' %}
   
   <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="register-form">
-                <h2 class="text-center mb-4">Register</h2>
-                <p id="message"></p>
-                <div >
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-block" id="registerbtn">Register</button>
-                    </div>
-                  </div>
-                <p>Already have an account? <a href="/login">Login here</a>.</p>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="register-form card p-4">
+          <h2 class="text-center mb-4">Register</h2>
+          <p id="message" class="text-center"></p>
+          
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
             </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-block" id="registerbtn">Register</button>
+            </div>
+          
+          <div class="text-center mt-3">
+            <p>Already have an account? <a href="/login">Login here</a>.</p>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+  
 
 
   <script src="{{url_for('static', filename='register.js')}}"></script>

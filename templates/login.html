@@ -20,16 +20,16 @@
   {% include 'navbar.html' %}
 
   <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="login-form">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="login-form card p-4">
           <h2 class="text-center mb-4">Login</h2>
-          <p id="message">
+          <p id="message" class="text-center">
             {% if request.args.get('message') == 'password-reset-success' %}
             Password reset successful. Login with your Username and new password.
-        {% endif %}
+            {% endif %}
           </p>
-          <div>
+           <!-- Add method and action for form submission -->
             <div class="mb-3">
               <label for="username" class="form-label">Username</label>
               <input type="text" class="form-control" id="username" name="username" required>
@@ -41,13 +41,16 @@
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-primary btn-block" id="loginbtn">Login</button>
             </div>
+          
+          <div class="text-center mt-3">
+            <p>Don't have an account? <a href="/register">Register here</a>.</p>
+            <p><a href="/reset_password_request" id="forgot-password-link">Forgot your password?</a></p>
           </div>
-          <p>Don't have an account? <a href="/register">Register here</a>.</p>
-          <p><a href="/reset_password_request" id="forgot-password-link">Forgot your password?</a></p> <!-- Added password reset link -->
         </div>
       </div>
     </div>
   </div>
+  
   
 
 
