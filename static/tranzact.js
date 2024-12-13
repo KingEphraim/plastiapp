@@ -19,6 +19,7 @@ const notificationCardHeader = document.getElementById("userNotificationCardHead
 const notificationCardHeaderP = document.getElementById("userNotificationCardHeaderP");
 const notificationCardBodyH = document.getElementById("userNotificationCardBodyH");
 const notificationCardBodyP = document.getElementById("userNotificationCardBodyP");
+const transactionLogsSubHead = document.getElementById('transactionLogsSubHead');
 let userGooglePay = false;
 let userebtOnline = false;
 
@@ -253,7 +254,7 @@ async function loadSettings() {
             userGooglePay = data.settings.googlePay;
             userebtOnline = data.settings.ebtOnline;
             ccdevice = data.settings.ccdevice;
-
+            transactionLogsSubHead.append(` (Key in use: ${userKey})`)
             console.log('Settings loaded successfully!', data);
         } else {
             console.log(data.message);
