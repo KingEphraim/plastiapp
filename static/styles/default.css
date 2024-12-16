@@ -61,34 +61,46 @@ body {
 
 }
 
-#cardiframe,
-#cvviframe {
+.ifields-iframe{
     border: 0;
     width: 100%;
-    height: 52px;
+    height: 66px;
     padding: 0;
 }
+
 
 #igp {
     height: 50px;
 }
-
+.input-label-style{
+    font-size: 14px;
+    color: #6c7a89;
+}
 .input-style {
-    padding: 12px;
-    border: 2px solid #d1d5db; /* Light gray */
-    border-radius: 8px; /* Slightly smaller radius for modern look */
-    font-family: 'Inter', sans-serif;
+    width: 100%;
+    padding: 12px 16px;
     font-size: 16px;
-    color: #1f2937; /* Darker gray for text */
+    border: 1px solid #d0dae6;
+    border-radius: 8px;
+    background-color: #f9fbfc;
+    color: #3a3f44;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    background-color: #f9fafb; /* Light background */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow for subtle depth */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .input-style:focus {
-    border-color: #000000; /* Soft blue for focus */
-    box-shadow: none
+    border-color: #a0c4ff;
+    box-shadow: 0 6px 12px rgba(160, 196, 255, 0.4);
+    background-color: #ffffff;
+}
+.input-style::placeholder {
+    color: #7e7e7e;
+}
+
+.input-style:disabled {
+    background-color: #eef1f6;
+    color: #a5b1c2;
 }
 
 .control-label {

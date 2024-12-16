@@ -345,68 +345,76 @@ window.onload = function () {
 
     let style = {
         'font-family': "'Inter', sans-serif",
-        color: '#1f2937',
-        border: '2px solid #d1d5db',
-        'background-color': '#f9fafb',
+        color: '#3a3f44', 
+        'border': '1px solid #d0dae6', 
+        'background-color': '#f9fbfc',
         'border-radius': '8px',
-        'border-width': '2px',
-        'box-shadow': '0 2px 4px rgba(0, 0, 0, 0.05)',
-        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-        padding: '10px',
+        'border-width': '1px', 
+        'box-shadow': '0 4px 6px rgba(0, 0, 0, 0.08)', 
+        transition: 'box-shadow 0.3s ease, border-color 0.3s ease', 
+        padding: '12px 16px', 
         'box-sizing': 'border-box',
         width: '100%',
         'overflow': 'hidden',
         'font-size': '16px',
         'font-weight': '400',
-        'line-height': '28px',
-
-
+        'line-height': '24px',
+        outline: 'none', 
     };
-    let cardfocus = {
-        'font-family': 'sans-serif',
-        'background-color': '#fafbff',
-        'border-color': '#e6e6e6',
-        'border-radius': '10px',
-        'border-style': 'solid',
-        'border-width': '2px',
-        padding: '10px',
-        display: 'block',
+
+    let styleFocus = {
+        'font-family': "'Inter', sans-serif",
+        color: '#3a3f44', 
+        'border': '1px solid #a0c4ff', 
+        'background-color': '#ffffff',
+        'border-radius': '8px',
+        'border-width': '1px', 
+        'box-shadow': '0 6px 12px rgba(160, 196, 255, 0.4)', 
+        transition: 'box-shadow 0.3s ease, border-color 0.3s ease', 
+        padding: '12px 16px', 
         'box-sizing': 'border-box',
         width: '100%',
         'overflow': 'hidden',
-        'font-size': '1em',
+        'font-size': '16px',
         'font-weight': '400',
-        'line-height': '28px',
-
-
+        'line-height': '24px',
+        outline: 'none', 
     };
-    let cvvfocus = {
-        'font-family': 'sans-serif',
-        'background-color': '#fafbff',
-        'border-color': '#e6e6e6',
-        'border-radius': '10px',
-        'border-style': 'solid',
-        'border-width': '2px',
-        padding: '10px',
-        display: 'block',
-        'box-sizing': 'border-box',
-        width: '100%',
-        'overflow': 'hidden',
-        'font-size': '1em',
-        'font-weight': '400',
-        'line-height': '28px',
 
-
-    };
     setIfieldStyle('card-number', style);
     setIfieldStyle('cvv', style);
-
-
+    addIfieldCallback('focus', function (data) {
+        if (data.triggeredByIfield === "card-number") {        
+            console.log("Focus on card-number field");  
+            setIfieldStyle('card-number', styleFocus);        
+        }
+    });
+    
+    addIfieldCallback('blur', function (data) {    
+        if (data.triggeredByIfield === "card-number") {        
+            console.log("Blur on card-number field");  
+            setIfieldStyle('card-number', style);     
+        }
+    });
+    
+    addIfieldCallback('focus', function (data) {    
+        if (data.triggeredByIfield === "cvv") {        
+            console.log("Focus on cvv field");  
+            setIfieldStyle('cvv', styleFocus);        
+        }
+    });
+    
+    addIfieldCallback('blur', function (data) {    
+        if (data.triggeredByIfield === "cvv") {        
+            console.log("Blur on cvv field");   
+            setIfieldStyle('cvv', style);    
+        }
+    });
 };
 
-addIfieldCallback('focus', function (data) {
-    console.log(data)
-});
+
+
+
 
 
 
