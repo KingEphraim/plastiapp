@@ -73,6 +73,93 @@ a:hover {
     color: #ffffff;
 }
 
+/* Secondary Button */
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6368;
+    box-shadow: 0 4px 12px rgba(92, 99, 104, 0.2);
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+/* Toggle Button */
+.btn-toggle {
+    background-color: #d4d4d4;
+    border-color: #c9c9c9;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-toggle.active {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-toggle:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 87, 179, 0.2);
+}
+
+.btn-toggle.active:hover {
+    background-color: #218838;
+}
+
+/* Styling for the checked state */
+.btn-check:checked + .btn-toggle {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+}
+
+.btn-check:checked + .btn-toggle:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 12px rgba(0, 87, 179, 0.2);
+}
+
+/* Disabled state styling */
+.btn-toggle:disabled {
+    background-color: #d6d6d6;  /* Light gray for disabled */
+    border-color: #d6d6d6;
+    color: #a1a1a1;  /* Dimmed text color */
+    cursor: not-allowed;
+    box-shadow: none;  /* Remove hover effect when disabled */
+}
+
+.btn-check:disabled + .btn-toggle {
+    background-color: #d6d6d6;
+    border-color: #d6d6d6;
+    color: #a1a1a1;
+}
+
+.btn-check:disabled + .btn-toggle:hover {
+    background-color: #d6d6d6;  /* No hover effect when disabled */
+}
+
+
+
+
+
 /* Card */
 .card {
     border: 1px solid #e6eaf0;
