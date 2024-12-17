@@ -72,6 +72,54 @@ body {
 #igp {
     height: 50px;
 }
+.button-style {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    
+}
+
+.button-primary {
+    background-color: #4fa3f7;
+    color: #ffffff;
+}
+
+.button-primary:hover {
+    background-color: #3b8ee6;
+    box-shadow: 0 4px 8px rgba(63, 122, 202, 0.3);
+}
+
+.button-primary:active {
+    background-color: #3079c1;
+}
+
+.button-secondary {
+    background-color: #f1f5f9;
+    color: #4fa3f7;
+    border: 1px solid #d0dae6;
+}
+
+.button-secondary:hover {
+    background-color: #e0e7ef;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button-secondary:active {
+    background-color: #cfd8e3;
+}
+
+/* Disabled state */
+.button-style:disabled {
+    background-color: #e6eff9;
+    color: #a5b1c2;
+    cursor: not-allowed;
+}
+
 .input-label-style{
     font-size: 14px;
     color: #6c7a89;
@@ -86,7 +134,7 @@ body {
     color: #3a3f44;
     outline: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .input-style:focus {
@@ -111,6 +159,8 @@ body {
     margin-bottom: 8px;
     display: block;
 }
+
+
 
 
 .accordion-item,
