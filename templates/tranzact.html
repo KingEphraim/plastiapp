@@ -17,9 +17,13 @@
     {% include 'navbar.html' %}
 
     <div class="container">
+      
         <div class="row justify-content-center">
+          
           <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-10">
-            <div class="tranzact-form card p-4">
+            
+            <div class="tranzact-form card p-4 position-relative">
+              <span class="loader" id="loader" ></span>
               <h1 class="text-center mb-4">Tranzact</h1>
               {% if not user_is_logged_in %}
               <p class="text-center"><small>Log in to access all features, including settings, transaction logs, and the ability to void transactions. 🔒</small></p>
@@ -135,33 +139,32 @@
                     src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm" id="cvviframe"></iframe>
                   <input type="hidden" class="form-control" id="cvv" data-ifields-id="cvv-token">
                 </div>
-      
+                
                 <div class="col-12 d-grid gap-2">
-                  <button class="btn button-style button-primary" type="button" id="sbmtbtn">
-                    <span hidden id="sbmtbtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <button class="btn btn-primary" type="button" id="sbmtbtn">
+                    <span hidden id="sbmtbtnspin" class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                     <span id="sbmtbtncont" role="status">Pay with card</span>
                   </button>
                 </div>
       
-                <div id="ebtOnlinebtndiv" class="col-12" style="display: none;">
-                  <div class="d-grid gap-2">
-                    <button class="btn button-style button-primary" type="button" id="ebtOnlinebtn">
-                      <span hidden id="ebtOnlinebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <div id="ebtOnlinebtndiv" class="col-12 d-grid gap-2 d-none" >                  
+                    <button class="btn btn-primary" type="button" id="ebtOnlinebtn">
+                      <span hidden id="ebtOnlinebtnspin" class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                       <span id="ebtOnlinebtncont" role="status">Pay with EBT card</span>
                     </button>
-                  </div>
+                  
                 </div>
       
-                <div id="ccdevicebtndiv" class="col-12" style="display: none;">
-                    <div class="d-grid gap-2">
-                      <button class="btn button-style button-primary" type="button" id="ccdevicebtn">
+                <div id="ccdevicebtndiv" class="col-12 d-grid gap-2 d-none" >
+                    
+                      <button class="btn btn-primary" type="button" id="ccdevicebtn">
                         <span hidden id="ccdevicebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                         <span id="ccdevicebtncont" role="status">Pay with cloudim</span>
                       </button>
-                    </div>
+                    
                   </div>
                   
-                  <div id="iframe-container" class="col-12 d-grid gap-2" style="display: none;">
+                  <div id="gpdiv" class="col-12 d-grid gap-2 d-none">
                     <iframe id="igp" class="gp mx-auto" data-ifields-id="igp" data-ifields-oninit="initGP"
                       src="https://cdn.cardknox.com/ifields/2.15.2409.2601/igp.htm" allowpaymentrequest
                       sandbox="allow-popups allow-modals allow-scripts allow-same-origin allow-forms allow-popups-to-escape-sandbox allow-top-navigation">
@@ -171,7 +174,7 @@
                   
                   
       
-                <div class="col-12">
+                <div id="apdiv" class="col-12 d-grid gap-2 d-none">
                   <div id="ap-container"></div>
                 </div>
       
@@ -180,8 +183,9 @@
             </div>
           </div>
         </div>
+        
       </div>
-
+      
       
     <div class="modal fade" id="userNotificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="userNotificationModalHeader" aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -194,7 +198,7 @@
                     <div class="container p-0">
                         <div class="card shadow-lg">
                             <div class="card-header bg-success text-white text-center py-4" id="userNotificationCardHeader">
-                                <h3 class="mb-0">Payment Receipt</h3>
+                                <h3 class="mb-0 text-white">Payment Receipt</h3>
                                 <p class="mb-0" id="userNotificationCardHeaderP">Transaction Successful</p>
                             </div>
                             <div class="card-body p-4">

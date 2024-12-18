@@ -304,8 +304,10 @@ window.onload = function () {
         if (userGooglePay === true) {
 
             ckGooglePay.enableGooglePay({ amountField: "amount" });
+            document.getElementById("gpdiv").classList.remove('d-none');
             if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
                 if (ckApplePay && typeof ckApplePay.enableApplePay === 'function') {
+                    document.getElementById("apdiv").classList.remove('d-none');
                     ckApplePay.enableApplePay({
                         initFunction: 'apRequest.initAP',
                         amountField: 'amount'
@@ -327,7 +329,7 @@ window.onload = function () {
         if (userebtOnline === true) {
 
 
-            document.getElementById("ebtOnlinebtndiv").style.display = "block";
+            document.getElementById("ebtOnlinebtndiv").classList.remove('d-none');
 
         } else if (userebtOnline === false) {
 
@@ -337,7 +339,7 @@ window.onload = function () {
 
         if (ccdevice === true) {
 
-            document.getElementById("ccdevicebtndiv").style.display = "block";
+            document.getElementById("ccdevicebtndiv").classList.remove('d-none');
         } else if (ccdevice === false) {
 
         } else {
@@ -367,7 +369,7 @@ window.onload = function () {
     let styleFocus = {
         'font-family': "'Inter', sans-serif",
         color: '#3a3f44', 
-        'border': '1px solid #4a90e2', 
+        'border': '1px solid #5f9ea0', 
         'background-color': '#ffffff',
         'border-radius': '8px',
         'border-width': '1px', 
@@ -444,7 +446,8 @@ function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticati
 sbmtbtn.addEventListener("click", () => {
     sbmtbtntoggle('off');
     setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
-    getTokens(function () {
+    getTokens(function () 
+    {
 
         var formData = {};
         var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
@@ -787,17 +790,17 @@ function sbmtbtntoggle(state) {
         sbmtbtn.disabled = false;
         sbmtbtnspin.hidden = true;
         sbmtbtncont.textContent = "Pay with card";
-        // Perform actions when the switch is turned on
+        hideLoader();
         console.log('Switch is ON');
-        // Add more code as needed
+        
     } else if (state === 'off') {
         sbmtbtn.disabled = true;
         sbmtbtnspin.hidden = false;
-        sbmtbtncont.textContent = "Please Wait";
-
-        // Perform actions when the switch is turned off
+        sbmtbtncont.textContent = "";
+        showLoader();
+        
         console.log('Switch is OFF');
-        // Add more code as needed
+        
     } else {
         // Handle invalid state
         console.error('Invalid state. Please provide "on" or "off".');
@@ -812,17 +815,18 @@ function ccdevicebtntoggle(state) {
         ccdevicebtn.disabled = false;
         ccdevicebtnspin.hidden = true;
         ccdevicebtncont.textContent = "Pay with cloudim";
-        // Perform actions when the switch is turned on
+        hideLoader();
         console.log('Switch is ON');
-        // Add more code as needed
+        
     } else if (state === 'off') {
         ccdevicebtn.disabled = true;
         ccdevicebtnspin.hidden = false;
         ccdevicebtncont.textContent = "Please Wait";
+        showLoader();
 
-        // Perform actions when the switch is turned off
+       
         console.log('Switch is OFF');
-        // Add more code as needed
+        
     } else {
         // Handle invalid state
         console.error('Invalid state. Please provide "on" or "off".');
@@ -837,19 +841,31 @@ function ebtOnlinebtntoggle(state) {
         ebtOnlinebtn.disabled = false;
         ebtOnlinebtnspin.hidden = true;
         ebtOnlinebtncont.textContent = "Pay with EBT online";
-        // Perform actions when the switch is turned on
+        hideLoader();
         console.log('Switch is ON');
         // Add more code as needed
     } else if (state === 'off') {
         ebtOnlinebtn.disabled = true;
         ebtOnlinebtnspin.hidden = false;
-        ebtOnlinebtncont.textContent = "Please Wait";
+        ebtOnlinebtncont.textContent = "";
 
-        // Perform actions when the switch is turned off
+        showLoader();
         console.log('Switch is OFF');
         // Add more code as needed
     } else {
         // Handle invalid state
         console.error('Invalid state. Please provide "on" or "off".');
     }
+}
+
+// Function to show the loader
+function showLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'inline-block'; // Makes the loader visible
+}
+
+// Function to hide the loader
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none'; // Hides the loader
 }
