@@ -1,12 +1,83 @@
 /* General body styling */
+/* General Body Styling */
 body {
     font-family: 'Inter', sans-serif; /* Clean, modern font */
-    background-color: #fdfdfd; /* Sleek light background */
-    color: #333333; /* Neutral dark text */
-    line-height: 1.7;
+    background-color: #fdfdfd; /* Soft light background */
+    color: #333333; /* Neutral dark text for readability */
+    line-height: 1.7; /* Comfortable line spacing */
     margin: 0;
     padding: 0;
 }
+
+/* Headings (h1 - h6) */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif; /* Consistent with body font */
+    font-weight: 700; /* Bold text for prominence */
+    margin-top: 1.5rem; /* Space before headings */
+    margin-bottom: 0.75rem; /* Space after headings */
+    color: #2a3e52; /* Calm dark blue for headings */
+    line-height: 1.4; /* Tighter spacing for headings */
+}
+
+/* Specific Heading Styles */
+h1 {
+    font-size: 2.5rem; /* Extra large for main titles */
+}
+
+h2 {
+    font-size: 2rem; /* Slightly smaller for sub-titles */
+}
+
+h3 {
+    font-size: 1.75rem; /* For section headings */
+}
+
+h4 {
+    font-size: 1.5rem; /* For sub-section headings */
+}
+
+h5 {
+    font-size: 1.25rem; /* For smaller headers */
+}
+
+h6 {
+    font-size: 1rem; /* For minor headings */
+    color: #4a90e2; /* Slightly lighter blue for less emphasis */
+}
+
+/* Paragraphs */
+p {
+    font-size: 1rem; /* Standard readable size */
+    color: #555555; /* Neutral gray for body text */
+    margin-bottom: 1rem; /* Space between paragraphs */
+    line-height: 1.8; /* Generous spacing for readability */
+}
+
+/* Links within Paragraphs */
+p a {
+    color: #4a90e2; /* Soft blue for links */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease;
+}
+
+p a:hover {
+    color: #357ab8; /* Darker blue for hover state */
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Utility Classes for Custom Styles */
+.text-muted {
+    color: #6c757d !important; /* Subtle gray for muted text */
+}
+
+.text-primary {
+    color: #4a90e2 !important; /* Blue text for emphasis */
+}
+
+.text-accent {
+    color: #5f9ea0 !important; /* Teal for accents */
+}
+
 
 /* Links */
 a {
@@ -70,7 +141,7 @@ a:hover {
     --bs-btn-disabled-color: #a3c6c5; /* Disabled state in light teal-gray */
     --bs-btn-disabled-bg: #5f9ea0;
     --bs-btn-disabled-border-color: #5f9ea0;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 12px 24px;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -182,19 +253,8 @@ footer a:hover {
     border-radius: 0.75rem !important;
 }
 
-/* Custom Heading Styling */
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    color: #333333;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-}
 
-/* Add spacing for sections */
-section {
-    padding: 4rem 0;
-}
+
 
 /* Input styles */
 .input-label-style {
@@ -228,6 +288,35 @@ section {
 .input-style:disabled {
     background-color: #eef1f6;
     color: #a5b1c2;
+}
+
+/* Active Button States */
+.btn-check:checked + .btn, 
+.btn.active, 
+.btn.show, 
+.btn:first-child:active, 
+:not(.btn-check) + .btn:active {
+    color: #ffffff; /* White text for active button */
+    background-color: #5f9ea0; /* Teal for active background */
+    border-color: #5f9ea0; /* Teal for active border */
+}
+
+/* Outline Success Button (Custom Colors) */
+.btn-outline-success {
+    --bs-btn-color: #198754; /* Forest green text for default state */
+    --bs-btn-border-color: #198754; /* Forest green border */
+    --bs-btn-hover-color: #ffffff; /* White text on hover */
+    --bs-btn-hover-bg: #198754; /* Forest green background on hover */
+    --bs-btn-hover-border-color: #198754; /* Forest green border on hover */
+    --bs-btn-focus-shadow-rgb: 25, 135, 84; /* Forest green glow for focus */
+    --bs-btn-active-color: #ffffff; /* White text on active */
+    --bs-btn-active-bg: #198754; /* Forest green background on active */
+    --bs-btn-active-border-color: #198754; /* Forest green border on active */
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); /* Subtle inset shadow */
+    --bs-btn-disabled-color: #198754; /* Green text for disabled state */
+    --bs-btn-disabled-bg: transparent; /* Transparent background for disabled */
+    --bs-btn-disabled-border-color: #198754; /* Green border for disabled */
+    --bs-gradient: none; /* No gradient for modern flat style */
 }
 
 /* Login / Register Form */

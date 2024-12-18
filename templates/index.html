@@ -19,82 +19,90 @@
 <body>
   {% include 'navbar.html' %}
 
-    <!-- Hero Section -->
-    <header class="bg-primary text-white text-center py-5">
+
+
+    <header class="bg-light-blue text-center py-5">
       <div class="container">
-        <h1 class="display-4 text-white">Welcome to Plastiqz</h1>
-        <p class="lead">Test. Innovate. Validate.</p>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">Get started</a>
+        <h1 class="display-4 text-primary fw-bold">Welcome to Plastiqz</h1>
+        <p class="lead text-muted mt-3">Effortless credit card processing with a modern touch. Discover simplicity and efficiency in every transaction.</p>
+        <div class="mt-4">
+          <a href="#features" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4">Explore Features</a>
+          <a href="#contact" class="btn btn-outline-primary btn-lg rounded-pill shadow-sm px-4 ms-3">Contact Us</a>
+        </div>
       </div>
     </header>
+    
   
-    <!-- About Section -->
-    <section id="about" class="py-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <h2>About Us</h2>
-            <p>Plastiqz is a sandbox platform designed for testing and experimenting with payment processing. We provide a safe, reliable environment for businesses and developers to explore payment workflows, test transactions, and fine-tune their systems without risk. With Plastiqz, you can validate your payment solutions with confidence.</p>
-          </div>
-          <div class="col-md-6">
-            <img src="{{ url_for('static', filename='images/aboutsmall.jpg') }}" alt="About Sola" class="img-fluid rounded">
-          </div>
-        </div>
-      </div>
-    </section>
-  
-<!-- Features Section -->
-<section id="features" class="bg-light py-5">
-  <div class="container text-center">
-    <h2 class="mb-4">Features</h2>
+    <!-- Features Section -->
+<section id="features" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center text-primary fw-bold mb-4">Features</h2>
     <div class="row">
-      <div class="col-md-4">
-        <div class="card p-3 d-flex flex-column h-100">
-          <i class="bi bi-shield-check display-4 mb-3 text-primary"></i>
-          <h5>Tranzact</h5>
-          <p>This tool is designed for testing payment features within the Sola API and other available integrations. It allows you to simulate transactions, validate responses, and troubleshoot payment processes.</p>
+      <div class="col-md-4 text-center mb-4">
+        <div class="icon text-primary mb-3">
+          <i class="fas fa-credit-card fa-3x"></i>
         </div>
+        <h5 class="fw-bold">Seamless Transactions</h5>
+        <p class="text-muted">Enjoy smooth and reliable payment processing for all your business needs.</p>
       </div>
-      <div class="col-md-4">
-        <div class="card p-3 d-flex flex-column h-100">
-          <i class="bi bi-clock-history display-4 mb-3 text-primary"></i>
-          <h5>Ewic APL Report</h5>
-          <p>Check the approved ewic list per state.</p>
+      <div class="col-md-4 text-center mb-4">
+        <div class="icon text-primary mb-3">
+          <i class="fas fa-shield-alt fa-3x"></i>
         </div>
+        <h5 class="fw-bold">Top-notch Security</h5>
+        <p class="text-muted">Protect your customers and business with advanced security protocols.</p>
       </div>
-      <div class="col-md-4">
-        <div class="card p-3 d-flex flex-column h-100">
-          <i class="bi bi-graph-up-arrow display-4 mb-3 text-primary"></i>
-          <h5>Settings</h5>
-          <p>The Settings screen lets you configure API keys, toggle between Sandbox and Production modes, manage authentication tokens, and set transaction parameters, ensuring seamless payment testing within the Sola API and integrations.</p>
+      <div class="col-md-4 text-center mb-4">
+        <div class="icon text-primary mb-3">
+          <i class="fas fa-chart-line fa-3x"></i>
         </div>
+        <h5 class="fw-bold">Detailed Analytics</h5>
+        <p class="text-muted">Gain insights with comprehensive reports to track and improve your performance.</p>
       </div>
     </div>
   </div>
 </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-5">
-      <div class="container">
-        <h2 class="text-center mb-4">Contact Us</h2>
+<!-- Contact Section -->
+<section id="contact" class="py-5">
+  <div class="container">
+    <h2 class="text-center text-primary fw-bold mb-4">Contact Us</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <h5 class="fw-bold">Get in Touch</h5>
+        <p class="text-muted">Have questions or need assistance? We’re here to help!</p>
+        <ul class="list-unstyled">
+          <li class="mb-2"><i class="fas fa-phone text-primary"></i> +1 (555) 123-4567</li>
+          <li class="mb-2"><i class="fas fa-envelope text-primary"></i> support@plastiqz.com</li>
+          <li class="mb-2"><i class="fas fa-map-marker-alt text-primary"></i> 123 Business Ave, Suite 100, Tech City</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h5 class="fw-bold">Send a Message</h5>
         <form id="contactUsForm">
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Your Name" id="name" required>
-            </div>
-            <div class="col-md-6">
-              <input type="email" class="form-control" placeholder="Your Email" id="email" required>
-            </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Your Name">
           </div>
           <div class="mb-3">
-            <textarea class="form-control" rows="5" placeholder="Your Message" id="message" required></textarea>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Your Email" required>
           </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary" id="contactBtn">Send Message</button>
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" rows="4" placeholder="Your Message" required></textarea>
           </div>
+          <button id="contactBtn" type="submit" class="btn btn-primary rounded-pill px-4">Send Message</button>
         </form>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
+  
+
+
+ 
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
       <div id="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" style="width: 300px; max-width: 100%; background-color: rgba(70, 85, 72, 0.808);">
         <div class="toast-header">
@@ -109,10 +117,39 @@
     </div>
     
     
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3">
-      <p>&copy; 2024 plastiqz. All Rights Reserved.</p>
-    </footer>
+    <!-- Footer Section -->
+<footer class="bg-dark text-white py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <h5 class="fw-bold">About Plastiqz</h5>
+        <p class="text-muted">Plastiqz provides cutting-edge credit card processing solutions for businesses of all sizes. Our goal is to make every transaction seamless, secure, and efficient.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5 class="fw-bold">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="#features" class="text-muted">Features</a></li>
+          <li><a href="#contact" class="text-muted">Contact Us</a></li>
+          <li><a href="#" class="text-muted">Privacy Policy</a></li>
+          <li><a href="#" class="text-muted">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5 class="fw-bold">Follow Us</h5>
+        <div>
+          <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+          <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+          <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <p class="text-muted mb-0">&copy; 2024 Plastiqz. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
 
     <script src="{{ url_for('static', filename='contact.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

@@ -1,13 +1,12 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">plastiqz</a>
+        <a class="navbar-brand fw-bold text-primary" href="#">Plastiqz</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ml-auto">
-                <!-- Add your navigation links here -->
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
                 </li>
@@ -21,26 +20,28 @@
                     <a class="nav-link" href="{{ url_for('bulk') }}">Bulk</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="#about">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="#contact">Contact</a>
                 </li>
                 {% if not user_is_logged_in %}
-                <li class="nav-item"></li>
-                <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-primary rounded-pill ms-2 px-4" href="{{ url_for('auth.login') }}">Login</a>
                 </li>
                 {% endif %}
                 {% if user_is_logged_in %}
-                <li class="nav-item"></li>
-                <a class="nav-link" href="{{ url_for('settings.settings') }}">Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Log out</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Account
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                        <li><a class="dropdown-item" href="{{ url_for('settings.settings') }}">Settings</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log out</a></li>
+                    </ul>
                 </li>
                 {% endif %}
             </ul>
-
         </div>
     </div>
 </nav>
