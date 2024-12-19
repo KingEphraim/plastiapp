@@ -12,9 +12,7 @@ body {
 /* Headings (h1 - h6) */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif; /* Consistent with body font */
-    font-weight: 700; /* Bold text for prominence */
-    margin-top: 1.5rem; /* Space before headings */
-    margin-bottom: 0.75rem; /* Space after headings */
+    font-weight: 700; /* Bold text for prominence */    
     color: #2a3e52; /* Calm dark blue for headings */
     line-height: 1.4; /* Tighter spacing for headings */
 }
@@ -71,7 +69,7 @@ p a:hover {
 }
 
 .text-primary {
-    color: #4a90e2 !important; /* Blue text for emphasis */
+    color: #4c8688 !important; /* Blue text for emphasis */
 }
 
 .text-accent {
@@ -111,20 +109,7 @@ a:hover {
     padding: 1.5rem;
 }
 
-/* Forms */
-.form-control {
-    border: 1px solid #d1d7e0;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    background-color: #ffffff;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
 
-.form-control:focus {
-    border-color: #5f9ea0;
-    box-shadow: 0 4px 8px rgba(95, 158, 160, 0.2); /* Calming teal focus */
-}
 
 /* Buttons */
 .btn-primary {
@@ -151,6 +136,32 @@ a:hover {
     --bs-btn-bg: #4e8b7e; /* Darker teal on hover */
     --bs-btn-border-color: #4e8b7e;
 }
+.btn-outline-primary {
+    --bs-btn-color: #5f9ea0; /* Soft teal-blue for text */
+    --bs-btn-bg: transparent; /* Transparent background for outline */
+    --bs-btn-border-color: #5f9ea0; /* Soft teal-blue for border */
+    --bs-btn-hover-color: #fff; /* White text on hover */
+    --bs-btn-hover-bg: #5f9ea0; /* Soft teal-blue background on hover */
+    --bs-btn-hover-border-color: #5f9ea0; /* Teal-blue border on hover */
+    --bs-btn-focus-shadow-rgb: 95, 158, 160;
+    --bs-btn-active-color: #fff; /* White text on active state */
+    --bs-btn-active-bg: #3e6d60; /* Deeper teal for active background */
+    --bs-btn-active-border-color: #3e6d60; /* Darker border on active */
+    --bs-btn-disabled-color: #a3c6c5; /* Disabled text color in light teal-gray */
+    --bs-btn-disabled-bg: transparent; /* Transparent disabled background */
+    --bs-btn-disabled-border-color: #a3c6c5; /* Disabled border color */
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    --bs-btn-color: #fff; /* White text on hover */
+    --bs-btn-bg: #5f9ea0; /* Soft teal-blue background on hover */
+    --bs-btn-border-color: #5f9ea0; /* Soft teal-blue border on hover */
+}
+
 
 /* Nav Pills Styles */
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -259,14 +270,15 @@ footer a:hover {
 /* Input styles */
 .input-label-style {
     font-size: 0.875rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
+    color: #1d3131d5;
+    font-weight: 600;
+    margin-bottom: 0;
 }
 
 .input-style {
-    width: 100%;
-    padding: 0.75rem 1rem;
+    width: 100%;    
     font-size: 1rem;
+    padding: 0.50rem;
     border: 1px solid #d1d7e0;
     border-radius: 0.5rem;
     background-color: #f9fbfc;
@@ -363,7 +375,7 @@ footer a:hover {
 .ifields-iframe {
     border: 0;
     width: 100%;
-    height: 56px;
+    height: 46px;
     padding: 0;
 }
 

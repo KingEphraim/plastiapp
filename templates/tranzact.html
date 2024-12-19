@@ -22,32 +22,37 @@
           
           <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-10">
             
-            <div class="tranzact-form card p-4 position-relative">
+            <div class="tranzact-form card  ">
               <span class="loader" id="loader" ></span>
-              <h1 class="text-center mb-4">Tranzact</h1>
+              <header class="text-center ">
+                <div class="container">
+                    <h1 class="display-4">Welcome to Tranzact</h1>
+                    <p class="lead">Secure and reliable payment processing made easy</p>
+                </div>
+            </header>
               {% if not user_is_logged_in %}
               <p class="text-center"><small>Log in to access all features, including settings, transaction logs, and the ability to void transactions. 🔒</small></p>
               {% endif %}
               <form class="row g-3" >
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="name">Full name</label>
-                  <input type="text" class="form-control input-style " id="name" placeholder="Full name" required>
+                  <input type="text" class="form-control input-style " id="name" placeholder="John Doe"  required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="email">Email</label>
-                  <input type="email" class="form-control input-style input-style" id="email" placeholder="Email" required>
+                  <input type="email" class="form-control input-style input-style" id="email" placeholder="you@example.com" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="phone">Phone number</label>
-                  <input type="tel" class="form-control input-style" id="phone" placeholder="Phone number" required>
+                  <input type="tel" class="form-control input-style" id="phone" placeholder="(123) 456-7890" required>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="address">Address</label>
-                  <input type="text" class="form-control input-style" id="address" placeholder="Address" required>
+                  <input type="text" class="form-control input-style" id="address" placeholder="1234 Main St" required>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="city">City</label>
-                  <input type="text" class="form-control input-style" id="city" placeholder="City" required>
+                  <input type="text" class="form-control input-style" id="city" placeholder="Anytown" required>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="state">State</label>
@@ -107,25 +112,25 @@
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="zip">Zip</label>
-                  <input type="text" class="form-control input-style" id="zip" placeholder="Zip" required>
+                  <input type="text" class="form-control input-style" id="zip" placeholder="12345" required>
                 </div>
       
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="invoice">Invoice</label>
-                  <input type="text" class="form-control input-style" id="invoice" placeholder="Invoice Number" required>
+                  <input type="text" class="form-control input-style" id="invoice" placeholder="I-12345" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="comments">Comments</label>
-                  <input type="text" class="form-control input-style" id="comments" placeholder="Comments">
+                  <input type="text" class="form-control input-style" id="comments" placeholder="Roses">
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="amount">Amount</label>
-                  <input type="text" class="form-control input-style" id="amount" placeholder="Amount" required>
+                  <input type="text" class="form-control input-style" id="amount" placeholder="1.99" required>
                 </div>
       
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="card">Card Number</label>
-                  <iframe class="ifields-iframe" data-ifields-id="card-number" data-ifields-placeholder="Card Number"
+                  <iframe class="ifields-iframe" data-ifields-id="card-number" data-ifields-placeholder="4444 3333 2222 1111"
                     src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm" id="cardiframe"></iframe>
                   <input type="hidden" class="form-control" id="card" data-ifields-id="card-number-token">
                 </div>
@@ -135,7 +140,7 @@
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="cvv">Cvv</label>
-                  <iframe class="ifields-iframe" data-ifields-id="cvv" data-ifields-placeholder="Cvv"
+                  <iframe class="ifields-iframe" data-ifields-id="cvv" data-ifields-placeholder="123"
                     src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifield.htm" id="cvviframe"></iframe>
                   <input type="hidden" class="form-control" id="cvv" data-ifields-id="cvv-token">
                 </div>
