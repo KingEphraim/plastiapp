@@ -6,7 +6,7 @@ const createdevicebtnspin = document.getElementById("createdevicebtnspin");
 const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
-const fields = ["key", "command", "ebtcommand", "username", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate"];
+const fields = ["key", "command", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate"];
 
 const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
@@ -48,7 +48,7 @@ const toggleButtonState = (state) => {
     };
     if (state === 'on') {
         toggle(savebtn, savebtnspin, savebtncont, "Save Settings", false);
-        toggle(createdevicebtn, createdevicebtnspin, createdevicebtncont, "Add device", false);
+        toggle(createdevicebtn, createdevicebtnspin, createdevicebtncont, "Add/Update Device ID", false);
     } else if (state === 'off') {
         toggle(savebtn, savebtnspin, savebtncont, "Please Wait", true);
         toggle(createdevicebtn, createdevicebtnspin, createdevicebtncont, "Please Wait", true);

@@ -110,6 +110,14 @@
                             <div class="container-fluid">
                                 <div class="row g-3 p-4">
 
+                                    <!-- LB Endpoint -->
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label for="lbendpoint" class="control-label">LB Endpoint</label>                                            
+                                            <input type="text" class="form-control input-style" id="lbendpoint"
+                                                placeholder="x1.cardknox.com" required>
+                                        </div>
+                                    </div>
                                     <!-- Key Input -->
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group">
@@ -125,8 +133,8 @@
                                             <label for="command" class="control-label">Credit Card Transaction
                                                 Type</label>
                                             <select id="command" class="form-control input-style" required>
-                                                <option value="" disabled selected>Select Transaction Type</option>
-                                                <option value="cc:sale">Sale</option>
+                                                <option value="" disabled >Select Transaction Type</option>
+                                                <option value="cc:sale" selected>Sale</option>
                                                 <option value="cc:authonly">Authorization</option>
                                                 <option value="cc:credit">Credit</option>
                                                 <option value="cc:save">Save</option>
@@ -182,8 +190,8 @@
                                         <div class="form-group">
                                             <label for="ebtcommand" class="control-label">EBT Transaction Type</label>
                                             <select id="ebtcommand" class="form-control input-style" required>
-                                                <option value="" disabled selected>Select Transaction Type</option>
-                                                <option value="ebtonline:fssale">FS Sale</option>
+                                                <option value="" disabled >Select Transaction Type</option>
+                                                <option value="ebtonline:fssale" selected>FS Sale</option>
                                                 <option value="ebtonline:cbsale">CB Sale</option>
                                                 <option value="ebtonline:balance">Balance</option>
                                             </select>

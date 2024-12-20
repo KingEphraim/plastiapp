@@ -28,6 +28,7 @@ class UserSettingsManager:
                 {
                     "_id": 0,
                     "useremail": 1,
+                    "lbendpoint": 1,
                     "key": 1,
                     "command": 1,
                     "ebtcommand": 1,

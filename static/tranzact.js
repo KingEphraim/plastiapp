@@ -838,7 +838,7 @@ function ebtOnlinebtntoggle(state) {
     if (state === 'on') {
         ebtOnlinebtn.disabled = false;
         ebtOnlinebtnspin.hidden = true;
-        ebtOnlinebtncont.textContent = "Pay with EBT online";
+        ebtOnlinebtncont.textContent = "Pay with EBT card";
         hideLoader();
         console.log('Switch is ON');
         // Add more code as needed

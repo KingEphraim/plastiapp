@@ -19,6 +19,7 @@ def sendtocardknox():
         "command": "cc:sale",
         "ebtcommand": "ebtonline:fssale",
         "phone": "",
+        "lbendpoint": config['lbendpoint'],
         "deviceSerialNumber": "",
         "deviceMake": "",
         "deviceFriendlyName": "",
@@ -27,7 +28,7 @@ def sendtocardknox():
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
-
+    lbendpoint = settings.get('lbendpoint') or config['lbendpoint']
 
     
     if (datafromuser['tranzType'] == 'R'):
@@ -45,7 +46,7 @@ def sendtocardknox():
 
 
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -73,7 +74,7 @@ def sendtocardknox():
         }
     elif (datafromuser['tranzType'] == 'void'):
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -85,7 +86,7 @@ def sendtocardknox():
         }
     elif (datafromuser['tranzType'] == 'capture'):
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -97,7 +98,7 @@ def sendtocardknox():
         }
     elif (datafromuser['tranzType'] == 'V'):
         tockmethod = 'post'
-        url = 'https://x1.cardknox.com/verifyjson'
+        url = f"https://{lbendpoint}/verifyjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -139,7 +140,7 @@ def sendtocardknox():
 
     elif (datafromuser['tranzType'] == 'GP'):
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -164,7 +165,7 @@ def sendtocardknox():
         }
     elif (datafromuser['tranzType'] == 'AP'):
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -189,7 +190,7 @@ def sendtocardknox():
         }    
     elif (datafromuser['tranzType'] == 'ebtOnlineInitiate'):
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',
@@ -216,7 +217,7 @@ def sendtocardknox():
         }
     elif (datafromuser['tranzType'] == 'ebtOnlineComplete'):
         tockmethod = 'post'
-        url = "https://x1.cardknox.com/gatewayjson"
+        url = f"https://{lbendpoint}/gatewayjson"
         tockdata = {
             'xkey': settings.get('key', config['xKey']),
             'xVersion': '5.0.0',

@@ -418,3 +418,21 @@ footer a:hover {
         left: 100%; /* Move to the right */
     }
 }
+
+    .card-loading {
+      opacity: 0;
+     
+      animation: loadCard 3s forwards;
+    }
+
+    /* Define the keyframes for the animation */
+    @keyframes loadCard {
+      0% {
+        opacity: 0;
+        
+      }
+      100% {
+        opacity: 1;
+        
+      }
+    }
