@@ -346,7 +346,7 @@ window.onload = function () {
 
         }
     })();
-
+    enableAutoFormatting();
     let style = {
         'font-family': "'Inter', sans-serif",
         'color': '#3a3f44', 
@@ -444,6 +444,7 @@ function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticati
 sbmtbtn.addEventListener("click", () => {
     sbmtbtntoggle('off');
     setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
+    
     getTokens(function () 
     {
 
