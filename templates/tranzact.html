@@ -45,20 +45,20 @@
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="email">Email</label>
-                  <input type="email" class="form-control input-style input-style" id="email" placeholder="you@example.com" required>
+                  <input type="email" class="form-control input-style input-style" id="email" placeholder="you@example.com" value="{{ email }}" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="phone">Phone number</label>
-                  <input type="tel" class="form-control input-style" id="phone" placeholder="(123) 456-7890" required>
+                  <input type="tel" class="form-control input-style" id="phone" placeholder="(123) 456-7890" value="{{ phone }}"required>
                 </div>
                 
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="address">Address</label>
-                  <input type="text" class="form-control input-style" id="address" placeholder="1234 Main St" required>
+                  <input type="text" class="form-control input-style" id="address" placeholder="1234 Main St" value="{{ address }}"required>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="city">City</label>
-                  <input type="text" class="form-control input-style" id="city" placeholder="Anytown" required>
+                  <input type="text" class="form-control input-style" id="city" placeholder="Anytown" value="{{ city }}"required>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="state">State</label>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="zip">Zip</label>
-                  <input type="text" class="form-control input-style" id="zip" placeholder="12345" required>
+                  <input type="text" class="form-control input-style" id="zip" placeholder="12345"value="{{ zip }}" required>
                 </div>
                 <div class="d-flex align-items-center mt-5">
                   <div class="flex-grow-1 border-top"></div>
@@ -127,11 +127,11 @@
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="invoice">Invoice</label>
-                  <input type="text" class="form-control input-style" id="invoice" placeholder="I-12345" required>
+                  <input type="text" class="form-control input-style" id="invoice" placeholder="I-12345" value="{{ invoice }}" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="comments">Comments</label>
-                  <input type="text" class="form-control input-style" id="comments" placeholder="Roses">
+                  <input type="text" class="form-control input-style" id="comments" placeholder="Roses" value="{{ comments }}">
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="amount">Amount</label>
