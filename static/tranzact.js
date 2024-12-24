@@ -14,8 +14,10 @@ const ebtOnlinebtn = document.getElementById("ebtOnlinebtn");
 const ebtOnlinebtnspin = document.getElementById("ebtOnlinebtnspin");
 const ebtOnlinebtncont = document.getElementById("ebtOnlinebtncont");
 const emailInvoicebtn = document.getElementById("emailInvoicebtn");
+const sendInvoiceBtn = document.getElementById("sendInvoiceBtn");
 const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder')
 const modalElement = new bootstrap.Modal(document.getElementById('userNotificationModal'));
+const emailInvoiceModal = new bootstrap.Modal(document.getElementById('emailInvoiceModal'));
 const notificationCardHeader = document.getElementById("userNotificationCardHeader");
 const notificationCardHeaderP = document.getElementById("userNotificationCardHeaderP");
 const notificationCardBodyH = document.getElementById("userNotificationCardBodyH");
@@ -320,9 +322,9 @@ window.onload = function () {
                 }
             } else {
                 console.error("Apple Pay not supported on this device or browser.");
-                
+
             }
-            
+
         } else if (userGooglePay === false) {
 
         } else {
@@ -332,82 +334,82 @@ window.onload = function () {
         if (userebtOnline === true) {
             document.getElementById("ebtOnlinebtndiv").classList.remove('d-none');
         }
-        
+
         if (useremailInvoice === true) {
             document.getElementById("emailInvoicebtndiv").classList.remove('d-none');
         }
-        
+
         if (ccdevice === true) {
             document.getElementById("ccdevicebtndiv").classList.remove('d-none');
         }
-        
+
 
 
     })();
     enableAutoFormatting();
     let style = {
         'font-family': "'Inter', sans-serif",
-        'color': '#3a3f44', 
-        'border': '1px solid #d0dae6', 
+        'color': '#3a3f44',
+        'border': '1px solid #d0dae6',
         'background-color': '#f9fbfc',
         'border-radius': '8px',
-        'border-width': '1px', 
-        'box-shadow': '0 2px 4px rgba(0, 0, 0, 0.05)', 
-        'transition': 'box-shadow 0.3s ease, border-color 0.3s ease', 
+        'border-width': '1px',
+        'box-shadow': '0 2px 4px rgba(0, 0, 0, 0.05)',
+        'transition': 'box-shadow 0.3s ease, border-color 0.3s ease',
         'font-size': '1rem',
         'padding': '0.50rem',
         'line-height': '1.5',
         'box-sizing': 'border-box',
         'width': '100%',
-        'overflow': 'hidden',          
-        'outline': 'none', 
+        'overflow': 'hidden',
+        'outline': 'none',
     };
 
     let styleFocus = {
         'font-family': "'Inter', sans-serif",
-        'color': '#3a3f44', 
-        'border': '1px solid #5f9ea0', 
+        'color': '#3a3f44',
+        'border': '1px solid #5f9ea0',
         'background-color': '#ffffff',
         'border-radius': '8px',
-        'border-width': '1px', 
-        'box-shadow': '0 4px 8px rgba(74, 144, 226, 0.2)', 
-        'transition': 'box-shadow 0.3s ease, border-color 0.3s ease', 
+        'border-width': '1px',
+        'box-shadow': '0 4px 8px rgba(74, 144, 226, 0.2)',
+        'transition': 'box-shadow 0.3s ease, border-color 0.3s ease',
         'font-size': '1rem',
         'padding': '0.50rem',
         'line-height': '1.5',
         'box-sizing': 'border-box',
         'width': '100%',
-        'overflow': 'hidden',          
-        'outline': 'none', 
+        'overflow': 'hidden',
+        'outline': 'none',
     };
 
     setIfieldStyle('card-number', style);
     setIfieldStyle('cvv', style);
     addIfieldCallback('focus', function (data) {
-        if (data.triggeredByIfield === "card-number") {        
-            console.log("Focus on card-number field");  
-            setIfieldStyle('card-number', styleFocus);        
+        if (data.triggeredByIfield === "card-number") {
+            console.log("Focus on card-number field");
+            setIfieldStyle('card-number', styleFocus);
         }
     });
-    
-    addIfieldCallback('blur', function (data) {    
-        if (data.triggeredByIfield === "card-number") {        
-            console.log("Blur on card-number field");  
-            setIfieldStyle('card-number', style);     
+
+    addIfieldCallback('blur', function (data) {
+        if (data.triggeredByIfield === "card-number") {
+            console.log("Blur on card-number field");
+            setIfieldStyle('card-number', style);
         }
     });
-    
-    addIfieldCallback('focus', function (data) {    
-        if (data.triggeredByIfield === "cvv") {        
-            console.log("Focus on cvv field");  
-            setIfieldStyle('cvv', styleFocus);        
+
+    addIfieldCallback('focus', function (data) {
+        if (data.triggeredByIfield === "cvv") {
+            console.log("Focus on cvv field");
+            setIfieldStyle('cvv', styleFocus);
         }
     });
-    
-    addIfieldCallback('blur', function (data) {    
-        if (data.triggeredByIfield === "cvv") {        
-            console.log("Blur on cvv field");   
-            setIfieldStyle('cvv', style);    
+
+    addIfieldCallback('blur', function (data) {
+        if (data.triggeredByIfield === "cvv") {
+            console.log("Blur on cvv field");
+            setIfieldStyle('cvv', style);
         }
     });
 };
@@ -442,9 +444,8 @@ function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticati
 sbmtbtn.addEventListener("click", () => {
     sbmtbtntoggle('off');
     setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
-    
-    getTokens(function () 
-    {
+
+    getTokens(function () {
 
         var formData = {};
         var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
@@ -456,7 +457,12 @@ sbmtbtn.addEventListener("click", () => {
         grecaptcha.ready(function () {
             grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'checkout' }).then(function (token) {
                 formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data           
-
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('payinvoice') === 'true' && urlParams.has('dbinvoiceid')) {
+                    const dbinvoiceid = urlParams.get('dbinvoiceid'); // Get the invoice number
+                    console.log(`Invoice ID: ${dbinvoiceid}`);
+                    formData['dbinvoiceid'] = dbinvoiceid; 
+                }
                 // Format the "exp" field
                 formData['exp'] = formatExp(formData['exp']);
 
@@ -522,8 +528,41 @@ ebtOnlinebtn.addEventListener("click", () => {
 });
 
 emailInvoicebtn.addEventListener("click", () => {
-    
-    emailInvoiceSpinner()
+
+
+    var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "phone"];
+
+    // Get the values of email and amount fields
+    var emailField = document.getElementById("email").value;
+    var amountField = document.getElementById("amount").value;
+
+    // Check if email and amount fields are not empty
+    if (emailField && amountField) {
+        emailInvoiceSpinner();
+        fields.forEach(function (field) {
+            var fieldValue = document.getElementById(field).value; // Get value from the form input
+            var invoiceDiv = document.getElementById("invoice" + field.charAt(0).toUpperCase() + field.slice(1)); // Get corresponding invoice div
+            if (invoiceDiv) {
+                invoiceDiv.innerText = fieldValue; // Set the div text to the input value
+            }
+        });
+        emailInvoiceModal.show();
+
+    } else {
+        alert("Please fill in both the email and amount before sending invoice.");
+    }
+
+
+
+
+
+
+
+});
+
+sendInvoiceBtn.addEventListener("click", () => {
+
+
     setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
     getTokens(function () {
         var formData = {};
@@ -536,16 +575,33 @@ emailInvoicebtn.addEventListener("click", () => {
 
         formData['tranzType'] = "emailInvoice";
         // Convert JSON to string for display or further processing
-        var formDataJSON = formData;
+        var formDataJSON = formData;        
+
+        createInvoice('/emailInvoice', formDataJSON)
+            .then(createInvoiceResponse => {
+                console.log('createInvoiceResponse:', createInvoiceResponse);
+                if (createInvoiceResponse.status === "success") {
+                    // Do something with the invoice value
+                    console.log("Invoice ID:", createInvoiceResponse.invoice);
+        
+                    // Example: You could redirect the user or display a message
+                    alert("Invoice created and sent successfully! Invoice ID: " + createInvoiceResponse.invoice);
+                }
+            })
+            .catch(error => {
+                console.error('Error handling createInvoice:', error);
+            });
 
         
-        createInvoiceResponse = createInvoice('/emailInvoice', formDataJSON)
+
+        emailInvoiceModal.hide();
         emailInvoiceSpinner()
     }, 10000,);
 
 });
-
-
+function sendInvoiceBtnCancel() {
+    emailInvoiceSpinner()
+}
 function showAcuPinPad(data, action) {
     // Generate the modal content
     const modalHtml = `
@@ -813,15 +869,15 @@ function sbmtbtntoggle(state) {
         sbmtbtncont.textContent = "Pay with card";
         hideLoader();
         console.log('Switch is ON');
-        
+
     } else if (state === 'off') {
         sbmtbtn.disabled = true;
         sbmtbtnspin.hidden = false;
         sbmtbtncont.textContent = "";
         showLoader();
-        
+
         console.log('Switch is OFF');
-        
+
     } else {
         // Handle invalid state
         console.error('Invalid state. Please provide "on" or "off".');
@@ -838,16 +894,16 @@ function ccdevicebtntoggle(state) {
         ccdevicebtncont.textContent = "Pay with cloudim";
         hideLoader();
         console.log('Switch is ON');
-        
+
     } else if (state === 'off') {
         ccdevicebtn.disabled = true;
         ccdevicebtnspin.hidden = false;
         ccdevicebtncont.textContent = "Please Wait";
         showLoader();
 
-       
+
         console.log('Switch is OFF');
-        
+
     } else {
         // Handle invalid state
         console.error('Invalid state. Please provide "on" or "off".');
@@ -857,11 +913,12 @@ function ccdevicebtntoggle(state) {
 function emailInvoiceSpinner() {
     var emailInvoicespinner = document.getElementById('emailInvoicebtnspin');
     var emailInvoiceText = document.getElementById('emailInvoicebtncont');
-    
+
+
     // Toggle visibility
     emailInvoicespinner.hidden = !emailInvoicespinner.hidden;
     emailInvoiceText.hidden = !emailInvoiceText.hidden;
-  }
+}
 
 function ebtOnlinebtntoggle(state) {
 

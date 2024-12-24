@@ -3,6 +3,7 @@ from models.user_settings import UserSettingsManager
 from models.apiconnector import send_api_request
 from models.databaselog import add_item_to_database,update_item_in_database
 from models.handleRecaptcha import verify_recaptcha
+from models.invoiceDB import modify_invoice
 
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
 
@@ -30,6 +31,9 @@ def sendtocardknox():
     datafromuser = request.get_json()
     lbendpoint = settings.get('lbendpoint') or config['lbendpoint']
 
+    db_invoice_id = datafromuser.get('dbinvoiceid')  
+    
+        
     
     if (datafromuser['tranzType'] == 'R'):
         recaptcha_response = datafromuser.get('g-recaptcha-response')  # Get the reCAPTCHA token
@@ -261,6 +265,23 @@ def sendtocardknox():
         jsonBody=tockdata
     )
     update_item_in_database(document_id, {'apiResponse':response})
+
+    print(response.get('xResult'))
+    print(response.get('xAuthAmount'))
+    print(response.get('xRefNum'))
+    print(db_invoice_id)
+    paymentToInvoice = {"payments":[{"paidRefnum": response.get('xRefNum'),"paidAmount":response.get('xAuthAmount')}]} 
+
+
+    if response.get('xResult') == 'A':
+        if db_invoice_id:
+
+            result = modify_invoice(db_invoice_id,paymentToInvoice)
+            print(result)
+            
+
+
+
     if (datafromuser['tranzType'] == 'cloudIM' and response['xResult'] == 'S'):
         tockmethod = 'get'
         url = f"https://device.cardknox.com/v1/Session/{response['xSessionId']}"

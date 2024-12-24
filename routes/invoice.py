@@ -52,8 +52,8 @@ def emailInvoice():
         }
 
         
-        invoice_id = create_invoice(new_invoice)
-        print(f"Invoice created with ID: {invoice_id}")
+        db_invoice_id = create_invoice(new_invoice)
+        print(f"Invoice created with ID: {db_invoice_id}")
 
         
         if email and re.match(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
@@ -79,11 +79,11 @@ def emailInvoice():
             encoded_todaysDate = quote_plus(todaysDate)
 
             
-            payURL = f'{base_url}/tranzact?payinvoice=true&name={encoded_name}&invoice={encoded_invoice}&comments={encoded_comments}&amount={encoded_amount}&email={encoded_email}&address={encoded_address}&city={encoded_city}&state={encoded_state}&zip={encoded_zip}&phone={encoded_phone}&todaysDate={encoded_todaysDate}'
+            payURL = f'{base_url}/tranzact?payinvoice=true&dbinvoiceid={db_invoice_id}&name={encoded_name}&invoice={encoded_invoice}&comments={encoded_comments}&amount={encoded_amount}&email={encoded_email}&address={encoded_address}&city={encoded_city}&state={encoded_state}&zip={encoded_zip}&phone={encoded_phone}&todaysDate={encoded_todaysDate}'
 
             subject = f'New Invoice: {invoice}'
             body = f"""
-            Dear {name},  # Keep name unencoded in body for readability
+            Dear {name},  
 
             A new invoice has been created for you. Below are the details:
 
@@ -94,7 +94,7 @@ def emailInvoice():
             Invoice Date: {todaysDate}
 
             Billing Information:
-            Name: {name}  # Keep name unencoded in body for readability
+            Name: {name}  
             Email: {email}
             Address: {address}
             City: {city}
@@ -116,7 +116,7 @@ def emailInvoice():
             print("Invalid or missing email")
         
 
-        return jsonify({"status": "success", "invoice": invoice_id}), 201
+        return jsonify({"status": "success", "invoice": db_invoice_id}), 201
     
     except Exception as e:
         # Log the exception (optional) for debugging purposes

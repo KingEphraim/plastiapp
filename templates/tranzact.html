@@ -268,6 +268,97 @@
         </div>
     </div>
     
+
+    <div class="modal fade" id="emailInvoiceModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="emailInvoiceModal" aria-hidden="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header d-none">
+                  <h1 class="modal-title fs-5" id="userNotificationModalHeader"></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body p-0" id="emailInvoiceModalBody">
+                  <div class="container p-0">
+                      <div class="card shadow-lg">
+                          <div class="card-header bg-secondary text-white text-center py-4" id="emailInvoiceModalCardHeader">
+                              <h3 class="mb-0 text-white">Email Invoice</h3>                              
+                          </div>
+                          <div class="card-body p-4">
+                              <div class="mb-3">
+                                  <h5 class="card-title text-center"  id="emailInvoiceModalCardBodyH">An Email will be sent to the user to pay the invoice.</h5>
+                                  <p class="card-text text-center" id="emailInvoiceModalCardBodyP">Confirm that the info below is correct.</p>
+                              </div>
+                              <hr>                             
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Amount:</strong></div>
+                                <div class="col-6 text-end" id="invoiceAmount">$0.00</div>
+                            </div>                            
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Name:</strong></div>
+                                <div class="col-6 text-end" id="invoiceName"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Email:</strong></div>
+                                <div class="col-6 text-end" id="invoiceEmail"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Address:</strong></div>
+                                <div class="col-6 text-end" id="invoiceAddress"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>City:</strong></div>
+                                <div class="col-6 text-end" id="invoiceCity"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>State:</strong></div>
+                                <div class="col-6 text-end" id="invoiceState"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Zip:</strong></div>
+                                <div class="col-6 text-end" id="invoiceZip"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Invoice:</strong></div>
+                                <div class="col-6 text-end" id="invoiceInvoice"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Comments:</strong></div>
+                                <div class="col-6 text-end" id="invoiceComments"></div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Phone:</strong></div>
+                                <div class="col-6 text-end" id="invoicePhone"></div>
+                            </div>
+                            
+                              <hr>
+                              <div class="text-center mt-3">
+                                  <p class="mb-1"><strong>Contact Support:</strong> support@sola.com</p>
+                                  <p class="mb-0"><strong>Phone:</strong> +1 (844) 227-3566</p>
+                              </div>
+                          </div>
+                          
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer " >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sendInvoiceBtnCancel()">Cancel</button>
+                  <button type="button" class="btn btn-primary" id="sendInvoiceBtn">Send Invoice</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+    
     <div id="dynamicModalContainer"></div>
     {% if user_is_logged_in %}
     <button class="btn btn-outline-secondary position-fixed bottom-0 start-50 translate-middle-x mb-3" type="button"

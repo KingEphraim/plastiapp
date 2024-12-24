@@ -137,6 +137,32 @@ a:hover {
     --bs-btn-bg: #4e8b7e; /* Darker teal on hover */
     --bs-btn-border-color: #4e8b7e;
 }
+
+.btn-secondary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #6c757d; /* Soft gray */
+    --bs-btn-border-color: #6c757d;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #5a6368; /* Darker gray for hover */
+    --bs-btn-hover-border-color: #5a6368;
+    --bs-btn-focus-shadow-rgb: 108, 117, 125;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #4e555b; /* Deeper gray for active */
+    --bs-btn-active-border-color: #4e555b;
+    --bs-btn-disabled-color: #b8bfc3; /* Disabled state in light gray */
+    --bs-btn-disabled-bg: #6c757d;
+    --bs-btn-disabled-border-color: #6c757d;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    --bs-btn-bg: #5a6368; /* Darker gray on hover */
+    --bs-btn-border-color: #5a6368;
+}
+
 .btn-outline-primary {
     --bs-btn-color: #5f9ea0; /* Soft teal-blue for text */
     --bs-btn-bg: transparent; /* Transparent background for outline */
