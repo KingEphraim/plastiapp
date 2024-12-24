@@ -13,6 +13,7 @@ const ccdevicebtncont = document.getElementById("ccdevicebtncont");
 const ebtOnlinebtn = document.getElementById("ebtOnlinebtn");
 const ebtOnlinebtnspin = document.getElementById("ebtOnlinebtnspin");
 const ebtOnlinebtncont = document.getElementById("ebtOnlinebtncont");
+const emailInvoicebtn = document.getElementById("emailInvoicebtn");
 const alertPlaceholder = document.getElementById('TransactionLogsPlaceholder')
 const modalElement = new bootstrap.Modal(document.getElementById('userNotificationModal'));
 const notificationCardHeader = document.getElementById("userNotificationCardHeader");
@@ -22,6 +23,7 @@ const notificationCardBodyP = document.getElementById("userNotificationCardBodyP
 const transactionLogsSubHead = document.getElementById('transactionLogsSubHead');
 let userGooglePay = false;
 let userebtOnline = false;
+let useremailInvoice = false;
 
 
 
@@ -255,6 +257,7 @@ async function loadSettings() {
             user3ds = data.settings.threeds;
             userGooglePay = data.settings.googlePay;
             userebtOnline = data.settings.ebtOnline;
+            useremailInvoice = data.settings.emailInvoice;
             ccdevice = data.settings.ccdevice;
             transactionLogsSubHead.append(` (Key in use: ${userKey})`)
             console.log('Settings loaded successfully!', data);
@@ -327,24 +330,19 @@ window.onload = function () {
         }
 
         if (userebtOnline === true) {
-
-
             document.getElementById("ebtOnlinebtndiv").classList.remove('d-none');
-
-        } else if (userebtOnline === false) {
-
-        } else {
-
         }
-
+        
+        if (useremailInvoice === true) {
+            document.getElementById("emailInvoicebtndiv").classList.remove('d-none');
+        }
+        
         if (ccdevice === true) {
-
             document.getElementById("ccdevicebtndiv").classList.remove('d-none');
-        } else if (ccdevice === false) {
-
-        } else {
-
         }
+        
+
+
     })();
     enableAutoFormatting();
     let style = {
@@ -521,6 +519,30 @@ ebtOnlinebtn.addEventListener("click", () => {
 
         data = sendtoserver(formDataJSON)
     }, 10000,);
+});
+
+emailInvoicebtn.addEventListener("click", () => {
+    
+    emailInvoiceSpinner()
+    setAccount("ifields_ephraimdev1f011616e4ba4f75b0bbcf26417", "tranzact", "1.0");
+    getTokens(function () {
+        var formData = {};
+        var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
+
+        fields.forEach(function (field) {
+            formData[field] = document.getElementById(field).value;
+        });        // Format the "exp" field
+        formData['exp'] = formatExp(formData['exp']);
+
+        formData['tranzType'] = "emailInvoice";
+        // Convert JSON to string for display or further processing
+        var formDataJSON = formData;
+
+        
+        createInvoiceResponse = createInvoice('/emailInvoice', formDataJSON)
+        emailInvoiceSpinner()
+    }, 10000,);
+
 });
 
 
@@ -831,6 +853,15 @@ function ccdevicebtntoggle(state) {
         console.error('Invalid state. Please provide "on" or "off".');
     }
 }
+
+function emailInvoiceSpinner() {
+    var emailInvoicespinner = document.getElementById('emailInvoicebtnspin');
+    var emailInvoiceText = document.getElementById('emailInvoicebtncont');
+    
+    // Toggle visibility
+    emailInvoicespinner.hidden = !emailInvoicespinner.hidden;
+    emailInvoiceText.hidden = !emailInvoiceText.hidden;
+  }
 
 function ebtOnlinebtntoggle(state) {
 

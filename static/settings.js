@@ -6,7 +6,7 @@ const createdevicebtnspin = document.getElementById("createdevicebtnspin");
 const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
-const fields = ["key", "command", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate"];
+const fields = ["key", "command", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice"];
 
 const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
@@ -27,7 +27,7 @@ const updateLabel = (checkboxId, labelId) => {
 };
 
 // Event listener for checkbox state updates
-["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate"].forEach(id => {
+["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice"].forEach(id => {
     document.getElementById(id).addEventListener("change", () => {
         updateLabel(id, `${id}Label`);
     });
@@ -61,7 +61,7 @@ const toggleButtonState = (state) => {
 const saveSettings = () => {
     toggleButtonState('off');
     const formData = fields.reduce((data, field) => {
-        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate"].includes(field)) {
+        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice"].includes(field)) {
             data[field] = document.getElementById(field).checked;
         } else {
             data[field] = document.getElementById(field).value;
@@ -152,7 +152,7 @@ const loadSettings = () => {
                 }
 
                 // Update labels
-                ["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate"].forEach(id => updateLabel(id, `${id}Label`));
+                ["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice"].forEach(id => updateLabel(id, `${id}Label`));
 
                 console.log('Settings loaded successfully!');
             } else {

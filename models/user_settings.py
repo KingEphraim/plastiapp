@@ -38,6 +38,7 @@ class UserSettingsManager:
                     "deviceFriendlyName": 1,
                     "deviceId": 1,
                     "allowDuplicate": 1,
+                    "emailInvoice": 1,
                 },
             )
             if not self.user_settings:

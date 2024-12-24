@@ -26,17 +26,22 @@
               <span class="loader" id="loader" ></span>
               <header class="text-center ">
                 <div class="container">
-                    <h1 class="display-4">Welcome to Tranzact</h1>
-                    <p class="lead">Secure and reliable payment processing made easy</p>
+                    <h1 class="display-4">Sola Payments</h1>
+                    <p class="lead">Checkout page</p>
                 </div>
             </header>
               {% if not user_is_logged_in %}
               <p class="text-center"><small>Log in to access all features, including settings, transaction logs, and the ability to void transactions. 🔒</small></p>
               {% endif %}
-              <form class="row g-3" >
+              <form class="row" >
+                <div class="d-flex align-items-center mt-4">
+                  <div class="flex-grow-1 border-top"></div>
+                  <span class="mx-3 text-muted">Customer Information</span>
+                  <div class="flex-grow-1 border-top"></div>
+                </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="name">Full name</label>
-                  <input type="text" class="form-control input-style " id="name" placeholder="John Doe"  required>
+                  <input type="text" class="form-control input-style " id="name" placeholder="John Doe" value="{{ name }}" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="email">Email</label>
@@ -46,6 +51,7 @@
                   <label class="form-label input-label-style" for="phone">Phone number</label>
                   <input type="tel" class="form-control input-style" id="phone" placeholder="(123) 456-7890" required>
                 </div>
+                
                 <div class="col-md-3">
                   <label class="form-label input-label-style" for="address">Address</label>
                   <input type="text" class="form-control input-style" id="address" placeholder="1234 Main St" required>
@@ -114,7 +120,11 @@
                   <label class="form-label input-label-style" for="zip">Zip</label>
                   <input type="text" class="form-control input-style" id="zip" placeholder="12345" required>
                 </div>
-      
+                <div class="d-flex align-items-center mt-5">
+                  <div class="flex-grow-1 border-top"></div>
+                  <span class="mx-3 text-muted">Invoice Details</span>
+                  <div class="flex-grow-1 border-top"></div>
+                </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="invoice">Invoice</label>
                   <input type="text" class="form-control input-style" id="invoice" placeholder="I-12345" required>
@@ -125,9 +135,13 @@
                 </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="amount">Amount</label>
-                  <input type="text" class="form-control input-style" id="amount" placeholder="1.99" required>
+                  <input type="text" class="form-control input-style" id="amount" placeholder="1.99" value="{{ amount }}" required>
                 </div>
-      
+                <div class="d-flex align-items-center mt-5">
+                  <div class="flex-grow-1 border-top"></div>
+                  <span class="mx-3 text-muted">Payment Information</span>
+                  <div class="flex-grow-1 border-top"></div>
+                </div>
                 <div class="col-md-4">
                   <label class="form-label input-label-style" for="card">Card Number</label>
                   <iframe class="ifields-iframe" data-ifields-id="card-number" data-ifields-placeholder="4444 3333 2222 1111"
@@ -145,22 +159,28 @@
                   <input type="hidden" class="form-control" id="cvv" data-ifields-id="cvv-token">
                 </div>
                 
-                <div class="col-12 d-grid gap-2">
+                <div class="col-12 d-grid gap-2 mb-3">
                   <button class="btn btn-primary" type="button" id="sbmtbtn">
                     <span hidden id="sbmtbtnspin" class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                     <span id="sbmtbtncont" role="status">Pay with card</span>
                   </button>
                 </div>
       
-                <div id="ebtOnlinebtndiv" class="col-12 d-grid gap-2 d-none" >                  
+                <div id="ebtOnlinebtndiv" class="col-12 d-grid gap-2 d-none mb-3" >                  
                     <button class="btn btn-primary" type="button" id="ebtOnlinebtn">
                       <span hidden id="ebtOnlinebtnspin" class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                       <span id="ebtOnlinebtncont" role="status">Pay with EBT card</span>
                     </button>
                   
                 </div>
-      
-                <div id="ccdevicebtndiv" class="col-12 d-grid gap-2 d-none" >
+                <div id="emailInvoicebtndiv" class="col-12 d-grid gap-2 d-none mb-3" >                  
+                  <button class="btn btn-primary" type="button" id="emailInvoicebtn">
+                    <span hidden id="emailInvoicebtnspin" class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                    <span id="emailInvoicebtncont" role="status">Email Invoice</span>
+                  </button>
+                
+              </div>
+                <div id="ccdevicebtndiv" class="col-12 d-grid gap-2 d-none mb-3" >
                     
                       <button class="btn btn-primary" type="button" id="ccdevicebtn">
                         <span hidden id="ccdevicebtnspin" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
@@ -271,6 +291,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
         <script src="{{ url_for('static', filename='applePay.js') }}"></script>
+        <script src="{{ url_for('static', filename='invoice.js') }}"></script>
     <script src="{{ url_for('static', filename='tranzact.js') }}"></script>
     
 </body>
