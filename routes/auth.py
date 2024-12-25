@@ -116,7 +116,7 @@ def login():
                     log_details = get_request_details()
                     add_to_log(f"Login failed: Incorrect password for user '{username}'. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Incorrect password.'})
-
+                session.permanent = True
                 session['username'] = username
                 session['user_is_logged_in'] = True
                 session['emailInvoice'] = user['emailInvoice']
