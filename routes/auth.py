@@ -119,7 +119,8 @@ def login():
                 session.permanent = True
                 session['username'] = username
                 session['user_is_logged_in'] = True
-                session['emailInvoice'] = user['emailInvoice']
+                if 'emailInvoice' in user:
+                    session['emailInvoice'] = user['emailInvoice']
 
                 log_details = get_request_details()
                 add_to_log(f"Login successful for user '{username}'. {log_details}")
