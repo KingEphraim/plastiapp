@@ -265,11 +265,7 @@ def sendtocardknox():
         jsonBody=tockdata
     )
     update_item_in_database(document_id, {'apiResponse':response})
-
-    print(response.get('xResult'))
-    print(response.get('xAuthAmount'))
-    print(response.get('xRefNum'))
-    print(db_invoice_id)
+    
     paymentToInvoice = {"payments":[{"paidRefnum": response.get('xRefNum'),"paidAmount":response.get('xAuthAmount')}]} 
 
 

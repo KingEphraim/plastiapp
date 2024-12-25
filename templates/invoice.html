@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tranzact</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favcon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/default.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+    
+    
+    <script src="https://cdn.cardknox.com/ifields/2.15.2409.2601/ifields.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB"></script>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container">
+      
+        <div class="row justify-content-center">
+          
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-10">
+            
+            <div class="tranzact-form card card-loading">
+              <span class="loader" id="loader" ></span>
+              <header class="text-center ">
+                <div class="container">
+                    <h1 class="display-4">Sola Payments</h1>
+                    <p class="lead">Invoices</p>
+                </div>
+            </header>
+            
+            <table id="invoiceTable" class="table table-striped">
+              <thead>
+                  <tr>
+                    <th>Invoice#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Address</th>
+                      <th>Phone</th>
+                      <th>Item</th>
+                      <th>Paid Amount</th>
+                      <th>Total</th>
+                      <th>Status</th>                      
+                  </tr>
+              </thead>
+              <tbody>
+                  
+              </tbody>
+
+
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      
+  
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+        
+        <script src="{{ url_for('static', filename='invoice.js') }}"></script>
+    
+    
+</body>
+
+</html>

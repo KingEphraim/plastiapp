@@ -1,17 +1,44 @@
-from flask import Blueprint,request,jsonify
-from models.invoiceDB import create_invoice
+from flask import Blueprint,request,jsonify,render_template,session,redirect,url_for
+from models.invoiceDB import create_invoice,list_invoices
 from datetime import datetime
 import re
 from models.sendEmail import send_email
 from urllib.parse import quote_plus
 
+
 invoice__bp = Blueprint('invoice', __name__)
 
-@invoice__bp.route('/invoice', methods=['POST'])
+@invoice__bp.route('/invoice', methods=['GET'])
 def invoice():
-    return
+    
+    user_is_logged_in = "username" in session
 
-from flask import jsonify, request
+    if 'username' not in session:        
+        return redirect(url_for('auth.login'))    
+    return render_template('invoice.html',user_is_logged_in=user_is_logged_in)
+
+@invoice__bp.route('/listInvoices')
+def listInvoices():
+    username = session.get('username')    
+    invoices = list_invoices(username) 
+    for invoice in invoices:
+        full_address = f"{invoice['address']}, {invoice['city']}, {invoice['state']} {invoice['zip']}"
+        invoice['fullAddress'] = full_address        
+        del invoice['address']
+        del invoice['city']
+        del invoice['state']
+        del invoice['zip']
+        formatted_items = [f"Name:{item['name']} Price:{item['price']}" for item in invoice['items']]
+        invoice['items'] = formatted_items
+        if 'payments' in invoice:
+            formatted_payments = [f"Refnum:{payment['paidRefnum']} Paid:{payment['paidAmount']}\n" for payment in invoice['payments']]
+            invoice['payments'] = formatted_payments
+        else:
+            invoice['payments'] = []  
+    print(invoices)
+    return jsonify(invoices)
+
+
 
 @invoice__bp.route('/emailInvoice', methods=['POST'])
 def emailInvoice():
@@ -35,6 +62,7 @@ def emailInvoice():
             return jsonify({"error": "No data provided"}), 400
         
         new_invoice = {
+        "accountUsername": session.get('username'),
         "customer_name": name,
         "email": email,
         "address": address,

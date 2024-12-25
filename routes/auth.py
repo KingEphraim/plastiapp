@@ -96,6 +96,9 @@ def login():
             try:
                 username = datafromuser.get('username')
                 password = datafromuser.get('password')
+                
+                     
+                
 
                 if not username or not password:
                     log_details = get_request_details()
@@ -103,7 +106,7 @@ def login():
                     return jsonify({'status': 'fail', 'message': 'Missing username or password.'})
 
                 user = users_collection.find_one({"username": username})
-
+                
                 if not user:
                     log_details = get_request_details()
                     add_to_log(f"Login failed: User '{username}' not found. {log_details}")
@@ -116,6 +119,7 @@ def login():
 
                 session['username'] = username
                 session['user_is_logged_in'] = True
+                session['emailInvoice'] = user['emailInvoice']
 
                 log_details = get_request_details()
                 add_to_log(f"Login successful for user '{username}'. {log_details}")

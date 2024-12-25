@@ -97,17 +97,18 @@ def view_invoice(invoice_id):
         invoice["_id"] = str(invoice["_id"])  # Convert ObjectId to string for easier handling
     return invoice
 
-# Function to list all invoices
-def list_invoices():
+def list_invoices(username):
     """
-    Retrieves all invoices from the MongoDB collection.
+    Retrieves all invoices for a specific user from the MongoDB collection.
 
-    :return: A list of all invoice documents
+    :param username: The username to filter invoices by
+    :return: A list of invoice documents matching the given username
     """
-    invoices = list(invoices_collection.find())
+    invoices = list(invoices_collection.find({"accountUsername": username}))
     for invoice in invoices:
         invoice["_id"] = str(invoice["_id"])  # Convert ObjectId to string
     return invoices
+
 
 # Function to delete an invoice
 def delete_invoice(invoice_id):

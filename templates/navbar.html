@@ -23,6 +23,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('tranzact.tranzact') }}">Tranzact</a>
                 </li>
+                {% if session.emailInvoice %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('invoice.invoice') }}">Invoice</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('ewiclist') }}">Ewic List</a>
                 </li>

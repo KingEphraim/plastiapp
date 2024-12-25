@@ -10,6 +10,7 @@ def load_settings():
         return jsonify({'status': 'fail', 'message': 'User not logged in.'}), 403
 
     username = session['username']
+    
     try:
         user_settings = users_collection.find_one({"username": username}, {"_id": 0})
         if user_settings:
