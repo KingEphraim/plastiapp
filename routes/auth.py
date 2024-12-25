@@ -156,7 +156,7 @@ def logout():
     else:
         add_to_log(f"Logout attempt with no user logged in. {log_details}")
     
-    session.pop("username", None)
+    session.clear()
     return redirect(url_for("auth.login"))
 
 @auth_bp.route("/reset_password_request", methods=["GET", "POST"])
