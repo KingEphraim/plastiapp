@@ -577,7 +577,7 @@ sendInvoiceBtn.addEventListener("click", () => {
         // Convert JSON to string for display or further processing
         var formDataJSON = formData;        
 
-        createInvoice('/emailInvoice', formDataJSON)
+        fetchData('/emailInvoice', formDataJSON)
             .then(createInvoiceResponse => {
                 console.log('createInvoiceResponse:', createInvoiceResponse);
                 if (createInvoiceResponse.status === "success") {
