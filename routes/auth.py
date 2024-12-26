@@ -168,7 +168,15 @@ def delete_user():
         add_to_log(f"Unauthorized delete user attempt. {log_details}")
         return jsonify({'status': 'fail', 'message': 'Unauthorized access.'}), 401
 
-    data = request.get_json()
+    
+    try:
+        data = request.get_json()
+    except Exception as e:
+        # Handle the exception appropriately
+        print(f"Error parsing JSON: {e}")
+        # Return an error response to the client
+        return jsonify({"error": "Invalid JSON"}), 400  # 400 Bad Request
+    
     username_to_delete = data.get("username")
 
     if not username_to_delete:

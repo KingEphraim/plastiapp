@@ -7,6 +7,7 @@ const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
 const fields = ["key", "command", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice"];
+let currentUserSettings = {};
 
 const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
@@ -120,6 +121,7 @@ const sendToServer = (data) => {
 };
 
 // Function to load settings
+
 const loadSettings = () => {
     fetch('/load_settings', {
         method: 'GET',
@@ -128,6 +130,7 @@ const loadSettings = () => {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
+                currentUserSettings = data.settings;
                 if (Array.isArray(fields)) {
                     fields.forEach(field => {
                         const value = data.settings[field];
@@ -173,6 +176,26 @@ window.onload = function () {
 
 savebtn.addEventListener("click", saveSettings);
 createdevicebtn.addEventListener("click", createDevice);
+
+
+document.getElementById('deleteUserBtn').addEventListener('click', () => {
+    if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+      toggleButtonSpinner('deleteUserBtn'); 
+      var user = { username: currentUserSettings.username };
+      fetchResponse = fetchData('/delete_user', user)
+      .then(data => {
+        if (data.status === 'success') {            
+            console.log(data.message);
+            window.location.href = '/';            
+        } else {            
+            console.error('User deletion failed:', data.message || 'Unknown error');            
+        }
+    }) 
+      
+      toggleButtonSpinner('deleteUserBtn'); 
+    }
+  });
+
 
 
 // Function to hide all sections
@@ -244,3 +267,17 @@ document.getElementById('cloudim-link').addEventListener('click', function (e) {
 // Show the profile section by default
 showSection('profile-section');
 updateActiveLink('profile-link'); // Highlight the default section
+
+function toggleButtonSpinner(buttonId) {
+    var button = document.getElementById(buttonId);
+    var spinner = document.getElementById(buttonId + 'Spinner');
+    var span = document.getElementById(buttonId + 'Span');
+
+    if (button && spinner && span) {
+        button.disabled = !button.disabled;
+        spinner.hidden = !spinner.hidden;
+        span.hidden = !span.hidden;
+    } else {
+        console.error(`One or more elements for the buttonId '${buttonId}' are not found.`);
+    }
+}
