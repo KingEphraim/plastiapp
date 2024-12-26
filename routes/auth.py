@@ -160,6 +160,56 @@ def logout():
     session.clear()
     return redirect(url_for("auth.login"))
 
+
+@auth_bp.route("/delete_user", methods=["POST"])
+def delete_user():
+    if "username" not in session:
+        log_details = get_request_details()
+        add_to_log(f"Unauthorized delete user attempt. {log_details}")
+        return jsonify({'status': 'fail', 'message': 'Unauthorized access.'}), 401
+
+    data = request.get_json()
+    username_to_delete = data.get("username")
+
+    if not username_to_delete:
+        log_details = get_request_details()
+        add_to_log(f"Delete user failed: No username provided. {log_details}")
+        return jsonify({'status': 'fail', 'message': 'Username is required.'})
+
+    # Ensure the user is authorized to delete the account
+    current_user = session["username"]
+    if current_user != username_to_delete and not session.get("is_admin"):
+        log_details = get_request_details()
+        add_to_log(f"Delete user failed: '{current_user}' attempted to delete '{username_to_delete}'. {log_details}")
+        return jsonify({'status': 'fail', 'message': 'Permission denied.'}), 403
+
+    try:
+        # Check if the user exists
+        user = users_collection.find_one({"username": username_to_delete})
+        if not user:
+            log_details = get_request_details()
+            add_to_log(f"Delete user failed: User '{username_to_delete}' not found. {log_details}")
+            return jsonify({'status': 'fail', 'message': 'User not found.'})
+
+        # Delete the user
+        users_collection.delete_one({"username": username_to_delete})
+        
+        log_details = get_request_details()
+        add_to_log(f"User '{username_to_delete}' was deleted by '{current_user}'. {log_details}")
+        
+        # Clear session if the current user deletes their own account
+        if current_user == username_to_delete:
+            session.clear()
+        
+        return jsonify({'status': 'success', 'message': f"User '{username_to_delete}' has been deleted."})
+    except Exception as e:
+        error_message = str(e)
+        log_details = get_request_details()
+        add_to_log(f"Error while deleting user '{username_to_delete}': {error_message}. {log_details}")
+        return jsonify({'status': 'error', 'message': 'An error occurred while deleting the user.'})
+
+
+
 @auth_bp.route("/reset_password_request", methods=["GET", "POST"])
 def reset_password_request():
     if request.method == "GET":
