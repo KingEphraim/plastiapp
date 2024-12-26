@@ -137,17 +137,22 @@ const loadSettings = () => {
                         const element = document.getElementById(field);
 
                         if (element) {
-                            if (field === "key") {
-                                const currentKeyElement = document.getElementById("key");                                
-                                currentKeyElement.placeholder = value || '';
-                            } else {
-                                if (element.type === "checkbox") {
-                                    element.checked = value || false;
+                            if (value !== undefined && value !== null) { // Ensure value is defined and not null
+                                if (field === "key") {
+                                    const currentKeyElement = document.getElementById("key");
+                                    if (currentKeyElement) {
+                                        currentKeyElement.placeholder = value;
+                                    }
                                 } else {
-                                    element.value = value || '';
+                                    if (element.type === "checkbox") {
+                                        element.checked = value; // Set checked state
+                                    } else {
+                                        element.value = value; // Set value
+                                    }
                                 }
                             }
                         }
+                        
                     });
 
                 } else {
