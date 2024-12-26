@@ -3,10 +3,15 @@ const message = document.getElementById("message");
 const userName = document.getElementById("username");
 const userEmail = document.getElementById("email");
 
-// Validation functions
 function validateUsername(username) {
-    // Check if username is at least 6 alphanumeric characters
-    return /^[a-zA-Z0-9]{6,}$/.test(username);
+    // Check if username meets the criteria:
+    // - At least 6 characters long
+    // - Only alphanumeric, underscores, and hyphens
+    // - No spaces
+    // - Cannot start or end with an underscore or hyphen
+    const regex = /^(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]{6,}$/;
+    const isValid = regex.test(username) && !/^[-_]|[-_]$/.test(username);
+    return isValid;
 }
 
 function validateEmail(email) {
@@ -27,7 +32,7 @@ registerbtn.addEventListener("click", function () {
         if (field === "username") {
             if (!validateUsername(value)) {
                 isValid = false;
-                message.innerText = "Please enter a Username that is at least 6 characters";
+                message.innerText = "Username must be at least 6 characters and can include letters, numbers, underscores, or hyphens—no special characters at the start or end.";
             }
         } else if (field === "email") {
             if (!validateEmail(value)) {
