@@ -23,9 +23,11 @@ const notificationCardHeaderP = document.getElementById("userNotificationCardHea
 const notificationCardBodyH = document.getElementById("userNotificationCardBodyH");
 const notificationCardBodyP = document.getElementById("userNotificationCardBodyP");
 const transactionLogsSubHead = document.getElementById('transactionLogsSubHead');
+const tapToPhoneBtn = document.getElementById("tapToPhoneBtn");
 let userGooglePay = false;
 let userebtOnline = false;
 let useremailInvoice = false;
+let usertapToPhone = false;
 
 
 
@@ -260,6 +262,7 @@ async function loadSettings() {
             userGooglePay = data.settings.googlePay;
             userebtOnline = data.settings.ebtOnline;
             useremailInvoice = data.settings.emailInvoice;
+            usertapToPhone = data.settings.tapToPhone;
             ccdevice = data.settings.ccdevice;
             transactionLogsSubHead.append(` (Key in use: ${userKey})`)
             console.log('Settings loaded successfully!', data);
@@ -338,6 +341,9 @@ window.onload = function () {
         if (useremailInvoice === true) {
             document.getElementById("emailInvoicebtndiv").classList.remove('d-none');
         }
+        if (usertapToPhone === true) {
+            document.getElementById("tapToPhoneBtnDiv").classList.remove('d-none');
+        }
 
         if (ccdevice === true) {
             document.getElementById("ccdevicebtndiv").classList.remove('d-none');
@@ -412,6 +418,49 @@ window.onload = function () {
             setIfieldStyle('cvv', style);
         }
     });
+
+    const tapToPhonestatusUrlParams = new URLSearchParams(window.location.search);
+    const tapToPhonestatus = tapToPhonestatusUrlParams.get('xStatus');
+    
+    if (tapToPhonestatus) {
+        if (tapToPhonestatus === 'Success') {
+            // Do something on success
+            alert('Transaction successful!');
+            var formData = {};
+            var fields = ["name", "email", "address", "city", "state", "zip", "invoice", "comments", "amount", "card", "exp", "cvv", "phone"];
+    
+            fields.forEach(function (field) {
+                formData[field] = document.getElementById(field).value;
+            });
+    
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6LfF85YqAAAAAKSObF9eWGm-WNIhz18hdNZq3KcB', { action: 'checkout' }).then(function (token) {
+                    formData['g-recaptcha-response'] = token; // Add reCAPTCHA token to form data           
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.has('xEncryptedPayload')) {
+                        const encryptedPayload = urlParams.get('xEncryptedPayload'); 
+                        console.log(`Encrypted Payload: ${encryptedPayload}`);
+                        formData['encryptedPayload'] = encryptedPayload; 
+                    }
+                    // Format the "exp" field
+                    formData['exp'] = formatExp(formData['exp']);
+    
+                    formData['tranzType'] = "R";
+                    // Convert JSON to string for display or further processing
+                    var formDataJSON = JSON.stringify(formData);
+    
+                    sendtoserver(formDataJSON)
+    
+                });
+            });
+            
+        } else {
+            // Show an alert for failure or unknown status
+            alert('Something went wrong, please try again.');
+        }
+    };   
+
+
 };
 
 
@@ -602,6 +651,40 @@ sendInvoiceBtn.addEventListener("click", () => {
 function sendInvoiceBtnCancel() {
     emailInvoiceSpinner()
 }
+
+
+tapToPhoneBtn.addEventListener("click", () => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (!isMobile) {
+        alert("This feature is designed for mobile devices.");
+        return;
+    }
+    
+    const cardknoxUrl = `cardknox://tap.cardknox.com/transaction?xCommand=cc:encrypt&xRedirectURL=${encodeURIComponent(window.location.href)}`;
+    const fallbackUrl = "https://play.google.com/store/apps/details?id=com.cardknox.tap.prod";
+    
+    // Attempt to open the Cardknox app
+    const openApp = () => {
+        window.location.href = cardknoxUrl;
+        
+        // If the app is not installed, fallback to the Play Store
+        setTimeout(() => {
+            window.location.href = fallbackUrl;
+        }, 2000);
+    };   
+
+    // Delay the redirection to avoid immediate fallback, improving user experience
+    setTimeout(openApp, 1000); 
+});
+
+
+
+
+
+
+
+
 function showAcuPinPad(data, action) {
     // Generate the modal content
     const modalHtml = `

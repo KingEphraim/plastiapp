@@ -75,6 +75,7 @@ def sendtocardknox():
             'xCardnum': datafromuser['card'],
             'xExp': datafromuser['exp'],
             'xCvv': datafromuser['cvv'],
+            'xEMVData': datafromuser.get('encryptedPayload', '')
         }
     elif (datafromuser['tranzType'] == 'void'):
         tockmethod = 'post'

@@ -39,6 +39,7 @@ class UserSettingsManager:
                     "deviceId": 1,
                     "allowDuplicate": 1,
                     "emailInvoice": 1,
+                    "tapToPhone": 1,
                 },
             )
             if not self.user_settings:
