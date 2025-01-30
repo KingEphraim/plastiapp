@@ -860,7 +860,7 @@ function sendtoserver(serverdata) {
 }
 
 //googlepay object
-const gpRequest = {
+var gpRequest = {
     merchantInfo: {
         merchantName: "Tranzact",
     },
