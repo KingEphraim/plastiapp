@@ -110,7 +110,7 @@ function onPaymentAuthorize(applePayload, totalAmount) {
 }
 
 // Main AP request object
-const apRequest = {
+var apRequest = {
     buttonOptions: {
         buttonContainer: "ap-container",
         buttonColor: APButtonColor.black,
