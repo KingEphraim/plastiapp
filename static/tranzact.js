@@ -473,13 +473,12 @@ function handle3DSResults(x3dsActionCode, xCavv, xEci, xRefNum, x3dsAuthenticati
 
     var postData = {
         tranzType: "V",
-        x3dsActionCode: x3dsActionCode,
-        xCavv: xCavv,
-        xEci: xEci,
-        xRefNum: xRefNum,
-        x3dsAuthenticationStatus: x3dsAuthenticationStatus,
-        x3dsSignatureVerificationStatus: x3dsSignatureVerificationStatus,
-        //x3dsError: ck3DS.error
+        x3dsActionCode,
+        xCavv,
+        xEci,
+        xRefNum,
+        x3dsAuthenticationStatus,
+        x3dsSignatureVerificationStatus,
     };
     sendtoserver(JSON.stringify(postData))
 }
@@ -661,7 +660,7 @@ tapToPhoneBtn.addEventListener("click", () => {
         return;
     }
     
-    const cardknoxUrl = `cardknox://tap.cardknox.com/transaction?xCommand=cc:encrypt&xRedirectURL=${encodeURIComponent(window.location.href)}`;
+    const cardknoxUrl = `cardknox://tap.cardknox.com/transaction?xKey=ifields_ephraimdev1f011616e4ba4f75b0bbcf26417&xCommand=cc:singleusetoken&xRedirectURL=${encodeURIComponent(window.location.href)}`;
     const fallbackUrl = "https://play.google.com/store/apps/details?id=com.cardknox.tap.prod";
     
     // Attempt to open the Cardknox app
@@ -805,8 +804,9 @@ function sendtoserver(serverdata) {
                 ckResponse = data.ckResponse
 
                 if (ckResponse.xResult == "A" || ckResponse.xResult == "S") {
+                    console.log(ckResponse);
                     if (ckResponse.xResult == "A" && ckRequest.xCommand == "ebtonline:initiate") {
-                        console.log(ckResponse);
+                        
 
                         // Check if the environment is local (localhost or 127.0.0.1)
                         const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
@@ -832,7 +832,8 @@ function sendtoserver(serverdata) {
                     }
 
                 }
-                else if (ckResponse.xResult == "V") {
+                else if (ckResponse.xResult == "V") {       
+                    console.log(ckResponse);             
                     verify3DS(ckResponse)
                     appendAlert(JSON.stringify(ckResponse), 'info', 'off', 'on', ckRequest);
                 }

@@ -273,8 +273,8 @@ def sendtocardknox():
     if response.get('xResult') == 'A':
         if db_invoice_id:
 
-            result = modify_invoice(db_invoice_id,paymentToInvoice)
-            print(result)
+            modify_invoice(db_invoice_id,paymentToInvoice)
+            
             
 
 

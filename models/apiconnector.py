@@ -1,8 +1,7 @@
 import requests
 
 def send_api_request(method="POST", url=None, headers=None, jsonBody=None, params=None):
-    try:
-        print(url)
+    try:        
         # Ensure the method is uppercase (in case it's provided in lowercase)
         method = method.upper()
 
