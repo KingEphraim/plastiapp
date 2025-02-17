@@ -7,7 +7,25 @@ const createdevicebtncont = document.getElementById("createdevicebtncont");
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
 const fields = ["key", "command","voidtype", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice","tapToPhone"];
+const userName = document.getElementById("username");
+const userEmail = document.getElementById("useremail");
 let currentUserSettings = {};
+
+function validateUsername(username) {
+    // Check if username meets the criteria:
+    // - At least 6 characters long
+    // - Only alphanumeric, underscores, and hyphens
+    // - No spaces
+    // - Cannot start or end with an underscore or hyphen
+    const regex = /^(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]{6,}$/;
+    const isValid = regex.test(username) && !/^[-_]|[-_]$/.test(username);
+    return isValid;
+}
+
+function validateEmail(useremail) {
+    // Check if email is valid
+    return /\S+@\S+\.\S+/.test(useremail);
+}
 
 const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
@@ -61,16 +79,58 @@ const toggleButtonState = (state) => {
 // Function to save settings
 const saveSettings = () => {
     toggleButtonState('off');
-    const formData = fields.reduce((data, field) => {
-        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
-            data[field] = document.getElementById(field).checked;
-        } else {
-            data[field] = document.getElementById(field).value;
-        }
-        return data;
-    }, { tranzType: "S" });
 
-    sendToServer(JSON.stringify(formData));
+
+
+    var formData = {};
+    var fields = ["username", "useremail"];
+    var isValid = true;
+        // Validate form fields
+        fields.forEach(function (field) {
+            var value = document.getElementById(field).value;
+            formData[field] = value;
+    
+            if (field === "username") {
+                if (!validateUsername(value)) {
+                    isValid = false;
+                    appendAlert('Username must be at least 6 characters and can include letters, numbers, underscores, or hyphens—no special characters at the start or end.', 'danger');
+                   
+                }
+            } else if (field === "useremail") {
+                if (!validateEmail(value)) {
+                    isValid = false;
+                    appendAlert('Please enter a valid email address.', 'danger');
+                }
+            }
+        });
+
+        if(isValid) {
+            if (userName.value !== currentUserSettings.username) {
+
+
+                if (confirm('You are about to change your username. This will log you out and you will need to log back in with your new username.')) {
+                    
+                    
+                }else{
+                    toggleButtonState('on');
+                    return;
+                }
+            }
+
+
+            const formData = fields.reduce((data, field) => {
+                if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
+                    data[field] = document.getElementById(field).checked;
+                } else {
+                    data[field] = document.getElementById(field).value;
+                }
+                return data;
+            }, { tranzType: "S" });
+        
+            sendToServer(JSON.stringify(formData));
+        }
+
+
 };
 
 // Function to create device

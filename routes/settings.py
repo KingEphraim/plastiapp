@@ -46,20 +46,33 @@ def save_settings():
     if "username" not in session:
         return jsonify({'status': 'fail', 'message': 'User not logged in.'}), 403
 
-    username = session['username']
+    current_username = session['username']
     settings_data = request.get_json()
+
     if not settings_data:
         return jsonify({'status': 'fail', 'message': 'Invalid JSON data.'})
 
-    # Check if "key" is in settings_data and is empty, and remove it
+    # Check if "key" is in settings_data and is empty, then remove it
     if 'key' in settings_data and not settings_data['key']:
         del settings_data['key']
 
     try:
-        users_collection.update_one({"username": username}, {"$set": settings_data})
+        # Check if username is updated
+        new_username = settings_data.get('username')
+        username_changed = new_username and new_username != current_username
+
+        # Update user settings in DB
+        users_collection.update_one({"username": current_username}, {"$set": settings_data})
+
+        # If username changed, log out the user
+        if username_changed:
+            session.clear()
+            return jsonify({'status': 'success', 'message': 'Username updated. Please log in again.'}), 401
+
         return jsonify({'status': 'success', 'message': 'Settings updated successfully!'})
     except OperationFailure as e:
-        return jsonify({'status': 'error', 'message': str(e)})
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 
 @settings_bp.route('/settings')
