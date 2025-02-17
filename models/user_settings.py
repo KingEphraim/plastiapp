@@ -31,6 +31,7 @@ class UserSettingsManager:
                     "lbendpoint": 1,
                     "key": 1,
                     "command": 1,
+                    "voidtype": 1,
                     "ebtcommand": 1,
                     "phone": 1,
                     "deviceSerialNumber": 1,

@@ -86,7 +86,7 @@ def sendtocardknox():
             'xSoftwareName': 'tranzact',
             'xSoftwareVersion': '1.0',
             'xIP': request.headers.get('X-Forwarded-For', request.remote_addr),
-            'xCommand': 'cc:voidrefund',
+            'xCommand': settings.get('voidtype', "cc:voidrefund"),
             'xRefNum': datafromuser.get('refnum', None),
         }
     elif (datafromuser['tranzType'] == 'capture'):
