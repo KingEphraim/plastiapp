@@ -192,6 +192,30 @@
                                         </div>
                                     </div>
 
+                                                                        <!-- EBT Online Toggle -->
+                                                                        <div class="col-12 text-start my-3">
+                                                                            <div class="form-group">
+                                                                                <label class="control-label d-block text-start">EBT Online</label>
+                                                                                <input type="checkbox" class="btn-check" id="ebtOnline" autocomplete="off">
+                                                                                <label class="btn btn-outline-success" for="ebtOnline" id="ebtOnlineLabel">EBT
+                                                                                    Online</label>
+                                                                            </div>
+                                                                        </div>
+                                    
+                                                                        <!-- EBT Transaction Type -->
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="form-group">
+                                                                                <label for="ebtcommand" class="control-label">EBT Transaction Type</label>
+                                                                                <select id="ebtcommand" class="form-control input-style" required>
+                                                                                    <option value="" disabled >Select Transaction Type</option>
+                                                                                    <option value="ebtonline:fssale" selected>FS Sale</option>
+                                                                                    <option value="ebtonline:cbsale">CB Sale</option>
+                                                                                    <option value="ebtonline:balance">Balance</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+
                                     <div class="col-12 text-start my-3">
                                         <div class="form-group">
                                             <label class="control-label d-block text-start" for="emailInvoice">Email Invoice (In the works)</label>
@@ -212,28 +236,7 @@
 
 
 
-                                    <!-- EBT Online Toggle -->
-                                    <div class="col-12 text-start my-3">
-                                        <div class="form-group">
-                                            <label class="control-label d-block text-start">EBT Online</label>
-                                            <input type="checkbox" class="btn-check" id="ebtOnline" autocomplete="off">
-                                            <label class="btn btn-outline-success" for="ebtOnline" id="ebtOnlineLabel">EBT
-                                                Online</label>
-                                        </div>
-                                    </div>
 
-                                    <!-- EBT Transaction Type -->
-                                    <div class="col-md-12 col-lg-12">
-                                        <div class="form-group">
-                                            <label for="ebtcommand" class="control-label">EBT Transaction Type</label>
-                                            <select id="ebtcommand" class="form-control input-style" required>
-                                                <option value="" disabled >Select Transaction Type</option>
-                                                <option value="ebtonline:fssale" selected>FS Sale</option>
-                                                <option value="ebtonline:cbsale">CB Sale</option>
-                                                <option value="ebtonline:balance">Balance</option>
-                                            </select>
-                                        </div>
-                                    </div>
 
                                 </div>
                             </div>
