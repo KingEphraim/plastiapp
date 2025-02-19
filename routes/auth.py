@@ -26,7 +26,7 @@ def register():
         if datafromuser:
             try:
                 # Extract form fields
-                username = datafromuser.get('username')
+                username = datafromuser.get('username').lower()  # Convert to lowercase
                 useremail = datafromuser.get('email')
                 password = datafromuser.get('password')
                 recaptcha_response = datafromuser.get('g-recaptcha-response')  # Get the reCAPTCHA token
@@ -50,8 +50,8 @@ def register():
                     add_to_log(f"Registration failed: Low reCAPTCHA score of {score}. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Low reCAPTCHA score. Registration not allowed.'})
 
-                # Check if username already exists
-                if users_collection.find_one({"username": username}):
+                # Check if username already exists (case-insensitive)
+                if users_collection.find_one({"username": username.lower()}):  # Querying with lowercase
                     log_details = get_request_details()
                     add_to_log(f"Registration failed: Username '{username}' already exists. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Username already exists.'})
@@ -88,24 +88,23 @@ def register():
     return render_template("register.html")
 
 
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         datafromuser = request.get_json()
         if datafromuser:
             try:
-                username = datafromuser.get('username')
+                username = datafromuser.get('username').lower()  # Convert to lowercase
                 password = datafromuser.get('password')
-                
-                     
-                
 
                 if not username or not password:
                     log_details = get_request_details()
                     add_to_log(f"Login failed: Missing username or password. Data received: {datafromuser}. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Missing username or password.'})
 
-                user = users_collection.find_one({"username": username})
+                # Query the database with a case-insensitive username
+                user = users_collection.find_one({"username": username.lower()})  # Querying with lowercase
                 
                 if not user:
                     log_details = get_request_details()
@@ -116,6 +115,7 @@ def login():
                     log_details = get_request_details()
                     add_to_log(f"Login failed: Incorrect password for user '{username}'. {log_details}")
                     return jsonify({'status': 'fail', 'message': 'Incorrect password.'})
+                
                 session.permanent = True
                 session['username'] = username
                 session['user_is_logged_in'] = True
@@ -140,6 +140,7 @@ def login():
     log_details = get_request_details()
     add_to_log(f"Login page accessed. {log_details}")
     return render_template("login.html")
+
 
 @auth_bp.route('/auth_check', methods=['GET'])
 def auth_check():
