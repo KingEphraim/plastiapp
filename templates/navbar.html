@@ -23,6 +23,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('tranzact.tranzact') }}">Tranzact</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="flexidipMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        FlexiDip
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="flexidipMenu">
+                        <li><a class="dropdown-item" href="https://cardknoxdemo.com/flexidip/FlexiDip.application">Run FlexiDip (Windows only)</a></li>
+                    </ul>
+                </li>
                 {% if user_is_logged_in and session.emailInvoice %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('invoice.invoice') }}">Invoice</a>
