@@ -80,58 +80,47 @@ const toggleButtonState = (state) => {
 const saveSettings = () => {
     toggleButtonState('off');
 
+    let formData = {};
+    let validationFields = ["username", "useremail"];
+    let isValid = true;
 
+    // Validate username & email
+    validationFields.forEach(field => {
+        let value = document.getElementById(field)?.value || "";
+        formData[field] = value;
 
-    var formData = {};
-    var fields = ["username", "useremail"];
-    var isValid = true;
-        // Validate form fields
-        fields.forEach(function (field) {
-            var value = document.getElementById(field).value;
-            formData[field] = value;
-    
-            if (field === "username") {
-                if (!validateUsername(value)) {
-                    isValid = false;
-                    appendAlert('Username must be at least 6 characters and can include letters, numbers, underscores, or hyphens—no special characters at the start or end.', 'danger');
-                   
-                }
-            } else if (field === "useremail") {
-                if (!validateEmail(value)) {
-                    isValid = false;
-                    appendAlert('Please enter a valid email address.', 'danger');
-                }
+        if (field === "username" && !validateUsername(value)) {
+            isValid = false;
+            appendAlert('Username must be at least 6 characters and can include letters, numbers, underscores, or hyphens—no special characters at the start or end.', 'danger');
+        } else if (field === "useremail" && !validateEmail(value)) {
+            isValid = false;
+            appendAlert('Please enter a valid email address.', 'danger');
+        }
+    });
+
+    if (isValid) {
+        // Confirm username change
+        if (userName.value !== currentUserSettings.username) {
+            if (!confirm('You are about to change your username. This will log you out and you will need to log back in with your new username.')) {
+                toggleButtonState('on');
+                return;
             }
-        });
-
-        if(isValid) {
-            if (userName.value !== currentUserSettings.username) {
-
-
-                if (confirm('You are about to change your username. This will log you out and you will need to log back in with your new username.')) {
-                    
-                    
-                }else{
-                    toggleButtonState('on');
-                    return;
-                }
-            }
-
-
-            const formData = fields.reduce((data, field) => {
-                if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
-                    data[field] = document.getElementById(field).checked;
-                } else {
-                    data[field] = document.getElementById(field).value;
-                }
-                return data;
-            }, { tranzType: "S" });
-        
-            sendToServer(JSON.stringify(formData));
         }
 
+        // Collect all form fields
+        formData = fields.reduce((data, field) => {
+            if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
+                data[field] = document.getElementById(field)?.checked || false;
+            } else {
+                data[field] = document.getElementById(field)?.value || "";
+            }
+            return data;
+        }, { tranzType: "S" });
 
+        sendToServer(JSON.stringify(formData));
+    }
 };
+
 
 // Function to create device
 const createDevice = () => {
