@@ -126,7 +126,7 @@ function updateUser(serverData, options = {}) {
             notificationCardHeader.className = "card-header bg-danger text-white text-center py-4";
             notificationCardHeaderP.innerText = "Transaction Declined";
             notificationCardBodyH.innerText = "Unfortunately, your payment could not be processed.";
-            notificationCardBodyP.innerText = serverData.AccuResponseMsg || serverData;
+            notificationCardBodyP.innerText = serverData.AccuResponseMsg || JSON.stringify(serverData) || serverData;
             console.log(serverData)
             modalElement.show();
     }
