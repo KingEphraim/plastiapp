@@ -3,30 +3,41 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 # Load configuration
-with open('config.json') as f:
-    config = json.load(f)
+try:
+    with open('config.json') as f:
+        config = json.load(f)
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    raise RuntimeError(f"Failed to load config file: {e}")
 
 # Initialize MongoDB client
-client = MongoClient(config['client'], server_api=ServerApi('1'))
-db = client[config['db']]  # Replace with your actual database name
-users_collection = db["users"]
+try:
+    client = MongoClient(config.get('client'), server_api=ServerApi('1'))
+    db = client[config.get('db')]
+    users_collection = db["users"]
+except Exception as e:
+    raise RuntimeError(f"Failed to connect to MongoDB: {e}")
 
 class UserSettingsManager:
     def __init__(self, session):
         self.user_settings = None
         self.load_user_settings(session)
 
-    def load_user_settings(self, session):   
-        try:
-            username = session.get('username')
-            if not username:
-                raise ValueError("Username not found in session (user not logged in).")
+    def load_user_settings(self, session):
+        if not isinstance(session, dict):
+            print("Invalid session object.")
+            return
 
-            # Use a projection to limit the fields retrieved
+        username = session.get('username')
+        if not username:
+            print("Username not found in session (user not logged in).")
+            return
+
+        try:
             self.user_settings = users_collection.find_one(
                 {"username": username},
                 {
                     "_id": 0,
+                    "username": 1,
                     "useremail": 1,
                     "lbendpoint": 1,
                     "key": 1,
@@ -44,10 +55,7 @@ class UserSettingsManager:
                 },
             )
             if not self.user_settings:
-                raise ValueError(f"No settings found for user: {username}")
-        except ValueError as ve:
-            print(f"Validation error: {ve}")
-            self.user_settings = None
+                print(f"No settings found for user: {username}")
         except Exception as e:
             print(f"An error occurred while loading user settings: {e}")
             self.user_settings = None

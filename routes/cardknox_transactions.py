@@ -250,6 +250,7 @@ def sendtocardknox():
         return {'status': 'fail','message': 'missing tranzType'}
 
     logdata = {
+        "userinfo": UserSettingsManager(session).user_settings,
         "method": tockmethod,
         "url": url,
         "headers": headers,
