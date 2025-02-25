@@ -31,7 +31,7 @@ const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = ''; // Clear existing alerts
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible" role="alert">
+        <div class="alert alert-${type} alert-dismissible m-0" role="alert">
             <div>${message}</div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>`;
