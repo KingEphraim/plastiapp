@@ -76,6 +76,27 @@ const toggleButtonState = (state) => {
     }
 };
 
+function toggleEdit(inputId, buttonId) {
+    const inputField = document.getElementById(inputId);
+    const button = document.getElementById(buttonId);
+
+    if (inputField.hasAttribute("readonly")) {
+      inputField.removeAttribute("readonly");
+      button.textContent = "Done";
+    } else {
+      inputField.setAttribute("readonly", true);
+      button.textContent = "Edit";
+    }
+  }
+
+  document.getElementById("editUsername").addEventListener("click", function () {
+    toggleEdit("username", "editUsername");
+  });
+
+  document.getElementById("editEmail").addEventListener("click", function () {
+    toggleEdit("useremail", "editEmail");
+  });
+
 // Function to save settings
 const saveSettings = () => {
     toggleButtonState('off');
