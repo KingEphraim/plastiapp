@@ -109,6 +109,14 @@ function onPaymentAuthorize(applePayload, totalAmount) {
     });
 }
 
+// onError function
+function onError() {
+    console.log("onError function triggered");
+}
+function onCancel() {
+    console.log("onCancel function triggered");
+}
+
 // Main AP request object
 var apRequest = {
     buttonOptions: {
@@ -124,10 +132,12 @@ var apRequest = {
             merchantIdentifier: "merchant.cardknox.com",
             requiredBillingContactFields: ['postalAddress', 'name', 'phone', 'email'],
             requiredShippingContactFields: ['postalAddress', 'name', 'phone', 'email'],
-            onGetTransactionInfo: "onGetTransactionInfo", // Function name as a string
-            onValidateMerchant: "onValidateMerchant", // Function name as a string
-            onPaymentAuthorize: "onPaymentAuthorize", // Function name as a string
-            onAPButtonLoaded: "apButtonLoaded", // Function name as a string
+            onGetTransactionInfo: "onGetTransactionInfo", 
+            onValidateMerchant: "onValidateMerchant", 
+            onPaymentAuthorize: "onPaymentAuthorize", 
+            onError: "onError", 
+            onCancel: "onCancel",
+            onAPButtonLoaded: "apButtonLoaded", 
             isDebug: false,
         };
     },
