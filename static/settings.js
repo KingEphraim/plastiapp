@@ -1,9 +1,7 @@
 const savebtn = document.getElementById("savebtn");
 const savebtnspin = document.getElementById("sbmtbtnspin");
 const savebtncont = document.getElementById("sbmtbtncont");
-const createdevicebtn = document.getElementById("createdevicebtn");
-const createdevicebtnspin = document.getElementById("createdevicebtnspin");
-const createdevicebtncont = document.getElementById("createdevicebtncont");
+
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
 const fields = ["key", "command","voidtype", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice","tapToPhone"];
@@ -52,11 +50,7 @@ const updateLabel = (checkboxId, labelId) => {
     });
 });
 
-inputs.forEach(input => {
-    input.addEventListener('input', () => {
-        toggleButtonState('unsavedChanges');
-    });
-});
+
 
 // Toggle function for buttons
 const toggleButtonState = (state) => {
@@ -67,12 +61,12 @@ const toggleButtonState = (state) => {
     };
     if (state === 'on') {
         toggle(savebtn, savebtnspin, savebtncont, "Save Settings", false);
-        toggle(createdevicebtn, createdevicebtnspin, createdevicebtncont, "Add/Update Device ID", false);
+        
     } else if (state === 'off') {
         toggle(savebtn, savebtnspin, savebtncont, "Please Wait", true);
-        toggle(createdevicebtn, createdevicebtnspin, createdevicebtncont, "Please Wait", true);
+       
     } else if (state === 'unsavedChanges') {
-        toggle(createdevicebtn, createdevicebtnspin, createdevicebtncont, "There are unsaved changes", true);
+        
     }
 };
 
