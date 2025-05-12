@@ -105,6 +105,8 @@ const saveSettings = () => {
     let validationFields = ["username", "useremail"];
     let isValid = true;
 
+    
+
     // Validate username & email
     validationFields.forEach(field => {
         let value = document.getElementById(field)?.value || "";
@@ -137,9 +139,12 @@ const saveSettings = () => {
             }
             return data;
         }, { tranzType: "S" });
-
+        //if ccdevice is enabled call create device
+   
         sendToServer(JSON.stringify(formData));
-    }
+    }   
+    
+    
 };
 
 
@@ -160,8 +165,7 @@ const createDevice = () => {
         .then(data => {
             const { ckRequest, ckResponse } = data;
             if (ckResponse.xResult === "S") {
-                document.getElementById('deviceId').value = ckResponse.xDeviceId;
-                savebtn.click();
+                document.getElementById('deviceId').value = ckResponse.xDeviceId;                
                 appendAlert(`Device created successfully! ID: ${ckResponse.xDeviceId}`, 'success');
             } else if (ckResponse.xResult === "E") {
                 appendAlert(`Error: ${ckResponse.xError} (Ref: ${ckResponse.xRefnum})`, 'danger');
@@ -249,8 +253,13 @@ window.onload = function () {
     loadSettings();
 };
 
-savebtn.addEventListener("click", saveSettings);
-createdevicebtn.addEventListener("click", createDevice);
+savebtn.addEventListener("click", async function() {
+    await saveSettings();  // Wait until saveSettings completes
+    if(ccdevice.checked){
+        createDevice();
+    }
+});
+
 
 
 document.getElementById('deleteUserBtn').addEventListener('click', () => {
