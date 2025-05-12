@@ -98,14 +98,12 @@ function toggleEdit(inputId, buttonId) {
   });
 
 // Function to save settings
-const saveSettings = () => {
+const saveSettings = async () => {
     toggleButtonState('off');
 
     let formData = {};
     let validationFields = ["username", "useremail"];
     let isValid = true;
-
-    
 
     // Validate username & email
     validationFields.forEach(field => {
@@ -121,63 +119,83 @@ const saveSettings = () => {
         }
     });
 
-    if (isValid) {
-        // Confirm username change
-        if (userName.value !== currentUserSettings.username) {
-            if (!confirm('You are about to change your username. This will log you out and you will need to log back in with your new username.')) {
-                toggleButtonState('on');
-                return;
-            }
-        }
+    if (!isValid) {
+        toggleButtonState('on');
+        return null;
+    }
 
-        // Collect all form fields
-        formData = fields.reduce((data, field) => {
-            if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
-                data[field] = document.getElementById(field)?.checked || false;
-            } else {
-                data[field] = document.getElementById(field)?.value || "";
-            }
-            return data;
-        }, { tranzType: "S" });
-        //if ccdevice is enabled call create device
-   
-        sendToServer(JSON.stringify(formData));
-    }   
-    
-    
+    if (userName.value !== currentUserSettings.username) {
+        if (!confirm('You are about to change your username. This will log you out and you will need to log back in with your new username.')) {
+            toggleButtonState('on');
+            return null;
+        }
+    }
+
+    // Collect all form fields
+    formData = fields.reduce((data, field) => {
+        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
+            data[field] = document.getElementById(field)?.checked || false;
+        } else {
+            data[field] = document.getElementById(field)?.value || "";
+        }
+        return data;
+    }, { tranzType: "S" });
+
+    try {
+        const response = await fetch('/save_settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        const alertType = data.status === "success" ? 'success' : 'danger';
+        appendAlert(JSON.stringify(data), alertType);
+
+        return formData;  // ✅ Always return the same object you sent
+    } catch (error) {
+        console.error(error);
+        toggleButtonState('on');
+        return null;
+    }
 };
 
 
+
 // Function to create device
-const createDevice = () => {
+const createDevice = (formData) => {
     toggleButtonState('off');
-    const formData = ["deviceSerialNumber", "deviceMake", "deviceFriendlyName"].reduce((data, field) => {
-        data[field] = document.getElementById(field).value;
-        return data;
-    }, { tranzType: "createdevice" });
+
+    // Use the provided data directly instead of reading DOM again
+    const deviceData = {
+        deviceSerialNumber: formData.deviceSerialNumber,
+        deviceMake: formData.deviceMake,
+        deviceFriendlyName: formData.deviceFriendlyName,
+        tranzType: "createdevice"
+    };
 
     fetch('/sendtocardknox', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(deviceData)
     })
-        .then(response => response.json())
-        .then(data => {
-            const { ckRequest, ckResponse } = data;
-            if (ckResponse.xResult === "S") {
-                document.getElementById('deviceId').value = ckResponse.xDeviceId;                
-                appendAlert(`Device created successfully! ID: ${ckResponse.xDeviceId}`, 'success');
-            } else if (ckResponse.xResult === "E") {
-                appendAlert(`Error: ${ckResponse.xError} (Ref: ${ckResponse.xRefnum})`, 'danger');
-            } else {
-                appendAlert(`Unexpected response: ${JSON.stringify(ckResponse)}`, 'warning');
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            appendAlert(`An error occurred: ${error.message}`, 'danger');
-        });
+    .then(response => response.json())
+    .then(data => {
+        const { ckRequest, ckResponse } = data;
+        if (ckResponse.xResult === "S") {
+            document.getElementById('deviceId').value = ckResponse.xDeviceId;                
+            appendAlert(`Device created successfully! ID: ${ckResponse.xDeviceId}`, 'success');
+        } else if (ckResponse.xResult === "E") {
+            appendAlert(`Error: ${ckResponse.xError} (Ref: ${ckResponse.xRefnum})`, 'danger');
+        } else {
+            appendAlert(`Unexpected response: ${JSON.stringify(ckResponse)}`, 'warning');
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        appendAlert(`An error occurred: ${error.message}`, 'danger');
+    });
 };
+
 
 // Function to send data to the server
 const sendToServer = (data) => {
@@ -254,11 +272,13 @@ window.onload = function () {
 };
 
 savebtn.addEventListener("click", async function() {
-    await saveSettings();  // Wait until saveSettings completes
-    if(ccdevice.checked){
-        createDevice();
+    const formData = await saveSettings();  // Get the actual saved data object
+
+    if (formData?.ccdevice) {
+        createDevice(formData);
     }
 });
+
 
 
 
