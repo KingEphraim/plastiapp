@@ -142,8 +142,7 @@ const saveSettings = async () => {
             body: JSON.stringify(formData)
         });
         const data = await response.json();
-        const alertType = data.status === "success" ? 'success' : 'danger';
-        appendAlert(JSON.stringify(data), alertType);
+        
 
         return formData;  // ✅ Always return the same object you sent
     } catch (error) {
@@ -157,38 +156,55 @@ const saveSettings = async () => {
 
 // Function to create device
 const createDevice = (formData) => {
-    toggleButtonState('off');
+    return new Promise((resolve, reject) => {
+        toggleButtonState('off');
 
-    // Use the provided data directly instead of reading DOM again
-    const deviceData = {
-        deviceSerialNumber: formData.deviceSerialNumber,
-        deviceMake: formData.deviceMake,
-        deviceFriendlyName: formData.deviceFriendlyName,
-        tranzType: "createdevice"
-    };
-
-    fetch('/sendtocardknox', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(deviceData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        const { ckRequest, ckResponse } = data;
-        if (ckResponse.xResult === "S") {
-            document.getElementById('deviceId').value = ckResponse.xDeviceId;                
-            appendAlert(`Device created successfully! ID: ${ckResponse.xDeviceId}`, 'success');
-        } else if (ckResponse.xResult === "E") {
-            appendAlert(`Error: ${ckResponse.xError} (Ref: ${ckResponse.xRefnum})`, 'danger');
-        } else {
-            appendAlert(`Unexpected response: ${JSON.stringify(ckResponse)}`, 'warning');
+        // Clear existing deviceId visually
+        const deviceIdElement = document.getElementById('deviceId');
+        if (deviceIdElement) {
+            deviceIdElement.value = "";
         }
-    })
-    .catch(error => {
-        console.error(error);
-        appendAlert(`An error occurred: ${error.message}`, 'danger');
+
+        // Also clear it in formData object
+        formData.deviceId = "";
+
+        const deviceData = {
+            deviceSerialNumber: formData.deviceSerialNumber,
+            deviceMake: formData.deviceMake,
+            deviceFriendlyName: formData.deviceFriendlyName,
+            tranzType: "createdevice"
+        };
+
+        fetch('/sendtocardknox', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(deviceData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const { ckResponse } = data;
+            if (ckResponse.xResult === "S") {
+                document.getElementById('deviceId').value = ckResponse.xDeviceId;
+                formData.deviceId = ckResponse.xDeviceId; // Update in formData as well
+                appendAlert(`Device created successfully! ID: ${ckResponse.xDeviceId}`, 'success');
+                resolve(ckResponse.xDeviceId);
+            } else if (ckResponse.xResult === "E") {
+                appendAlert(`Error: ${ckResponse.xError} (Ref: ${ckResponse.xRefnum})`, 'danger');
+                resolve(null);
+            } else {
+                appendAlert(`Unexpected response: ${JSON.stringify(ckResponse)}`, 'warning');
+                resolve(null);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            appendAlert(`An error occurred: ${error.message}`, 'danger');
+            reject(error);
+        });
     });
 };
+
+
 
 
 // Function to send data to the server
@@ -266,12 +282,33 @@ window.onload = function () {
 };
 
 savebtn.addEventListener("click", async function() {
-    const formData = await saveSettings();  // Get the actual saved data object
+    let formData = await saveSettings();  // Save and validate initial form data
 
-    if (formData?.ccdevice) {
-        createDevice(formData);
+    if (!formData) return; // Validation failed, abort further steps
+
+    if (formData.ccdevice) {
+        createDevice(formData)
+            .then(updatedDeviceId => {
+                if (updatedDeviceId) {
+                    formData.deviceId = updatedDeviceId;
+                    sendToServer(JSON.stringify(formData));  // Only now show success/error in `sendToServer`
+                } else {
+                    appendAlert('Device creation failed. Please check your device details.', 'danger');
+                    toggleButtonState('on');
+                }
+            })
+            .catch(error => {
+                console.error('Device creation failed:', error);
+                appendAlert('Failed to create device. Please check your details and try again.', 'danger');
+                toggleButtonState('on');
+            });
+    } else {
+        // No device creation needed, proceed normally
+        sendToServer(JSON.stringify(formData));
     }
 });
+
+
 
 
 
