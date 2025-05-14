@@ -4,6 +4,7 @@ from models.apiconnector import send_api_request
 from models.databaselog import add_item_to_database,update_item_in_database
 from models.handleRecaptcha import verify_recaptcha
 from models.invoiceDB import modify_invoice
+import uuid
 
 cardknox_transactions_bp = Blueprint('cardknox_transactions', __name__)
 
@@ -136,7 +137,7 @@ def sendtocardknox():
                 'xSoftwareVersion': '1.0',
                 'xAmount': datafromuser['amount'],
                 'xCommand': settings.get('command', "cc:sale"),
-                'xExternalRequestId': datafromuser['invoice'],
+                'xExternalRequestId': str(uuid.uuid4()),
                 'xInvoice': datafromuser['invoice']
             },
             "xDeviceId":   settings['deviceId']
