@@ -184,6 +184,20 @@ def receipt():
     # Render the HTML template with the dynamic fields
     return render_template('receipt.html', receipt_html=receipt_html)
 
+# Challenge POST with text from CloudIM that returns it with 200
+@app.route('/challenge', methods=['POST'])
+def challenge():
+    data = request.get_data(as_text=True)
+    add_to_log(f'Challenge data: {data}')
+    if data:
+        add_to_log(f'Challenge data: {data}')
+        return data, 200
+    else:
+        add_to_log('Challenge data is empty')
+        return "No data received", 400
+    
+    
+
 
 @app.route('/webhook', methods=['POST'])
 def handle_webhook():
