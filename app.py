@@ -19,6 +19,8 @@ from routes.invoice import invoice__bp
 from routes.customer import customer__bp
 from routes.ebtresponse import ebtresponse__bp
 from routes.tranzact.main import tranzact_bp
+from routes.webhook import webhook_bp
+
 with open('config.json') as f:
     config = json.load(f) 
 app = Flask(__name__)
@@ -32,6 +34,7 @@ app.register_blueprint(invoice__bp)
 app.register_blueprint(customer__bp)
 app.register_blueprint(ebtresponse__bp)
 app.register_blueprint(tranzact_bp)
+app.register_blueprint(webhook_bp)
 
 
 app.secret_key = config['secret_key']  # Change this to a secure secret key
@@ -199,73 +202,7 @@ def challenge():
     
 
 
-@app.route('/webhook', methods=['POST'])
-def handle_webhook():
-    try:
-        content_type = request.headers['Content-Type']
-        add_to_log(f'content_type: {content_type}')
-    except KeyError:
-        return "Content-Type header is missing", 400
-    try:
-        cksig = request.headers['ck-signature']
-        add_to_log(f'ck-sig: {cksig}')
-    except KeyError:
-        add_to_log(f'missing ck signature')
 
-    ck_signature = request.headers.get('ck-signature')
-    if content_type == 'application/json':
-        data = request.get_json()
-    elif content_type.startswith('multipart/form-data'):
-        data = request.form.to_dict()
-    elif content_type == 'application/x-www-form-urlencoded':
-        data = request.form.to_dict()
-    elif content_type.startswith('application/x-www-form-urlencoded'):
-        data = request.form.to_dict()
-    elif content_type.startswith('text/plain'):
-        datatext = request.data.decode('utf-8')
-        try:
-            data = json.loads(datatext)
-        except json.JSONDecodeError as e:
-            data = {"text/plain": request.data.decode('utf-8')}
-    else:
-        # Unsupported content type
-        return f"Unsupported content type Content Type: {request.headers['Content-Type']}", 400
-
-    pin = config['webhookpin']
-    sorted_dict = dict(sorted(data.items(), key=lambda item: item[0]))
-    values_string = ''.join([str(value) for value in sorted_dict.values()])
-    values_string_pin = values_string + pin
-    md5_hash = hashlib.md5(values_string_pin.encode()).hexdigest()
-    print(md5_hash)
-    if ck_signature is None:
-        ck_signature = ""
-        print(ck_signature)
-        url = config['ipn-webhook-hooks.slack']
-        payload = json.dumps({
-            "text": f"message{data}{ck_signature}",
-            "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "A new transaction has been processed:"}}, {"type": "section", "text": {"type": "mrkdwn", "text": f"*Payload:*\n```{json.dumps(data, indent=4)}```"}, "accessory": {"type": "image", "image_url": "https://cardknoxdemo.com/img/logo.png", "alt_text": "computer thumbnail"}}]
-        })
-
-    else:
-        if ck_signature.lower() == md5_hash.lower():
-            print("The two strings are equal (ignoring case).")
-            matchcheck = "Match"
-        else:
-            print("The two strings are not equal.")
-            matchcheck = "No Match"
-        url = config['ipn-webhook-hooks.slack']
-        payload = json.dumps({
-            "text": f"message{data}{ck_signature}",
-            "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "A new transaction has been processed:"}}, {"type": "section", "text": {"type": "mrkdwn", "text": f"*Payload:*\n```{json.dumps(data, indent=4)}```\n*ck_signature: * `{ck_signature}` \n*Hash: * `{md5_hash}`\n*ck_signature - Hash:* `{matchcheck}`"}, "accessory": {"type": "image", "image_url": "https://cardknoxdemo.com/img/logo.png", "alt_text": "computer thumbnail"}}]
-        })
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    print(response)
-
-    return 'OK'
 
 
 @app.route('/slackrefnum', methods=['POST'])
