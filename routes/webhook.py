@@ -142,7 +142,7 @@ def handle_webhook():
             },
             "accessory": {
                 "type": "image",
-                "image_url": "https://cardknoxdemo.com/img/logo.png",
+                "image_url": "https://cardknoxdemo.com/img/moneysola.png",
                 "alt_text": "computer thumbnail"
             }
         }
