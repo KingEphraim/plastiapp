@@ -30,7 +30,7 @@ def send_api_request(method="POST", url=None, headers=None, jsonBody=None, param
             return response.text  # Return raw text if JSON is not available
 
     except requests.exceptions.Timeout:
-        return {"error": "Request timed out"}
+        return {"error": "Request timed out. The request was sent to the Sola api, but no response was received within 25 seconds so it was aborted."}
     except requests.exceptions.TooManyRedirects:
         return {"error": "Too many redirects"}
     except requests.exceptions.RequestException as e:
