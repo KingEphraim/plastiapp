@@ -1,13 +1,13 @@
 import requests
 
-def send_api_request(method="POST", url=None, headers=None, jsonBody=None, params=None):
+def send_api_request(method="POST", url=None, headers=None, jsonBody=None, params=None, timeout=25):
     try:        
         # Ensure the method is uppercase (in case it's provided in lowercase)
         method = method.upper()
 
         # Perform the API call based on the HTTP method
         if method == "POST":
-            response = requests.post(url, headers=headers, json=jsonBody, params=params)
+            response = requests.post(url, headers=headers, json=jsonBody, params=params, timeout=timeout)
         elif method == "GET":
             response = requests.get(url, headers=headers, params=params)
         elif method == "PUT":
