@@ -1,8 +1,6 @@
 from flask import Blueprint, request, json
 from models.mylogs import add_to_log
 import hashlib
-import requests
-import re
 from models.crypto_utils import verify_cloudim_signature
 from models.slack_notifier import send_slack_webhook
 
