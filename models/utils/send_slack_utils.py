@@ -1,7 +1,20 @@
-import json
-import requests
+#send_slack_utils handles sending messages to Slack channels.
+import json,requests
+with open('config.json') as f:
+    config = json.load(f)
 
-def send_slack_webhook(data, md5_hash, ck_signature, signature_verified, url):
+def send_slack_webhook(data, md5_hash, ck_signature, signature_verified, slack_url):
+    """
+    Sends a message to a Slack channel using the provided  URL.
+    
+    Args:
+        data (dict): The data to be sent to Slack.
+        slack_url (str): The Slack URL.
+    Raises:
+        ValueError: If the request to Slack fails or if the data cannot be encoded to JSON
+    Returns:
+        response: The response from the Slack API.
+    """
     blocks = [
         {
             "type": "section",
@@ -15,7 +28,7 @@ def send_slack_webhook(data, md5_hash, ck_signature, signature_verified, url):
             },
             "accessory": {
                 "type": "image",
-                "image_url": "https://cardknoxdemo.com/img/moneysola.png",
+                "image_url": config['slack_image_url'],
                 "alt_text": "computer thumbnail"
             }
         }
@@ -38,4 +51,13 @@ def send_slack_webhook(data, md5_hash, ck_signature, signature_verified, url):
     })
 
     headers = {'Content-Type': 'application/json'}
-    return requests.post(url, headers=headers, data=payload)
+    response = requests.post(slack_url, headers=headers, data=payload)
+
+    if response.status_code != 200:
+        raise ValueError(f"Request to Slack failed with status code {response.status_code}: {response.text}")
+
+    return response
+
+  
+    
+

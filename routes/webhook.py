@@ -2,7 +2,7 @@ from flask import Blueprint, request, json
 from models.mylogs import add_to_log
 import hashlib
 from models.crypto_utils import verify_cloudim_signature
-from models.slack_notifier import send_slack_webhook
+from models.utils.send_slack_utils import send_slack_webhook
 
 with open('config.json') as f:
     config = json.load(f)
