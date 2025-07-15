@@ -3,6 +3,7 @@ let userKey = '';
 let userCommand = '';
 let userPhone = '';
 let user3ds = false;
+let user3dsenv = 'production';
 let ccdevice = false;
 const sbmtbtn = document.getElementById("sbmtbtn");
 const sbmtbtnspin = document.getElementById("sbmtbtnspin");
@@ -259,6 +260,7 @@ async function loadSettings() {
             userCommand = data.settings.userCommand || '';
             userPhone = data.settings.phone || '';
             user3ds = data.settings.threeds;
+            user3dsenv = data.settings.threedsenv || '';
             userGooglePay = data.settings.googlePay;
             userebtOnline = data.settings.ebtOnline;
             useremailInvoice = data.settings.emailInvoice;
@@ -301,8 +303,8 @@ window.onload = function () {
         await loadSettings();
 
         if (user3ds === true) {
-            console.log("threeds is true");
-            enable3DS('staging', handle3DSResults);
+            console.log("threeds is true " + user3dsenv);
+            enable3DS(user3dsenv, handle3DSResults);
         } else if (user3ds === false) {
 
         } else {

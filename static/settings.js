@@ -4,7 +4,7 @@ const savebtncont = document.getElementById("sbmtbtncont");
 
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
-const fields = ["key", "command","voidtype", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice","tapToPhone"];
+const fields = ["key", "command","voidtype", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds","threedsenv", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice","tapToPhone"];
 const userName = document.getElementById("username");
 const userEmail = document.getElementById("useremail");
 let currentUserSettings = {};
