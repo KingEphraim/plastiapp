@@ -442,7 +442,9 @@ window.onload = function () {
                     if (urlParams.has('xEncryptedPayload')) {
                         const encryptedPayload = urlParams.get('xEncryptedPayload'); 
                         console.log(`Encrypted Payload: ${encryptedPayload}`);
-                        formData['encryptedPayload'] = encryptedPayload; 
+                        formData['encryptedPayload'] = encryptedPayload;
+                        formData['xSerialNumber'] = urlParams.get('xSerialNumber') || '';
+                        formData['xMobileTapType'] = 'TapToPhoneApp';
                     }
                     // Format the "exp" field
                     formData['exp'] = formatExp(formData['exp']);
@@ -661,8 +663,8 @@ tapToPhoneBtn.addEventListener("click", () => {
         alert("This feature is designed for mobile devices.");
         return;
     }
-    
-    const cardknoxUrl = `cardknox://tap.cardknox.com/transaction?xKey=ifields_ephraimdev1f011616e4ba4f75b0bbcf26417&xCommand=cc:singleusetoken&xRedirectURL=${encodeURIComponent(window.location.href)}`;
+    // create the Cardknox URL with the xKey and xCommand parameters and any other paramaters the user entrered on the page
+    const cardknoxUrl = `cardknox://tap.cardknox.com/transaction?xKey=ifields_ephraimdev1f011616e4ba4f75b0bbcf26417&xCommand=cc:singleusetoken&xRedirectURL=${encodeURIComponent(window.location.href)}&xAmount=${encodeURIComponent(document.getElementById("amount").value)}`;
     const fallbackUrl = "https://play.google.com/store/apps/details?id=com.cardknox.tap.prod";
     
     // Attempt to open the Cardknox app

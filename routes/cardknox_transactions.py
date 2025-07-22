@@ -30,6 +30,30 @@ def sendtocardknox():
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
+    transactionData = {
+            'xAllowDuplicate': settings.get('allowDuplicate', False),
+            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
+            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
+            'xEmail': datafromuser['email'],
+            'xBillPhone': datafromuser['phone'],
+            'xBillStreet': datafromuser['address'],
+            'xBillCity': datafromuser['city'],
+            'xBillState': datafromuser['state'],
+            'xBillZip': datafromuser['zip'],
+            'xInvoice': datafromuser['invoice'],
+            'xDescription': datafromuser['comments'],
+            'xAmount': datafromuser['amount'],
+            'xCardnum': datafromuser['card'],
+            'xExp': datafromuser['exp'],
+            'xCvv': datafromuser['cvv'],
+            'xEMVData': datafromuser.get('encryptedPayload', ''),
+            'xSerialNumber': datafromuser.get('xSerialNumber', ''),
+            'xMobileTapType': datafromuser.get('xMobileTapType', ''),
+    }
+    #remove any empty values from transactionData
+    transactionData = {k: v for k, v in transactionData.items() if v is not None and v != ''}
+
+    
     lbendpoint = settings.get('lbendpoint') or config['lbendpoint']
 
     db_invoice_id = datafromuser.get('dbinvoiceid')  
@@ -61,23 +85,9 @@ def sendtocardknox():
             'xVendorID': '128717',
             'xIP': request.headers.get('X-Forwarded-For', request.remote_addr),
             # 'xAllowNonAuthenticated': 'true',
-            'xAllowDuplicate': settings.get('allowDuplicate', False),
-            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
-            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
-            'xEmail': datafromuser['email'],
-            'xBillPhone': datafromuser['phone'],
-            'xBillStreet': datafromuser['address'],
-            'xBillCity': datafromuser['city'],
-            'xBillState': datafromuser['state'],
-            'xBillZip': datafromuser['zip'],
-            'xInvoice': datafromuser['invoice'],
-            'xDescription': datafromuser['comments'],
-            'xAmount': datafromuser['amount'],
-            'xCardnum': datafromuser['card'],
-            'xExp': datafromuser['exp'],
-            'xCvv': datafromuser['cvv'],
-            'xEMVData': datafromuser.get('encryptedPayload', '')
         }
+        #add the transactionData to the tockdata
+        tockdata.update(transactionData)
     elif (datafromuser['tranzType'] == 'void'):
         tockmethod = 'post'
         url = f"https://{lbendpoint}/gatewayjson"
