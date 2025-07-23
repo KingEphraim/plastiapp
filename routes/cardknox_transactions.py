@@ -32,26 +32,27 @@ def sendtocardknox():
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
     transactionData = {
-            'xAllowDuplicate': settings.get('allowDuplicate', False),
-            'xAllowNonAuthenticated': settings.get('allowNonAuthenticated', False),
-            'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
-            'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
-            'xEmail': datafromuser['email'],
-            'xBillPhone': datafromuser['phone'],
-            'xBillStreet': datafromuser['address'],
-            'xBillCity': datafromuser['city'],
-            'xBillState': datafromuser['state'],
-            'xBillZip': datafromuser['zip'],
-            'xInvoice': datafromuser['invoice'],
-            'xDescription': datafromuser['comments'],
-            'xAmount': datafromuser['amount'],
-            'xCardnum': datafromuser['card'],
-            'xExp': datafromuser['exp'],
-            'xCvv': datafromuser['cvv'],
-            'xEMVData': datafromuser.get('encryptedPayload', ''),
-            'xSerialNumber': datafromuser.get('xSerialNumber', ''),
-            'xMobileTapType': datafromuser.get('xMobileTapType', ''),
+        'xAllowDuplicate': settings.get('allowDuplicate', False),
+        'xAllowNonAuthenticated': settings.get('allowNonAuthenticated', False),
+        'xBillFirstName': ' '.join(datafromuser.get('name', '').split()[:-1]),
+        'xBillLastName': datafromuser.get('name', '').split()[-1] if datafromuser.get('name') else '',
+        'xEmail': datafromuser.get('email', ''),
+        'xBillPhone': datafromuser.get('phone', ''),
+        'xBillStreet': datafromuser.get('address', ''),
+        'xBillCity': datafromuser.get('city', ''),
+        'xBillState': datafromuser.get('state', ''),
+        'xBillZip': datafromuser.get('zip', ''),
+        'xInvoice': datafromuser.get('invoice', ''),
+        'xDescription': datafromuser.get('comments', ''),
+        'xAmount': datafromuser.get('amount', ''),
+        'xCardnum': datafromuser.get('card', ''),
+        'xExp': datafromuser.get('exp', ''),
+        'xCvv': datafromuser.get('cvv', ''),
+        'xEMVData': datafromuser.get('encryptedPayload', ''),
+        'xSerialNumber': datafromuser.get('xSerialNumber', ''),
+        'xMobileTapType': datafromuser.get('xMobileTapType', ''),
     }
+
     #remove any empty values from transactionData
     transactionData = {k: v for k, v in transactionData.items() if v is not None and v != ''}
 
