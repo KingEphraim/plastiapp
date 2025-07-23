@@ -27,11 +27,13 @@ def sendtocardknox():
         "deviceFriendlyName": "",
         "deviceId": "",
         "allowDuplicate": False,
+        "allowNonAuthenticated": False,
     }
     headers = {"Content-Type": "application/json"}
     datafromuser = request.get_json()
     transactionData = {
             'xAllowDuplicate': settings.get('allowDuplicate', False),
+            'xAllowNonAuthenticated': settings.get('allowNonAuthenticated', False),
             'xBillFirstName': str.join(' ', datafromuser['name'].split()[:-1]) if datafromuser['name'] else '',
             'xBillLastName': datafromuser['name'].split()[-1] if datafromuser['name'] else '',
             'xEmail': datafromuser['email'],

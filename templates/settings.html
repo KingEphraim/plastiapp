@@ -177,7 +177,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- 3DS Verification Toggle and enviroment selection -->
+                                    <!-- 3DS Verification Toggle, enviroment selection and Allow non authenticated toggle -->
                                     <div class="col-12 text-start my-3">
                                         <div class="form-group">
                                             <label class="control-label d-block text-start" for="threeds">3DS
@@ -189,7 +189,12 @@
                                                 <option value="production" selected>Production</option>
                                                 <option value="staging">Sandbox</option>
                                             </select>
-
+                                            <label class="control-label d-block text-start mt-2"
+                                                for="allowNonAuthenticated">Allow Non-Authenticated</label>
+                                            <input type="checkbox" class="btn-check" id="allowNonAuthenticated"
+                                                autocomplete="off">
+                                            <label class="btn btn-outline-success" for="allowNonAuthenticated"
+                                                id="allowNonAuthenticatedLabel">Allow Non-Authenticated</label>
                                         </div>
                                     </div>
 

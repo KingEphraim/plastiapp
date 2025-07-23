@@ -4,7 +4,7 @@ const savebtncont = document.getElementById("sbmtbtncont");
 
 const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
 const inputs = document.querySelectorAll('input');
-const fields = ["key", "command","voidtype", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds","threedsenv", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice","tapToPhone"];
+const fields = ["key", "command","voidtype", "ebtcommand", "username","lbendpoint", "useremail", "fullname", "phone", "deviceSerialNumber", "deviceMake", "deviceFriendlyName", "deviceId", "threeds","threedsenv","allowNonAuthenticated", "googlePay", "ebtOnline", "ccdevice", "allowDuplicate","emailInvoice","tapToPhone"];
 const userName = document.getElementById("username");
 const userEmail = document.getElementById("useremail");
 let currentUserSettings = {};
@@ -44,7 +44,7 @@ const updateLabel = (checkboxId, labelId) => {
 };
 
 // Event listener for checkbox state updates
-["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].forEach(id => {
+["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate","allowNonAuthenticated", "emailInvoice", "tapToPhone"].forEach(id => {
     document.getElementById(id).addEventListener("change", () => {
         updateLabel(id, `${id}Label`);
     });
@@ -129,7 +129,7 @@ const saveSettings = async () => {
 
     // Collect all form fields
     formData = fields.reduce((data, field) => {
-        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice", "tapToPhone"].includes(field)) {
+        if (["threeds", "ccdevice", "googlePay", "ebtOnline", "allowDuplicate","allowNonAuthenticated", "emailInvoice", "tapToPhone"].includes(field)) {
             data[field] = document.getElementById(field)?.checked || false;
         } else {
             data[field] = document.getElementById(field)?.value || "";
@@ -264,7 +264,7 @@ const loadSettings = () => {
                 }
 
                 // Update labels
-                ["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate", "emailInvoice","tapToPhone"].forEach(id => updateLabel(id, `${id}Label`));
+                ["ccdevice", "threeds", "googlePay", "ebtOnline", "allowDuplicate","allowNonAuthenticated", "emailInvoice","tapToPhone"].forEach(id => updateLabel(id, `${id}Label`));
 
                 console.log('Settings loaded successfully!');
             } else {
