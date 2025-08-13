@@ -863,22 +863,22 @@ function sendtoserver(serverdata) {
         .catch(error => console.error(error));
 }
 
-//googlepay object
+// Google Pay request configuration
 var gpRequest = {
     merchantInfo: {
-        merchantName: "Tranzact",
+        merchantName: "Tranzact"
     },
     buttonOptions: {
         buttonColor: GPButtonColor.default,
         buttonType: GPButtonType.plain,
         buttonSizeMode: GPButtonSizeMode.fill
     },
-    billingParams: {
-        //allowedAuthMethods:["PAN_ONLY"],
-        //allowedCardNetworks:["AMEX", "DISCOVER", "MASTERCARD", "VISA"],
+    billingParameters: {
+        // allowedAuthMethods: ["PAN_ONLY"],
+        // allowedCardNetworks: ["AMEX", "DISCOVER", "MASTERCARD", "VISA"],
         phoneNumberRequired: false,
         billingAddressRequired: false,
-        billingAddressFormat: GPBillingAddressFormat.full,
+        billingAddressFormat: GPBillingAddressFormat.full
     },
     shippingParameters: {
         shippingAddressRequired: false,
@@ -889,30 +889,35 @@ var gpRequest = {
         return {
             totalPriceStatus: "FINAL",
             currencyCode: "USD",
-            totalPrice: amount.value ? amount.value : "0",
+            totalPrice: (typeof amount !== "undefined" && amount.value) ? amount.value : "0"
         };
     },
+
     onProcessPayment: function (paymentResponse) {
         return processGP(paymentResponse);
     },
+
     onPaymentCanceled: function () {
-        setTimeout(function () { appendAlert("Payment was canceled", 'info') }, 500);
-    },
+        setTimeout(function () {
+            appendAlert("Payment was canceled", "info");
+        }, 500);
+    }
 };
 
-//initiates googlepay
+// Initializes Google Pay
 function initGP() {
     return {
         merchantInfo: gpRequest.merchantInfo,
         buttonOptions: gpRequest.buttonOptions,
-        onGetTransactionInfo: "gpRequest.onGetTransactionInfo",
-        environment: "PRODUCTION",
-        billingParameters: gpRequest.billingParams,
+        billingParameters: gpRequest.billingParameters,
         shippingParameters: gpRequest.shippingParameters,
-        onProcessPayment: "gpRequest.onProcessPayment",
-        onPaymentCanceled: "gpRequest.onPaymentCanceled",
+        onGetTransactionInfo: gpRequest.onGetTransactionInfo,
+        onProcessPayment: gpRequest.onProcessPayment,
+        onPaymentCanceled: gpRequest.onPaymentCanceled,
+        environment: "PRODUCTION"
     };
 }
+
 
 //process googlepay
 function processGP(paymentResponse) {
