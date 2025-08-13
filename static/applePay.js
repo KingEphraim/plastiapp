@@ -110,11 +110,14 @@ function onPaymentAuthorize(applePayload, totalAmount) {
 }
 
 // onError function
-function onError() {
-    console.log("onError function triggered");
+function onError(error) {
+    console.log('onError triggered', error);
+    return Promise.reject(error);
 }
-function onCancel() {
-    console.log("onCancel function triggered");
+
+function onCancel(error) {
+    console.log('onCancel triggered', error);
+    return Promise.reject(error);
 }
 
 // Main AP request object
